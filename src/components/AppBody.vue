@@ -21,7 +21,7 @@ import SideBarContent from "./SideBarContent.vue";
   }
 })
 export default class AppBody extends Vue {
-  public visibleLeft = false;
+  public visibleLeft = true;
 }
 </script>
 
