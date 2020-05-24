@@ -1,46 +1,78 @@
 <template>
   <div>
     side bar content component
-    <Dropdown
-      v-model="selectedTheme"
-      :options="themes"
-      v-on:input="onInput"
-      optionLabel="name"
-      :filter="true"
-      placeholder="Select a theme"
-      :showClear="true"
-    >
-      <!-- <template #value="slotProps">
-        <div class="p-dropdown-car-value" v-if="slotProps.value">
-          <img
-            :src="'img/theme-icon/' + slotProps.value.name + '.png'"
-            :alt="slotProps.option.name"
-          />
-          <span>{{slotProps.value.name}}</span>
-        </div>
-        <span v-else>{{slotProps.placeholder}}</span>
-      </template>-->
-      <template #option="slotProps">
-        <div class="p-dropdown-car-option">
-          <img
-            :alt="slotProps.option.name"
-            :src="'img/theme-icon/' + slotProps.option.name + '.png'"
-          />
-          <span>{{slotProps.option.name}}</span>
-        </div>
-      </template>
-    </Dropdown>
+    <div>
+      <Dropdown
+        v-model="selectedTheme"
+        :options="themes"
+        v-on:input="onThemeSelected"
+        optionLabel="name"
+        :filter="true"
+        placeholder="Select a theme"
+        :showClear="true"
+      >
+        <template #option="slotProps">
+          <div class="p-dropdown-car-option">
+            <img
+              :alt="slotProps.option.name"
+              :src="'img/theme-icon/' + slotProps.option.name + '.png'"
+            />
+            <span>{{slotProps.option.name}}</span>
+          </div>
+        </template>
+      </Dropdown>
+    </div>
+    <div>
+      <Dropdown
+        v-model="selectedCountry"
+        :options="countries"
+        :filter="true"
+        optionLabel="UlkeAdi"
+        v-on:input="onCountrySelected"
+        placeholder="Select a Country"
+      />
+    </div>
+    <div>
+      <Dropdown
+        v-model="selectedCity"
+        :options="cities"
+        :filter="true"
+        optionLabel="sehirAdi"
+        v-on:input="onCitySelected"
+        placeholder="Select a City"
+      />
+    </div>
+
+    <div>
+      <Dropdown
+        v-model="selectedDistrict"
+        :options="districts"
+        :filter="true"
+        optionLabel="IlceAdi"
+        v-on:input="onDistrictSelected"
+        placeholder="Select a District"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import COUNTRIES from "../assets/countries.json";
+import TR_CITIES from "../assets/cities.json";
+import { Country, City, District } from "./MetaType";
+import { ApiClient } from "../ApiClient";
 
 @Component
 export default class SideBarContent extends Vue {
   public visibleLeft = false;
   public selectedTheme = null;
-
+  public selectedCountry = null;
+  public selectedCity = null;
+  public selectedDistrict = null;
+  public countries = COUNTRIES;
+  public cities: City[] = [];
+  public districts: District[] = [];
   public themes = [
     { name: "luna-amber" },
     { name: "luna-blue" },
@@ -68,12 +100,45 @@ export default class SideBarContent extends Vue {
     { name: "vela-purple" },
     { name: "vela-teal" }
   ];
+  public _api: ApiClient;
 
-  onInput(e: { name: string }) {
+  constructor() {
+    super();
+    this._api = new ApiClient();
+  }
+
+  onThemeSelected(e: { name: string }) {
     if (e) {
       const file = document.getElementById("theme-link") as HTMLLinkElement;
       file.href = `css/${e.name}/theme.css`;
     }
+    console.log("countries: ", this.countries);
+  }
+
+  onCountrySelected(c: Country) {
+    // cache turkey
+    if (c.UlkeAdi == "TURKIYE") {
+      this.cities = TR_CITIES;
+    } else {
+      this._api = new ApiClient();
+      this._api.getCities4Country(c.UlkeID, e => {
+        this.cities = e;
+      });
+    }
+  }
+
+  onCitySelected(c: City) {
+    this._api = new ApiClient();
+    this._api.getDistricts4City(c.sehirID, e => {
+      this.districts = e;
+    });
+  }
+
+  onDistrictSelected(d: District) {
+    this._api = new ApiClient();
+    this._api.getTimes4District(d.IlceID, e => {
+      this.districts = e;
+    });
   }
 }
 </script>
