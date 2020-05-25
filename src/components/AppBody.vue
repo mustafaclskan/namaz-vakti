@@ -1,18 +1,15 @@
 <template>
-  <Card>
-    <template slot="title">Namaz Vakti</template>
-    <template slot="content">
-      <Sidebar :visible.sync="visibleLeft" :modal="false" class="p-sidebar-lg">
-        <SideBarContent />
-      </Sidebar>
-      <Button icon="pi pi-arrow-right" @click="visibleLeft = !visibleLeft" />
-      <div>asd asd ada sdasd</div>
-    </template>
-  </Card>
+  <div>
+    <Sidebar :visible.sync="visibleLeft" class="p-sidebar-lg">
+      <SideBarContent v-on:curr-times-updated="currTimes = $event" />
+    </Sidebar>
+    <Button icon="pi pi-arrow-right" @click="visibleLeft = !visibleLeft" />
+    <div>{{currTimes}}</div>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import SideBarContent from "./SideBarContent.vue";
 
 @Component({
@@ -22,6 +19,7 @@ import SideBarContent from "./SideBarContent.vue";
 })
 export default class AppBody extends Vue {
   public visibleLeft = true;
+  public currTimes = null;
 }
 </script>
 

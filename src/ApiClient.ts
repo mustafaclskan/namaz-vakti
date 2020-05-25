@@ -20,7 +20,6 @@ export class ApiClient {
   private httpGet(url: string, cb: (e: any) => void) {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
-      console.log(xmlhttp.getAllResponseHeaders());
       if (this.readyState == 4 && this.status == 200) {
         cb(JSON.parse(this.responseText));
       }

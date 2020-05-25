@@ -7,11 +7,13 @@ import Sidebar from 'primevue/sidebar';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 import Card from 'primevue/card';
+import Fieldset from 'primevue/fieldset';
 
 Vue.component('Sidebar', Sidebar);
 Vue.component('Button', Button);
 Vue.component('Dropdown', Dropdown);
 Vue.component('Card', Card);
+Vue.component('Fieldset', Fieldset);
 
 Vue.config.productionTip = false
 
