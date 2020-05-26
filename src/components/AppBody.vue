@@ -3,14 +3,16 @@
     <Sidebar :visible.sync="visibleLeft" class="p-sidebar-lg">
       <SideBarContent v-on:curr-times-updated="currTimes = $event" />
     </Sidebar>
-    <Button icon="pi pi-arrow-right" @click="visibleLeft = !visibleLeft" />
+    <Button icon="pi pi-ellipsis-v" @click="visibleLeft = !visibleLeft" />
+
     <div>{{currTimes}}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import SideBarContent from "./SideBarContent.vue";
+import { TimesData } from "./MetaType";
 
 @Component({
   components: {
@@ -19,7 +21,7 @@ import SideBarContent from "./SideBarContent.vue";
 })
 export default class AppBody extends Vue {
   public visibleLeft = true;
-  public currTimes = null;
+  public currTimes: TimesData[] = [];
 }
 </script>
 

@@ -5,7 +5,6 @@ export class SettingService {
   private static QUEUE_KEY = 'timesQueue';
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
-  private static LOCATIONS_KEY = 'locations';
 
   static setTheme(theme: string) {
     const file = document.getElementById('theme-link') as HTMLLinkElement;
@@ -25,88 +24,73 @@ export class SettingService {
     return localStorage.getItem(this.THEME_KEY)
   }
 
+  // needs change
   static getSavedLocations(): string[] {
-    const locs = localStorage.getItem(this.LOCATIONS_KEY);
+    const locs = localStorage.getItem(this.QUEUE_KEY);
     if (locs) {
-      return locs.split(',');
+      const arr = JSON.parse(locs) as any[];
+      const s: string[] = [];
+      // keys are IDS for data, values are human readable location names
+      for (let i = 0; i < arr.length; i++) {
+        s.push(Object.values(arr[i])[0] as string);
+      }
+      return s;
     } else {
       return [];
     }
   }
 
+  // needs change
   static getData4SavedLocation(loc: string): TimesData | null {
-    const locs = localStorage.getItem(this.LOCATIONS_KEY);
-    let idx = -1;
+    const locs = localStorage.getItem(this.QUEUE_KEY);
     if (locs != null) {
-      const arr = locs.split(',');
+      const arr = JSON.parse(locs) as any[];
       for (let i = 0; i < arr.length; i++) {
-        if (arr[i] == loc) {
-          idx = i;
-          break;
+        if (Object.values(arr[i])[0] == loc) {
+          const data = localStorage.getItem(Object.keys(arr[i])[0]);
+          if (data != null) {
+            return JSON.parse(data) as TimesData;
+          }
         }
-      }
-    }
-    const ids = localStorage.getItem(this.QUEUE_KEY);
-    if (idx > -1 && ids != null) {
-      const arr2 = ids.split(',');
-      const data = localStorage.getItem(arr2[idx]);
-      if (data != null) {
-        return JSON.parse(data) as TimesData;
       }
     }
     return null;
   }
 
-  static addLocation(loc: string): void {
-    let locs = localStorage.getItem(this.LOCATIONS_KEY);
-    SettingService.setCurrLocation(loc);
-    // set locations
-    if (locs) {
-      const arr = locs.split(',');
+  static addTimesData(key: string, data: any, locName: string) {
+    localStorage.setItem(key, JSON.stringify(data));
+    let d = localStorage.getItem(this.QUEUE_KEY);
+    SettingService.setCurrLocation(locName);
+    // insert item to the queue
+    if (d != null) {
+      const arr = JSON.parse(d) as any[];
       for (let i = 0; i < arr.length; i++) {
-        // do not add existing location
-        if (arr[i] == loc) {
+        // do not add redundant data
+        if (Object.keys(arr[i])[0] == key) {
           return;
         }
       }
-      localStorage.setItem(this.LOCATIONS_KEY, locs + ',' + loc);
+      const obj = {} as any;
+      obj[key] = locName;
+      arr.push(obj);
+      localStorage.setItem(this.QUEUE_KEY, JSON.stringify(arr));
     } else {
-      localStorage.setItem(this.LOCATIONS_KEY, loc);
+      localStorage.setItem(this.QUEUE_KEY, `[{"${key}":"${locName}"}]`);
     }
 
-    locs = localStorage.getItem(this.LOCATIONS_KEY);
-    // check the queue size
-    if (locs) {
-      const arr = locs.split(',');
-      if (arr.length > this.QUEUE_LIMIT) {
-        arr.shift();
-        localStorage.setItem(this.LOCATIONS_KEY, arr.join(','));
-      }
-    }
-  }
-
-  static addTimesData(key: string, data: any) {
-    localStorage.setItem(key, JSON.stringify(data));
-    let d = localStorage.getItem(this.QUEUE_KEY);
-    // update queue of items
-    if (d != null) {
-      const arr = d.split(',');
-      arr.push(key);
-      localStorage.setItem(this.QUEUE_KEY, arr.join(','));
-    } else {
-      localStorage.setItem(this.QUEUE_KEY, key);
-    }
-
+    // remove element if queue is full
     d = localStorage.getItem(this.QUEUE_KEY);
-    if (d != null) {
-      const arr = d.split(',');
-      if (arr.length > this.QUEUE_LIMIT) {
-        const elem2remove = arr.shift();
-        localStorage.setItem(this.QUEUE_KEY, arr.join(','));
-        if (elem2remove != undefined) {
-          localStorage.removeItem(elem2remove);
-        }
-      }
+    if (d == null) {
+      return;
+    }
+    const arr = JSON.parse(d) as any[];
+    if (arr.length <= this.QUEUE_LIMIT) {
+      return;
+    }
+    const elem2remove = arr.shift();
+    localStorage.setItem(this.QUEUE_KEY, JSON.stringify(arr));
+    if (elem2remove != undefined) {
+      localStorage.removeItem(Object.keys(elem2remove)[0]);
     }
   }
 

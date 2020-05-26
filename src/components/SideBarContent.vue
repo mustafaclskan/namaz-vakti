@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import COUNTRIES from "../assets/countries.json";
 import TR_CITIES from "../assets/cities.json";
 import { Country, City, District } from "./MetaType";
@@ -171,10 +171,9 @@ export default class SideBarContent extends Vue {
           this.selectedDistrict.IlceID +
           "_" +
           e[0].MiladiTarihKisa;
-        SettingService.addLocation(d.IlceAdi);
+        SettingService.addTimesData(id, e, d.IlceAdi);
         this.savedLocations = SettingService.getSavedLocations();
         this.currLocation = SettingService.getCurrLocation();
-        SettingService.addTimesData(id, e);
       }
 
       this.$emit("curr-times-updated", e);
