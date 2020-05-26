@@ -6,6 +6,13 @@ export class SettingService {
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
 
+  static setInitialTheme() {
+    const t = SettingService.getCurrTheme();
+    if (t) {
+      SettingService.setTheme(t);
+    }
+  }
+
   static setTheme(theme: string) {
     const file = document.getElementById('theme-link') as HTMLLinkElement;
     file.href = `https://primefaces.org/primevue/showcase/themes/${theme}/theme.css`;
@@ -94,5 +101,26 @@ export class SettingService {
     }
   }
 
+  static getTimes4CurrentLocation(): TimesData | null {
+    const currLoc = localStorage.getItem(this.CURR_LOC_KEY);
+    if (currLoc == null) {
+      return null;
+    }
+    const d = localStorage.getItem(this.QUEUE_KEY);
+    if (d == null) {
+      return null;
+    }
+    const arr = JSON.parse(d) as any[];
+    for (let i = arr.length - 1; i > -1; i--) {
+      if (Object.values(arr[i])[0] == currLoc) {
+        const obj = localStorage.getItem(Object.keys(arr[i])[0])
+        if (obj == null) {
+          return null;
+        }
+        return JSON.parse(obj) as TimesData;
+      }
+    }
+    return null;
+  }
 
 }
