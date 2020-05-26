@@ -19,7 +19,7 @@ Vue.config.productionTip = false
 
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
-SettingService.setCSS('saga-blue');
+SettingService.setTheme('saga-blue');
 
 new Vue({
   render: h => h(App),

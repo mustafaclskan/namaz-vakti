@@ -15,3 +15,18 @@ export interface District {
   IlceAdiEn: string;
   IlceID: string;
 }
+
+export interface TimesData {
+  MiladiTarihKisa: string;
+  MiladiTarihUzun: string;
+  HicriTarihKisa: string;
+  HicriTarihUzun: string;
+  Imsak: string;
+  Gunes: string;
+  Ogle: string;
+  Ikindi: string;
+  Aksam: string;
+  Yatsi: string;
+  KibleAcisi: string;
+  KibleSaati: string;
+}

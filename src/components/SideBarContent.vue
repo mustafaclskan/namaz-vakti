@@ -39,32 +39,32 @@
     <Fieldset legend="Settings" :toggleable="true" class="m-5">
       <Dropdown
         class="m-5"
-        v-model="selectedTheme"
+        v-model="currTheme"
         :options="themes"
         v-on:input="onThemeSelected"
-        optionLabel="name"
         :filter="true"
         placeholder="Select a theme"
-        :showClear="true"
       >
+        <template #value="slotProps">
+          <div class="p-dropdown-imaged-option">
+            <img :alt="slotProps.value" :src="'img/theme-icon/' + slotProps.value + '.png'" />
+            <span>{{slotProps.value}}</span>
+          </div>
+        </template>
         <template #option="slotProps">
           <div class="p-dropdown-imaged-option">
-            <img
-              :alt="slotProps.option.name"
-              :src="'img/theme-icon/' + slotProps.option.name + '.png'"
-            />
-            <span>{{slotProps.option.name}}</span>
+            <img :alt="slotProps.option" :src="'img/theme-icon/' + slotProps.option + '.png'" />
+            <span>{{slotProps.option}}</span>
           </div>
         </template>
       </Dropdown>
       <br />
       <Dropdown
         class="m-5"
-        v-model="selectedCountry"
-        :options="countries"
+        v-model="currLocation"
+        :options="savedLocations"
         :filter="true"
-        optionLabel="UlkeAdi"
-        v-on:input="onCountrySelected"
+        v-on:input="onSavedLocationSelected"
         placeholder="Change location"
       />
     </Fieldset>
@@ -77,55 +77,60 @@ import COUNTRIES from "../assets/countries.json";
 import TR_CITIES from "../assets/cities.json";
 import { Country, City, District } from "./MetaType";
 import { ApiClient } from "../ApiClient";
+import { SettingService } from "../SettingService";
 
 @Component
 export default class SideBarContent extends Vue {
-  public visibleLeft = false;
-  public selectedTheme = null;
-  public selectedCountry = null;
-  public selectedCity = null;
-  public selectedDistrict = null;
-  public countries = COUNTRIES;
-  public cities: City[] = [];
-  public districts: District[] = [];
-  public themes = [
-    { name: "luna-amber" },
-    { name: "luna-blue" },
-    { name: "luna-green" },
-    { name: "luna-pink" },
-    { name: "nova-colored" },
-    { name: "nova-dark" },
-    { name: "nova-light" },
-    { name: "nova-vue" },
-    { name: "rhea" },
-    { name: "saga-blue" },
-    { name: "saga-cyan" },
-    { name: "saga-deeppurple" },
-    { name: "saga-green" },
-    { name: "saga-indigo" },
-    { name: "saga-orange" },
-    { name: "saga-purple" },
-    { name: "saga-teal" },
-    { name: "vela-blue" },
-    { name: "vela-cyan" },
-    { name: "vela-deeppurple" },
-    { name: "vela-green" },
-    { name: "vela-indigo" },
-    { name: "vela-orange" },
-    { name: "vela-purple" },
-    { name: "vela-teal" }
+  private visibleLeft = false;
+  private selectedCountry: Country | null = null;
+  private selectedCity: City | null = null;
+  private selectedDistrict: District | null = null;
+  private savedLocations: string[] = [];
+  private countries = COUNTRIES;
+  private cities: City[] = [];
+  private districts: District[] = [];
+  private themes = [
+    "luna-amber",
+    "luna-blue",
+    "luna-green",
+    "luna-pink",
+    "nova-colored",
+    "nova-dark",
+    "nova-light",
+    "nova-vue",
+    "rhea",
+    "saga-blue",
+    "saga-cyan",
+    "saga-deeppurple",
+    "saga-green",
+    "saga-indigo",
+    "saga-orange",
+    "saga-purple",
+    "saga-teal",
+    "vela-blue",
+    "vela-cyan",
+    "vela-deeppurple",
+    "vela-green",
+    "vela-indigo",
+    "vela-orange",
+    "vela-purple",
+    "vela-teal"
   ];
-  public _api: ApiClient = new ApiClient();
+  private _api: ApiClient = new ApiClient();
+  private currLocation: string | null = "";
+  private currTheme: string | null = "";
 
   // special life-cycle hook for vue
   created() {
     this._api = new ApiClient();
+    this.savedLocations = SettingService.getSavedLocations();
+    this.currLocation = SettingService.getCurrLocation();
+    this.currTheme = SettingService.getCurrTheme();
   }
 
-  onThemeSelected(e: { name: string }) {
+  onThemeSelected(e: string) {
     if (e) {
-      const file = document.getElementById("theme-link") as HTMLLinkElement;
-      file.href = `css/${e.name}/theme.css`;
+      SettingService.setTheme(e);
     }
   }
 
@@ -133,10 +138,14 @@ export default class SideBarContent extends Vue {
     // Turkey is cached
     if (c.UlkeAdi == "TURKIYE") {
       this.cities = TR_CITIES;
+      this.selectedCity = null;
+      this.selectedDistrict = null;
     } else {
       // this._api = new ApiClient();
       this._api.getCities4Country(c.UlkeID, e => {
         this.cities = e;
+        this.selectedCity = null;
+        this.selectedDistrict = null;
       });
     }
   }
@@ -149,10 +158,32 @@ export default class SideBarContent extends Vue {
 
   onDistrictSelected(d: District) {
     this._api.getTimes4District(d.IlceID, e => {
-      // this.districts = e;
-      console.log("times: ", e);
+      if (
+        this.selectedCountry != null &&
+        this.selectedCity != null &&
+        this.selectedDistrict != null
+      ) {
+        const id =
+          this.selectedCountry.UlkeID +
+          "_" +
+          this.selectedCity.sehirID +
+          "_" +
+          this.selectedDistrict.IlceID +
+          "_" +
+          e[0].MiladiTarihKisa;
+        SettingService.addLocation(d.IlceAdi);
+        this.savedLocations = SettingService.getSavedLocations();
+        this.currLocation = SettingService.getCurrLocation();
+        SettingService.addTimesData(id, e);
+      }
+
       this.$emit("curr-times-updated", e);
     });
+  }
+
+  onSavedLocationSelected(e: string) {
+    SettingService.setCurrLocation(e);
+    this.$emit("curr-times-updated", SettingService.getData4SavedLocation(e));
   }
 }
 </script>
