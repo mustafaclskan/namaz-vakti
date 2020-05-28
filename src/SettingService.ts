@@ -15,7 +15,7 @@ export class SettingService {
 
   static setTheme(theme: string) {
     const file = document.getElementById('theme-link') as HTMLLinkElement;
-    file.href = `https://primefaces.org/primevue/showcase/themes/${theme}/theme.css`;
+    // file.href = `https://primefaces.org/primevue/showcase/themes/${theme}/theme.css`;
     localStorage.setItem(this.THEME_KEY, theme);
   }
 

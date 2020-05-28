@@ -1,5 +1,5 @@
 <template>
-  <Panel>
+  <!-- <Panel>
     <template #header>
       <Button icon="pi pi-ellipsis-v" @click="visibleLeft = !visibleLeft" />
       <h3 class="main-container">{{currLoc}}</h3>
@@ -35,7 +35,8 @@
         <h2 class="normal-font">{{currPray}} vaktine kalan süre {{remainingTime}}</h2>
       </div>
     </div>
-  </Panel>
+  </Panel>-->
+  <div></div>
 </template>
 
 <script lang="ts">
