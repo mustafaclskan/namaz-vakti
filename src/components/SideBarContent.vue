@@ -150,13 +150,7 @@ export default class SideBarContent extends Vue {
         this.savedLocations = SettingService.getSavedLocations();
         this.currLocation = SettingService.getCurrLocation();
         if (this.currLocation) {
-          this.$emit("curr-times-updated", e);
-          console.log(
-            "set data for curr location: ",
-            this.currLocation,
-            " data: ",
-            e
-          );
+          this.$emit("curr-times-updated", e[0]);
         }
       }
     });

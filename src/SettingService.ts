@@ -92,7 +92,7 @@ export class SettingService {
     }
   }
 
-  static getTimes4CurrentLocation(): TimesData | null {
+  static getTimes4CurrentLocation(): TimesData[] | null {
     const currLoc = localStorage.getItem(this.CURR_LOC_KEY);
     if (currLoc == null) {
       return null;
@@ -108,7 +108,7 @@ export class SettingService {
         if (obj == null) {
           return null;
         }
-        return JSON.parse(obj) as TimesData;
+        return JSON.parse(obj) as TimesData[];
       }
     }
     return null;
