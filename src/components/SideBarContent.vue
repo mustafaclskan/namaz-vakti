@@ -1,73 +1,64 @@
 <template>
   <div>
-    <h1 style="fontWeight:normal">Namaz Vakti 0.0.0</h1>
-
-    <Fieldset legend="Add location" :toggleable="true" class="m-5">
-      <Dropdown
+    <v-card class="m-5">
+      <v-card-title>Yeni Konum Ekle</v-card-title>
+      <v-autocomplete
         class="m-5"
         v-model="selectedCountry"
-        :options="countries"
-        :filter="true"
-        optionLabel="UlkeAdi"
+        :items="countries"
+        :filter="filterByTxt"
+        item-text="UlkeAdi"
         v-on:input="onCountrySelected"
+        label="Select a Country"
         placeholder="Select a Country"
       />
       <br />
-      <Dropdown
+      <v-autocomplete
         class="m-5"
         v-model="selectedCity"
         :disabled="selectedCountry == null"
-        :options="cities"
-        :filter="true"
-        optionLabel="sehirAdi"
+        :items="cities"
+        :filter="filterByTxt"
+        item-text="sehirAdi"
         v-on:input="onCitySelected"
+        label="Select a City"
         placeholder="Select a City"
       />
       <br />
-      <Dropdown
+      <v-autocomplete
         class="m-5"
         v-model="selectedDistrict"
         :disabled="selectedCity == null"
-        :options="districts"
-        :filter="true"
-        optionLabel="IlceAdi"
+        :items="districts"
+        :filter="filterByTxt"
+        item-text="IlceAdi"
         v-on:input="onDistrictSelected"
+        label="Select a District"
         placeholder="Select a District"
       />
-    </Fieldset>
-
-    <Fieldset legend="Settings" :toggleable="true" class="m-5">
-      <Dropdown
+    </v-card>
+    <v-card class="m-5">
+      <v-card-title>Ayarlar</v-card-title>
+      <v-autocomplete
         class="m-5"
         v-model="currTheme"
-        :options="themes"
+        :items="themes"
         v-on:input="onThemeSelected"
-        :filter="true"
+        :filter="filterByTxt"
+        label="Select a theme"
         placeholder="Select a theme"
-      >
-        <template #value="slotProps">
-          <div class="p-dropdown-imaged-option">
-            <img :alt="slotProps.value" :src="'img/theme-icon/' + slotProps.value + '.png'" />
-            <span>{{slotProps.value}}</span>
-          </div>
-        </template>
-        <template #option="slotProps">
-          <div class="p-dropdown-imaged-option">
-            <img :alt="slotProps.option" :src="'img/theme-icon/' + slotProps.option + '.png'" />
-            <span>{{slotProps.option}}</span>
-          </div>
-        </template>
-      </Dropdown>
+      />
       <br />
-      <Dropdown
+      <v-autocomplete
         class="m-5"
         v-model="currLocation"
-        :options="savedLocations"
-        :filter="true"
+        :items="savedLocations"
+        :filter="filterByTxt"
         v-on:input="onSavedLocationSelected"
+        label="Change location"
         placeholder="Change location"
       />
-    </Fieldset>
+    </v-card>
   </div>
 </template>
 
@@ -134,15 +125,22 @@ export default class SideBarContent extends Vue {
     }
   }
 
-  onCountrySelected(c: Country) {
+  onCountrySelected(c: string) {
+    console.log(" on country selected");
     // Turkey is cached
-    if (c.UlkeAdi == "TURKIYE") {
+    if (c == "TURKIYE") {
       this.cities = TR_CITIES;
       this.selectedCity = null;
       this.selectedDistrict = null;
     } else {
-      // this._api = new ApiClient();
-      this._api.getCities4Country(c.UlkeID, e => {
+      const curr: Country | undefined = this.countries.find(
+        x => x.UlkeAdi == c
+      );
+      if (!curr) {
+        console.log("country not found: ", c);
+        return;
+      }
+      this._api.getCities4Country(curr.UlkeID, e => {
         this.cities = e;
         this.selectedCity = null;
         this.selectedDistrict = null;
@@ -150,8 +148,14 @@ export default class SideBarContent extends Vue {
     }
   }
 
-  onCitySelected(c: City) {
-    this._api.getDistricts4City(c.sehirID, e => {
+  onCitySelected(c: string) {
+    const curr: City | undefined = this.cities.find(x => x.sehirAdi == c);
+    if (!curr) {
+      console.log("city not found: ", c);
+      return;
+    }
+
+    this._api.getDistricts4City(curr.sehirID, e => {
       this.districts = e;
     });
   }
@@ -184,23 +188,15 @@ export default class SideBarContent extends Vue {
     SettingService.setCurrLocation(e);
     this.$emit("curr-times-updated", SettingService.getData4SavedLocation(e));
   }
+
+  filterByTxt(item: object, queryText: string, itemText: string): boolean {
+    return itemText.toLowerCase().includes(queryText.toLowerCase());
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.p-dropdown-imaged-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  img {
-    margin-right: 0.5rem;
-    width: 24px;
-  }
-  span {
-    line-height: 1;
-  }
-}
 .m-5 {
   margin: 5px;
 }
