@@ -6,16 +6,7 @@ export class SettingService {
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
 
-  static setInitialTheme() {
-    const t = SettingService.getCurrTheme();
-    if (t) {
-      SettingService.setTheme(t);
-    }
-  }
-
-  static setTheme(theme: string) {
-    const file = document.getElementById('theme-link') as HTMLLinkElement;
-    // file.href = `https://primefaces.org/primevue/showcase/themes/${theme}/theme.css`;
+  static saveTheme(theme: string) {
     localStorage.setItem(this.THEME_KEY, theme);
   }
 

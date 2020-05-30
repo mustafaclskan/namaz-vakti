@@ -1,22 +1,56 @@
 <template>
-  <v-app id="inspire">
+  <v-app>
     <v-navigation-drawer v-model="isSideBarOpen" app>
       <SideBarContent v-on:curr-times-updated="currTimes = $event" />
     </v-navigation-drawer>
 
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="isSideBarOpen = !isSideBarOpen"></v-app-bar-nav-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>Namaz vakti</v-toolbar-title>
     </v-app-bar>
 
     <v-content>
-      <div v-if="currTimes && currTimes[currTimeIdx]" class="txt-center">
+      <v-list :flat="true" v-if="currTimes && currTimes[currTimeIdx]" class>
+        <v-list-item-group v-model="currPrayIdx">
+          <v-list-item>
+            <h2 class="normal-font">{{currTimes[currTimeIdx].MiladiTarihUzun}}</h2>
+          </v-list-item>
+          <v-list-item>
+            <h2 class="normal-font">{{currTimes[currTimeIdx].MiladiTarihUzun}}</h2>
+          </v-list-item>
+          <v-list-item>
+            <h2 class="normal-font">{{currTimes[currTimeIdx].MiladiTarihUzun}}</h2>
+          </v-list-item>
+          <v-list-item>
+            <h2 class="normal-font">{{currTimes[currTimeIdx].MiladiTarihUzun}}</h2>
+          </v-list-item>
+          <v-list-item>
+            <h2 class="normal-font">{{currTimes[currTimeIdx].MiladiTarihUzun}}</h2>
+          </v-list-item>
+          <v-list-item>
+            <h2 class="normal-font">{{currTimes[currTimeIdx].MiladiTarihUzun}}</h2>
+          </v-list-item>
+
+          <!-- <v-list-item-content>{{currTimes[currTimeIdx].HicriTarihUzun}}</v-list-item-content>
+            <v-list-item-content>
+              <h1 class="normal-font primary--text">İmsak: {{currTimes[currTimeIdx].Imsak}}</h1>
+            </v-list-item-content>
+            <v-list-item-content>
+              <h1 class="normal-font">Güneş: {{currTimes[currTimeIdx].Gunes}}</h1>
+            </v-list-item-content>
+            <v-list-item-content></v-list-item-content>
+            <v-list-item-content></v-list-item-content>
+          <v-list-item-content></v-list-item-content>-->
+        </v-list-item-group>
+      </v-list>
+      <!-- <v-card v-if="currTimes && currTimes[currTimeIdx]" class="txt-center m-5">
         <div>
           <h2 class="normal-font">{{currTimes[currTimeIdx].MiladiTarihUzun}}</h2>
         </div>
         <div>{{currTimes[currTimeIdx].HicriTarihUzun}}</div>
-        <div>
-          <h1 class="normal-font">İmsak: {{currTimes[currTimeIdx].Imsak}}</h1>
+        <v-divider></v-divider>
+        <div color="primary">
+          <h1 class="normal-font primary--text">İmsak: {{currTimes[currTimeIdx].Imsak}}</h1>
         </div>
         <div>
           <h1 class="normal-font">Güneş: {{currTimes[currTimeIdx].Gunes}}</h1>
@@ -33,14 +67,12 @@
         <div>
           <h1 class="normal-font">Yatsı: {{currTimes[currTimeIdx].Yatsi}}</h1>
         </div>
+        <v-divider></v-divider>
         <div>
           <h2 class="normal-font">{{currPray}} vaktine kalan süre {{remainingTime}}</h2>
         </div>
-      </div>
+      </v-card>-->
     </v-content>
-    <v-footer color="primary" app>
-      <span class="white--text">&copy; 2019</span>
-    </v-footer>
   </v-app>
 </template>
 
@@ -61,7 +93,9 @@ export default class App extends Vue {
   private currTimeIdx = 0;
   private currLoc: string | null = "";
   private currPray = "Akşam";
+  private currPrayIdx = 3;
   private remainingTime = "1:38:21";
+  private timeItems = [""];
 
   created() {
     this.currTimes = SettingService.getTimes4CurrentLocation();

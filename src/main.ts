@@ -7,7 +7,6 @@ import { SettingService } from './SettingService';
 Vue.config.productionTip = false
 
 import vuetify from './plugins/vuetify';
-SettingService.setInitialTheme();
 
 new Vue({
   vuetify,
