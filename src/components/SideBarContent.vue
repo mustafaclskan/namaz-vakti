@@ -41,8 +41,19 @@
       />
     </v-card>
     <v-card class="m-5">
-      <v-card-title>Ayarlar</v-card-title>
-      <v-autocomplete
+      <v-card-title>{{$t('settings')}}</v-card-title>
+      <v-select
+        class="m-5"
+        v-model="currLang"
+        :items="langs"
+        item-text="txt"
+        v-on:input="onLangSelected"
+        :filter="filterByTxt"
+        label="Select language"
+        placeholder="Select language"
+        return-object
+      />
+      <v-select
         class="m-5"
         v-model="currTheme"
         :items="themes"
@@ -84,9 +95,14 @@ export default class SideBarContent extends Vue {
   private cities: City[] = [];
   private districts: District[] = [];
   private themes = ["light", "dark"];
+  private langs = [
+    { txt: "English", code: "en" },
+    { txt: "Türkçe", code: "tr" }
+  ];
   private _api: ApiClient = new ApiClient();
   private currLocation: string | null = "";
   private currTheme: string | null = "";
+  private currLang: string | null = "";
 
   // special life-cycle hook for vue
   created() {
@@ -94,6 +110,7 @@ export default class SideBarContent extends Vue {
     this.savedLocations = SettingService.getSavedLocations();
     this.currLocation = SettingService.getCurrLocation();
     this.currTheme = SettingService.getCurrTheme();
+    this.currLang = SettingService.getCurrLang() || "tr";
     this.$vuetify.theme.dark =
       this.currTheme === "dark" || this.currTheme === "koyu";
   }
@@ -106,6 +123,13 @@ export default class SideBarContent extends Vue {
       // }
       SettingService.saveTheme(e);
       this.$vuetify.theme.dark = e === "dark" || e === "koyu";
+    }
+  }
+
+  onLangSelected(e: { txt: string; code: string }) {
+    if (e) {
+      SettingService.saveLang(e.code);
+      this.$i18n.locale = e.code;
     }
   }
 
@@ -150,7 +174,7 @@ export default class SideBarContent extends Vue {
         this.savedLocations = SettingService.getSavedLocations();
         this.currLocation = SettingService.getCurrLocation();
         if (this.currLocation) {
-          this.$emit("curr-times-updated", e[0]);
+          this.$emit("curr-times-updated", e);
         }
       }
     });

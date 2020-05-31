@@ -5,21 +5,30 @@ export class SettingService {
   private static QUEUE_KEY = 'timesQueue';
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
+  private static CURR_LANG_KEY = 'currLoc';
 
   static saveTheme(theme: string) {
     localStorage.setItem(this.THEME_KEY, theme);
   }
 
+  static saveLang(theme: string) {
+    localStorage.setItem(this.CURR_LANG_KEY, theme);
+  }
+
+  static getCurrLang(): string | null {
+    return localStorage.getItem(this.CURR_LANG_KEY);
+  }
+
   static getCurrLocation(): string | null {
-    return localStorage.getItem(this.CURR_LOC_KEY)
+    return localStorage.getItem(this.CURR_LOC_KEY);
   }
 
   static setCurrLocation(loc: string) {
-    localStorage.setItem(this.CURR_LOC_KEY, loc)
+    localStorage.setItem(this.CURR_LOC_KEY, loc);
   }
 
   static getCurrTheme(): string | null {
-    return localStorage.getItem(this.THEME_KEY)
+    return localStorage.getItem(this.THEME_KEY);
   }
 
   // needs change
