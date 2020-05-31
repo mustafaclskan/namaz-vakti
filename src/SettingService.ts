@@ -1,7 +1,7 @@
 import { TimesData } from './components/MetaType';
 
 export class SettingService {
-  private static QUEUE_LIMIT = 3;
+  private static QUEUE_LIMIT = 33;
   private static QUEUE_KEY = 'timesQueue';
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';

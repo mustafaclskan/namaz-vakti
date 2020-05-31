@@ -6,7 +6,7 @@
 
     <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="isSideBarOpen = !isSideBarOpen"></v-app-bar-nav-icon>
-      <v-toolbar-title>Namaz vakti</v-toolbar-title>
+      <v-toolbar-title>{{currLoc}}</v-toolbar-title>
     </v-app-bar>
 
     <v-content>
@@ -25,9 +25,14 @@
 
           <v-list-item v-for="(item, i) in timeItems" :key="i">
             <v-list-item-content>
-              <h1
-                v-bind:class="{ 'normal-font': i != currPrayIdx }"
-              >{{item.pre}} {{currTimes[currDayIdx][item.key]}}</h1>
+              <h1 v-bind:class="{ 'normal-font': i != currPrayIdx }">
+                {{item.pre}} {{currTimes[currDayIdx][item.key]}}
+                <v-icon
+                  v-if="i == currPrayIdx"
+                  color="primary"
+                  style="vertical-align: initial"
+                >mdi-clock</v-icon>
+              </h1>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -99,11 +104,11 @@ export default class App extends Vue {
         this.timeItems[this.currPrayIdx].key
       ] as string
     );
-    if (totalSec < totalSec2) {
+    if (totalSec > totalSec2) {
       this.updateCurrPrayIdx();
       return;
     }
-    const secDiff = totalSec - totalSec2;
+    const secDiff = totalSec2 - totalSec;
     this.remainingTime = this.seconds2str(secDiff);
   }
 
