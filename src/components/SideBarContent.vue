@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="m-5">
-      <v-card-title>Yeni Konum Ekle</v-card-title>
+      <v-card-title>{{$t('addNewLocation')}}</v-card-title>
       <v-autocomplete
         class="m-5"
         v-model="selectedCountry"
@@ -9,8 +9,8 @@
         :filter="filterByTxt"
         item-text="UlkeAdi"
         v-on:input="onCountrySelected"
-        label="Select a Country"
-        placeholder="Select a Country"
+        :label="$t('selectCountry')"
+        :placeholder="$t('selectCountry')"
         return-object
       />
       <br />
@@ -22,8 +22,8 @@
         :filter="filterByTxt"
         item-text="sehirAdi"
         v-on:input="onCitySelected"
-        label="Select a City"
-        placeholder="Select a City"
+        :label="$t('selectCity')"
+        :placeholder="$t('selectCity')"
         return-object
       />
       <br />
@@ -35,8 +35,8 @@
         :filter="filterByTxt"
         item-text="IlceAdi"
         v-on:input="onDistrictSelected"
-        label="Select a District"
-        placeholder="Select a District"
+        :label="$t('selectDistrict')"
+        :placeholder="$t('selectDistrict')"
         return-object
       />
     </v-card>
@@ -49,8 +49,8 @@
         item-text="txt"
         v-on:input="onLangSelected"
         :filter="filterByTxt"
-        label="Select language"
-        placeholder="Select language"
+        :label="$t('selectLanguage')"
+        :placeholder="$t('selectLanguage')"
         return-object
       />
       <v-select
@@ -59,8 +59,8 @@
         :items="themes"
         v-on:input="onThemeSelected"
         :filter="filterByTxt"
-        label="Select a theme"
-        placeholder="Select a theme"
+        :label="$t('selectTheme')"
+        :placeholder="$t('selectTheme')"
       />
       <br />
       <v-autocomplete
@@ -69,8 +69,8 @@
         :items="savedLocations"
         :filter="filterByTxt"
         v-on:input="onSavedLocationSelected"
-        label="Change location"
-        placeholder="Change location"
+        :label="$t('changeLocation')"
+        :placeholder="$t('changeLocation')"
       />
     </v-card>
   </div>

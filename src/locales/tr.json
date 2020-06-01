@@ -1,3 +1,10 @@
 {
-  "settings": "Ayarlar"
+  "settings": "Ayarlar",
+  "addNewLocation": "Yeni Konum Ekle",
+  "selectCountry": "Ülke seçin",
+  "selectCity": "Şehir/eyalet seçin",
+  "selectDistrict": "İlçe/bölge seçin",
+  "selectLanguage": "Dil seçin",
+  "selectTheme": "Tema seçin",
+  "changeLocation": "Konum değiştirin"
 }

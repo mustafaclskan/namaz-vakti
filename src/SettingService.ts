@@ -5,7 +5,7 @@ export class SettingService {
   private static QUEUE_KEY = 'timesQueue';
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
-  private static CURR_LANG_KEY = 'currLoc';
+  private static CURR_LANG_KEY = 'currLang';
 
   static saveTheme(theme: string) {
     localStorage.setItem(this.THEME_KEY, theme);

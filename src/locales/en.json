@@ -1,3 +1,10 @@
 {
-  "settings": "Settings"
+  "settings": "Settings",
+  "addNewLocation": "Add New Location",
+  "selectCountry": "Select a Country",
+  "selectCity": "Select a state/city",
+  "selectDistrict": "Select a district",
+  "selectLanguage": "Select a language",
+  "selectTheme": "Select a theme",
+  "changeLocation": "Change location"
 }
