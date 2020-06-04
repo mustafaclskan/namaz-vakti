@@ -10,19 +10,20 @@
     </v-app-bar>
 
     <v-content>
+      <div class="txt-center">
+        <h1 class="normal-font">
+          <v-btn v-on:click="decreaseCurrDay()" class="mx-2" fab small color="secondary">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          {{currTimes[currDayIdx]['MiladiTarihUzun']}}
+          <v-btn v-on:click="increaseCurrDay()" class="mx-2" fab small color="secondary">
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+        </h1>
+        <h2 class="normal-font">{{currTimes[currDayIdx]['HicriTarihUzun']}}</h2>
+      </div>
       <v-list :flat="true" disabled v-if="currTimes && currTimes[currDayIdx]" class="txt-center">
         <v-list-item-group>
-          <v-list-item>
-            <v-list-item-content>
-              <h1 class="normal-font">{{currTimes[currDayIdx]['MiladiTarihUzun']}}</h1>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-content>
-              <h2 class="normal-font">{{currTimes[currDayIdx]['HicriTarihUzun']}}</h2>
-            </v-list-item-content>
-          </v-list-item>
-
           <v-list-item v-for="(item, i) in timeItems" :key="i">
             <v-list-item-content>
               <h1 v-bind:class="{ 'normal-font': i != currPrayIdx }">
@@ -78,6 +79,7 @@ export default class App extends Vue {
   created() {
     this.currTimes = SettingService.getTimes4CurrentLocation();
     this.currLoc = SettingService.getCurrLocation();
+    this.currDayIdx = new Date().getDay() - 1;
     // update remaining time for current pray every second
     setInterval(() => {
       this.updateRemainingTime();
@@ -90,6 +92,14 @@ export default class App extends Vue {
     }, 60000);
   }
 
+  increaseCurrDay() {
+    this.currDayIdx++;
+  }
+
+  decreaseCurrDay() {
+    this.currDayIdx--;
+  }
+
   private updateRemainingTime() {
     if (!this.currTimes) {
       return;
@@ -98,17 +108,21 @@ export default class App extends Vue {
     const h = d.getHours();
     const m = d.getMinutes();
     const sec = d.getSeconds();
-    const totalSec = h * 3600 + m * 60 + sec;
-    const totalSec2 = this.strTime2TotalSec(
+    const currSeconds = h * 3600 + m * 60 + sec;
+    const prayTimeInSeconds = this.strTime2TotalSec(
       (this.currTimes as any)[this.currDayIdx][
         this.timeItems[this.currPrayIdx].key
       ] as string
     );
-    if (totalSec > totalSec2) {
+    if (currSeconds > prayTimeInSeconds && this.currPrayIdx != 0) {
       this.updateCurrPrayIdx();
       return;
     }
-    const secDiff = totalSec2 - totalSec;
+    let secDiff = prayTimeInSeconds - currSeconds;
+    // means we should measure time difference for the next day
+    if (secDiff < 0) {
+      secDiff = 86400 - currSeconds + prayTimeInSeconds;
+    }
     this.remainingTime = this.seconds2str(secDiff);
   }
 
@@ -122,6 +136,7 @@ export default class App extends Vue {
       return;
     }
     const d = new Date();
+    this.currDayIdx = d.getDay() - 1;
     const h = d.getHours();
     const m = d.getMinutes();
     const totalSec = h * 3600 + m * 60;
