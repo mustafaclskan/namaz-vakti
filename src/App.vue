@@ -5,21 +5,26 @@
     </v-navigation-drawer>
 
     <v-app-bar app>
-      <v-app-bar-nav-icon @click.stop="isSideBarOpen = !isSideBarOpen"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="isSideBarOpen = !isSideBarOpen" color="primary"></v-app-bar-nav-icon>
       <v-toolbar-title>{{currLoc}}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn v-on:click="loadNewTimes()" icon color="primary">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+      <v-btn v-on:click="decreaseCurrDay()" icon color="primary">
+        <v-icon>mdi-calendar-arrow-left</v-icon>
+      </v-btn>
+      <v-btn v-on:click="loadNewTimes()" icon color="primary">
+        <v-icon>mdi-calendar-today</v-icon>
+      </v-btn>
+      <v-btn v-on:click="increaseCurrDay()" icon color="primary">
+        <v-icon>mdi-calendar-arrow-right</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <v-content>
       <div class="txt-center">
-        <h1 class="normal-font">
-          <v-btn v-on:click="decreaseCurrDay()" class="mx-2" fab small color="secondary">
-            <v-icon>mdi-chevron-left</v-icon>
-          </v-btn>
-          {{currTimes[currDayIdx]['MiladiTarihUzun']}}
-          <v-btn v-on:click="increaseCurrDay()" class="mx-2" fab small color="secondary">
-            <v-icon>mdi-chevron-right</v-icon>
-          </v-btn>
-        </h1>
+        <h1 class="normal-font">{{currTimes[currDayIdx]['MiladiTarihUzun']}}</h1>
         <h2 class="normal-font">{{currTimes[currDayIdx]['HicriTarihUzun']}}</h2>
       </div>
       <v-list :flat="true" disabled v-if="currTimes && currTimes[currDayIdx]" class="txt-center">

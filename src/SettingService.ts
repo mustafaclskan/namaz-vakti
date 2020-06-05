@@ -111,16 +111,37 @@ export class SettingService {
       return null;
     }
     const arr = JSON.parse(d) as any[];
+    const queueKeys: string[] = [];
     for (let i = arr.length - 1; i > -1; i--) {
       if (Object.values(arr[i])[0] == currLoc) {
-        const obj = localStorage.getItem(Object.keys(arr[i])[0])
-        if (obj == null) {
-          return null;
-        }
-        return JSON.parse(obj) as TimesData[];
+        queueKeys.push(Object.keys(arr[i])[0]);
       }
     }
-    return null;
+    const keyOfRecent = SettingService.getRecentQueueKey4Location(queueKeys);
+    const obj = localStorage.getItem(keyOfRecent);
+    if (obj == null) {
+      return null;
+    }
+    return JSON.parse(obj) as TimesData[];
+  }
+
+  private static getRecentQueueKey4Location(timesQueueKeys: string[], now = 0): string {
+    if (now < 1) {
+      now = new Date().getTime();
+    }
+    let minDiff = now;
+    let keyOfMin = '';
+    for (const k of timesQueueKeys) {
+      const arr = k.split('_');
+      const dateStr = arr[arr.length - 1];
+      const d = new Date(+(dateStr.substr(6, 4)), +(dateStr.substr(3, 2)) - 1, +(dateStr.substr(0, 2))).getTime();
+      const currDiff = Math.abs(d - now);
+      if (currDiff < minDiff) {
+        minDiff = currDiff;
+        keyOfMin = k;
+      }
+    }
+    return keyOfMin;
   }
 
 }
