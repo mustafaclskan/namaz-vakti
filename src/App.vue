@@ -1,20 +1,17 @@
 <template>
   <v-app>
     <v-navigation-drawer v-model="isSideBarOpen" app>
-      <SideBarContent v-on:curr-times-updated="currTimes = $event" />
+      <SideBarContent v-on:curr-times-updated="currTimesUpdated($event)" />
     </v-navigation-drawer>
 
-    <v-app-bar app>
+    <v-app-bar app dense>
       <v-app-bar-nav-icon @click.stop="isSideBarOpen = !isSideBarOpen" color="primary"></v-app-bar-nav-icon>
       <v-toolbar-title>{{currLoc}}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-on:click="loadNewTimes()" icon color="primary">
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
       <v-btn v-on:click="decreaseCurrDay()" icon color="primary">
         <v-icon>mdi-calendar-arrow-left</v-icon>
       </v-btn>
-      <v-btn v-on:click="loadNewTimes()" icon color="primary">
+      <v-btn v-on:click="setCurrDayIdx()" icon color="primary">
         <v-icon>mdi-calendar-today</v-icon>
       </v-btn>
       <v-btn v-on:click="increaseCurrDay()" icon color="primary">
@@ -33,11 +30,7 @@
             <v-list-item-content>
               <h1 v-bind:class="{ 'normal-font': i != currPrayIdx }">
                 {{item.pre}} {{currTimes[currDayIdx][item.key]}}
-                <v-icon
-                  v-if="i == currPrayIdx"
-                  color="primary"
-                  style="vertical-align: initial"
-                >mdi-clock</v-icon>
+                <v-icon v-if="i == currPrayIdx" style="vertical-align: initial">mdi-clock</v-icon>
               </h1>
             </v-list-item-content>
           </v-list-item>
@@ -71,7 +64,7 @@ export default class App extends Vue {
   private currDayIdx = 0;
   private currLoc: string | null = "";
   private currPrayIdx = 2;
-  private remainingTime = "1:38:21";
+  private remainingTime = "";
   private timeItems = [
     { pre: "İmsak:", key: "Imsak" },
     { pre: "Güneş:", key: "Gunes" },
@@ -84,7 +77,7 @@ export default class App extends Vue {
   created() {
     this.currTimes = SettingService.getTimes4CurrentLocation();
     this.currLoc = SettingService.getCurrLocation();
-    this.currDayIdx = new Date().getDay() - 1;
+    this.setCurrDayIdx();
     // update remaining time for current pray every second
     setInterval(() => {
       this.updateRemainingTime();
@@ -97,12 +90,45 @@ export default class App extends Vue {
     }, 60000);
   }
 
+  setCurrDayIdx() {
+    if (!this.currTimes) {
+      console.log("times data not exists");
+      return;
+    }
+    const today = new Date();
+    let idx = 0;
+    for (const d of this.currTimes) {
+      if (this.date2str(today) == d.MiladiTarihKisa) {
+        this.currDayIdx = idx;
+        return;
+      }
+      idx++;
+    }
+    console.log("current day not found in current times data");
+  }
+
   increaseCurrDay() {
-    this.currDayIdx++;
+    if (!this.currTimes) {
+      return;
+    }
+    if (this.currDayIdx < this.currTimes.length - 1) {
+      this.currDayIdx++;
+    }
   }
 
   decreaseCurrDay() {
-    this.currDayIdx--;
+    if (this.currDayIdx > 0) {
+      this.currDayIdx--;
+    }
+  }
+
+  currTimesUpdated(data: TimesData[] | null) {
+    this.currTimes = data;
+    this.setCurrDayIdx();
+  }
+
+  loadTimes4Current() {
+    console.log("");
   }
 
   private updateRemainingTime() {
@@ -141,7 +167,7 @@ export default class App extends Vue {
       return;
     }
     const d = new Date();
-    this.currDayIdx = d.getDay() - 1;
+    this.setCurrDayIdx();
     const h = d.getHours();
     const m = d.getMinutes();
     const totalSec = h * 3600 + m * 60;
@@ -161,12 +187,14 @@ export default class App extends Vue {
   private seconds2str(i: number): string {
     let s = "";
     const h = Math.floor(i / 3600);
-    if (h < 10) {
-      s += "0" + h;
-    } else {
-      s += h;
+    if (h > 0) {
+      if (h < 10) {
+        s += "0" + h;
+      } else {
+        s += h;
+      }
+      s += ":";
     }
-    s += ":";
     const m = Math.floor((i - 3600 * h) / 60);
     if (m < 10) {
       s += "0" + m;
@@ -181,6 +209,24 @@ export default class App extends Vue {
       s += sec;
     }
     return s;
+  }
+
+  private date2str(d: Date | null = null): string {
+    if (!d) {
+      d = new Date();
+    }
+    let month = "" + (d.getMonth() + 1);
+    let day = "" + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) {
+      month = "0" + month;
+    }
+    if (day.length < 2) {
+      day = "0" + day;
+    }
+
+    return [day, month, year].join(".");
   }
 }
 </script>

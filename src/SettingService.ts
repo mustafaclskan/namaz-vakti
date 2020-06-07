@@ -6,6 +6,7 @@ export class SettingService {
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
   private static CURR_LANG_KEY = 'currLang';
+  private static CURR_DATA_KEY = 'currData';
 
   static saveTheme(theme: string) {
     localStorage.setItem(this.THEME_KEY, theme);
@@ -101,7 +102,7 @@ export class SettingService {
     }
   }
 
-  static getTimes4CurrentLocation(): TimesData[] | null {
+  static getTimes4CurrentLocation(now = 0): TimesData[] | null {
     const currLoc = localStorage.getItem(this.CURR_LOC_KEY);
     if (currLoc == null) {
       return null;
@@ -117,7 +118,7 @@ export class SettingService {
         queueKeys.push(Object.keys(arr[i])[0]);
       }
     }
-    const keyOfRecent = SettingService.getRecentQueueKey4Location(queueKeys);
+    const keyOfRecent = SettingService.getRecentQueueKey4Location(queueKeys, now);
     const obj = localStorage.getItem(keyOfRecent);
     if (obj == null) {
       return null;
@@ -135,7 +136,7 @@ export class SettingService {
       const arr = k.split('_');
       const dateStr = arr[arr.length - 1];
       const d = new Date(+(dateStr.substr(6, 4)), +(dateStr.substr(3, 2)) - 1, +(dateStr.substr(0, 2))).getTime();
-      const currDiff = Math.abs(d - now);
+      const currDiff = now - d;
       if (currDiff < minDiff) {
         minDiff = currDiff;
         keyOfMin = k;
