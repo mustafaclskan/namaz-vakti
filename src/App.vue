@@ -21,24 +21,26 @@
 
     <v-content>
       <div class="txt-center">
-        <h1 class="normal-font">{{currTimes[currDayIdx]['MiladiTarihUzun']}}</h1>
-        <h2 class="normal-font">{{currTimes[currDayIdx]['HicriTarihUzun']}}</h2>
+        <h2 class="normal-font">{{currTimes[currDayIdx]['MiladiTarihUzun']}}</h2>
+        <h4 class="normal-font">{{currTimes[currDayIdx]['HicriTarihUzun']}}</h4>
       </div>
+      <v-divider></v-divider>
       <v-list :flat="true" disabled v-if="currTimes && currTimes[currDayIdx]" class="txt-center">
         <v-list-item-group>
           <v-list-item v-for="(item, i) in timeItems" :key="i">
             <v-list-item-content>
-              <h1 v-bind:class="{ 'normal-font': i != currPrayIdx }">
+              <h2 v-bind:class="{ 'normal-font': i != currPrayIdx }">
                 {{item.pre}} {{currTimes[currDayIdx][item.key]}}
                 <v-icon v-if="i == currPrayIdx" style="vertical-align: initial">mdi-clock</v-icon>
-              </h1>
+              </h2>
             </v-list-item-content>
           </v-list-item>
+          <v-divider></v-divider>
           <v-list-item>
             <v-list-item-content>
-              <h1
+              <h2
                 class="normal-font"
-              >{{ timeItems[currPrayIdx].pre.slice(0,-1) }} vakti için kalan süre {{remainingTime}}</h1>
+              >{{ timeItems[currPrayIdx].pre.slice(0,-1) }} vakti için kalan süre {{remainingTime}}</h2>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
