@@ -6,7 +6,6 @@ export class SettingService {
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
   private static CURR_LANG_KEY = 'currLang';
-  private static CURR_DATA_KEY = 'currData';
 
   static saveTheme(theme: string) {
     localStorage.setItem(this.THEME_KEY, theme);

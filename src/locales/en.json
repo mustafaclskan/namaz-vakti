@@ -6,5 +6,7 @@
   "selectDistrict": "Select a district",
   "selectLanguage": "Select a language",
   "selectTheme": "Select a theme",
-  "changeLocation": "Change location"
+  "changeLocation": "Change location",
+  "Light": "Light",
+  "Dark": "Dark"
 }

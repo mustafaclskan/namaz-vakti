@@ -6,5 +6,7 @@
   "selectDistrict": "İlçe/bölge seçin",
   "selectLanguage": "Dil seçin",
   "selectTheme": "Tema seçin",
-  "changeLocation": "Konum değiştirin"
+  "changeLocation": "Konum değiştirin",
+  "Light": "Açık",
+  "Dark": "Koyu"
 }

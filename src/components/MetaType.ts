@@ -16,6 +16,11 @@ export interface District {
   IlceID: string;
 }
 
+export interface UiLanguage {
+  txt: string;
+  code: string;
+}
+
 export interface TimesData {
   MiladiTarihKisa: string;
   MiladiTarihUzun: string;

@@ -9,7 +9,6 @@
         :filter="filterByTxt"
         item-text="UlkeAdi"
         v-on:input="onCountrySelected"
-        :label="$t('selectCountry')"
         :placeholder="$t('selectCountry')"
         return-object
       />
@@ -80,7 +79,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import COUNTRIES from "../assets/countries.json";
 import TR_CITIES from "../assets/cities.json";
-import { Country, City, District, THEMES } from "./MetaType";
+import { Country, City, District, THEMES, UiLanguage } from "./MetaType";
 import { ApiClient } from "../ApiClient";
 import { SettingService } from "../SettingService";
 
@@ -94,15 +93,15 @@ export default class SideBarContent extends Vue {
   private countries = COUNTRIES;
   private cities: City[] = [];
   private districts: District[] = [];
-  private themes = ["light", "dark"];
-  private langs = [
+  private themes = ["Light", "Dark"];
+  private langs: UiLanguage[] = [
     { txt: "English", code: "en" },
     { txt: "Türkçe", code: "tr" }
   ];
   private _api: ApiClient = new ApiClient();
   private currLocation: string | null = "";
   private currTheme: string | null = "";
-  private currLang: string | null = "";
+  private currLang: UiLanguage | undefined = undefined;
 
   // special life-cycle hook for vue
   created() {
@@ -110,9 +109,17 @@ export default class SideBarContent extends Vue {
     this.savedLocations = SettingService.getSavedLocations();
     this.currLocation = SettingService.getCurrLocation();
     this.currTheme = SettingService.getCurrTheme();
-    this.currLang = SettingService.getCurrLang() || "tr";
+    if (this.currTheme) {
+      this.currTheme = this.$tc(this.currTheme);
+    }
+    for (let i = 0; i < this.themes.length; i++) {
+      this.themes[i] = this.$tc(this.themes[i]);
+    }
+    this.currLang = this.langs.find(
+      x => x.code === SettingService.getCurrLang() || "tr"
+    );
     this.$vuetify.theme.dark =
-      this.currTheme === "dark" || this.currTheme === "koyu";
+      this.currTheme === "Dark" || this.currTheme === "Koyu";
   }
 
   onThemeSelected(e: string) {
@@ -121,15 +128,20 @@ export default class SideBarContent extends Vue {
       //   this.$vuetify.theme.themes.dark[i] = THEMES[e][i];
       //   this.$vuetify.theme.themes.light[i] = THEMES[e][i];
       // }
+      console.log('save theme');
       SettingService.saveTheme(e);
-      this.$vuetify.theme.dark = e === "dark" || e === "koyu";
+      this.$vuetify.theme.dark = e === "Dark" || e === "Koyu";
     }
   }
 
   onLangSelected(e: { txt: string; code: string }) {
     if (e) {
+      console.log('save lang');
       SettingService.saveLang(e.code);
       this.$i18n.locale = e.code;
+      for (let i = 0; i < this.themes.length; i++) {
+        this.themes[i] = this.$tc(this.themes[i]);
+      }
     }
   }
 
