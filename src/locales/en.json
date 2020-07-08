@@ -8,5 +8,6 @@
   "selectTheme": "Select a theme",
   "changeLocation": "Change location",
   "Light": "Light",
-  "Dark": "Dark"
+  "Dark": "Dark",
+  "noTimeData": "There is no time data. Try adding a location."
 }

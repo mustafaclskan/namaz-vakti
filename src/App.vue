@@ -20,7 +20,10 @@
     </v-app-bar>
 
     <v-content>
-      <div class="txt-center">
+      <div class="txt-center" v-if="!currTimes || !currTimes[currDayIdx]">
+        <h2 class="normal-font">{{$t('noTimeData')}}</h2>
+      </div>
+      <div class="txt-center" v-if="currTimes && currTimes[currDayIdx]">
         <h2 class="normal-font">{{currTimes[currDayIdx]['MiladiTarihUzun']}}</h2>
         <h4 class="normal-font">{{currTimes[currDayIdx]['HicriTarihUzun']}}</h4>
       </div>
@@ -95,6 +98,7 @@ export default class App extends Vue {
   setCurrDayIdx() {
     if (!this.currTimes) {
       console.log("times data not exists");
+      this.isSideBarOpen = true;
       return;
     }
     const today = new Date();

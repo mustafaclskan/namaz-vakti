@@ -8,5 +8,6 @@
   "selectTheme": "Tema seçin",
   "changeLocation": "Konum değiştirin",
   "Light": "Açık",
-  "Dark": "Koyu"
+  "Dark": "Koyu",
+  "noTimeData": "Zaman verisi bulunamadı. Konum eklemeyi deneyin."
 }
