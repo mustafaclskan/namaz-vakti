@@ -57,6 +57,7 @@ import { Component, Vue } from "vue-property-decorator";
 import SideBarContent from "./components/SideBarContent.vue";
 import { TimesData } from "./components/MetaType";
 import { SettingService } from "./SettingService";
+import { SubstrTranslator } from "./SubstrTranslator";
 
 @Component({
   components: {
@@ -81,6 +82,11 @@ export default class App extends Vue {
 
   created() {
     this.currTimes = SettingService.getTimes4CurrentLocation();
+    for (let i = 0; i < this.timeItems.length; i++) {
+      this.timeItems[i].pre = SubstrTranslator.translatePrayName(
+        this.timeItems[i].pre
+      );
+    }
     this.currLoc = SettingService.getCurrLocation();
     this.setCurrDayIdx();
     // update remaining time for current pray every second
