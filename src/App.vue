@@ -1,7 +1,10 @@
 <template>
   <v-app>
     <v-navigation-drawer v-model="isSideBarOpen" app>
-      <SideBarContent v-on:curr-times-updated="currTimesUpdated($event)" />
+      <SideBarContent
+        v-on:curr-times-updated="currTimesUpdated($event)"
+        v-on:lang-selected="langSelected($event)"
+      />
     </v-navigation-drawer>
 
     <v-app-bar app dense>
@@ -24,7 +27,9 @@
         <h2 class="normal-font">{{$t('noTimeData')}}</h2>
       </div>
       <div class="txt-center" v-if="currTimes && currTimes[currDayIdx]">
-        <h2 class="normal-font">{{currTimes[currDayIdx]['MiladiTarihUzun']}}</h2>
+        <h2
+          class="normal-font"
+        >{{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx]['MiladiTarihUzun']))}}</h2>
         <h4 class="normal-font">{{currTimes[currDayIdx]['HicriTarihUzun']}}</h4>
       </div>
       <v-divider></v-divider>
@@ -43,7 +48,12 @@
             <v-list-item-content>
               <h2
                 class="normal-font"
+                v-if="currLang && currLang == 'tr'"
               >{{ timeItems[currPrayIdx].pre.slice(0,-1) }} vakti için kalan süre {{remainingTime}}</h2>
+              <h2
+                class="normal-font"
+                v-else
+              >Remaining time for {{ timeItems[currPrayIdx].pre.slice(0,-1) }} {{remainingTime}}</h2>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -58,6 +68,7 @@ import SideBarContent from "./components/SideBarContent.vue";
 import { TimesData } from "./components/MetaType";
 import { SettingService } from "./SettingService";
 import { SubstrTranslator } from "./SubstrTranslator";
+import { ApiClient } from "./ApiClient";
 
 @Component({
   components: {
@@ -79,14 +90,13 @@ export default class App extends Vue {
     { pre: "Akşam:", key: "Aksam" },
     { pre: "Yatsı:", key: "Yatsi" }
   ];
+  private substrTranslate = SubstrTranslator;
+  private currLang = SettingService.getCurrLang();
+  private _api: ApiClient = new ApiClient();
 
   created() {
+    this._api = new ApiClient();
     this.currTimes = SettingService.getTimes4CurrentLocation();
-    for (let i = 0; i < this.timeItems.length; i++) {
-      this.timeItems[i].pre = SubstrTranslator.translatePrayName(
-        this.timeItems[i].pre
-      );
-    }
     this.currLoc = SettingService.getCurrLocation();
     this.setCurrDayIdx();
     // update remaining time for current pray every second
@@ -99,6 +109,7 @@ export default class App extends Vue {
     setInterval(() => {
       this.updateCurrPrayIdx();
     }, 60000);
+    this.langSelected();
   }
 
   setCurrDayIdx() {
@@ -117,6 +128,7 @@ export default class App extends Vue {
       idx++;
     }
     console.log("current day not found in current times data");
+    this.updateTimes4Current();
   }
 
   increaseCurrDay() {
@@ -139,8 +151,27 @@ export default class App extends Vue {
     this.setCurrDayIdx();
   }
 
-  loadTimes4Current() {
-    console.log("");
+  langSelected() {
+    for (let i = 0; i < this.timeItems.length; i++) {
+      this.timeItems[i].pre = SubstrTranslator.t(this.timeItems[i].pre);
+    }
+    this.currLang = SettingService.getCurrLang();
+  }
+
+  private updateTimes4Current() {
+    const k = SettingService.getDataKey4CurrentLocation();
+    if (!k) {
+      return;
+    }
+    const arr = k.split("_");
+
+    this._api.getTimes4District(arr[arr.length - 2], e => {
+      const id = arr.slice(0, -1).join("_") + "_" + e[0].MiladiTarihKisa;
+      const loc = SettingService.getCurrLocation();
+      if (loc) {
+        SettingService.addTimesData(id, e, loc);
+      }
+    });
   }
 
   private updateRemainingTime() {

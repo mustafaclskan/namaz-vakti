@@ -82,6 +82,7 @@ import TR_CITIES from "../assets/cities.json";
 import { Country, City, District, THEMES, UiLanguage } from "./MetaType";
 import { ApiClient } from "../ApiClient";
 import { SettingService } from "../SettingService";
+import { SubstrTranslator } from '../SubstrTranslator';
 
 @Component
 export default class SideBarContent extends Vue {
@@ -102,6 +103,7 @@ export default class SideBarContent extends Vue {
   private currLocation: string | null = "";
   private currTheme: string | null = "";
   private currLang: UiLanguage | undefined = undefined;
+  
 
   // special life-cycle hook for vue
   created() {
@@ -142,6 +144,7 @@ export default class SideBarContent extends Vue {
       for (let i = 0; i < this.themes.length; i++) {
         this.themes[i] = this.$tc(this.themes[i]);
       }
+      this.$emit('lang-selected', e.code);
     }
   }
 

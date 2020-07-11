@@ -102,6 +102,19 @@ export class SettingService {
   }
 
   static getTimes4CurrentLocation(now = 0): TimesData[] | null {
+    
+    const keyOfRecent = SettingService.getDataKey4CurrentLocation();
+    if (!keyOfRecent) {
+      return null;
+    }
+    const obj = localStorage.getItem(keyOfRecent);
+    if (obj == null) {
+      return null;
+    }
+    return JSON.parse(obj) as TimesData[];
+  }
+
+  static getDataKey4CurrentLocation(): string | null {
     const currLoc = localStorage.getItem(this.CURR_LOC_KEY);
     if (currLoc == null) {
       return null;
@@ -117,12 +130,7 @@ export class SettingService {
         queueKeys.push(Object.keys(arr[i])[0]);
       }
     }
-    const keyOfRecent = SettingService.getRecentQueueKey4Location(queueKeys, now);
-    const obj = localStorage.getItem(keyOfRecent);
-    if (obj == null) {
-      return null;
-    }
-    return JSON.parse(obj) as TimesData[];
+    return SettingService.getRecentQueueKey4Location(queueKeys);
   }
 
   private static getRecentQueueKey4Location(timesQueueKeys: string[], now = 0): string {

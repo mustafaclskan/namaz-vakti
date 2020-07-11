@@ -1,15 +1,8 @@
 import { SettingService } from './SettingService';
 
 export class SubstrTranslator {
-  private static _months = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
 
-  // match longer first
-  private static _days = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cumartesi', 'Cuma', 'Pazar'];
-
-  private static _prays = ['İmsak', 'Güneş', 'Öğle', 'İkindi', 'Akşam', 'Yatsı'];
-
-  private static _toEn = {
+  private static _2En = {
     "Ocak": "January",
     "Şubat": "February",
     "Mart": "March",
@@ -37,42 +30,22 @@ export class SubstrTranslator {
     "Yatsı": "Isha'a"
   } as any;
 
-  public static translateDayName(s: string): string {
+  public static t(s: string): string {
     const lang = SettingService.getCurrLang();
     if (!lang || lang == 'tr') {
-      return s;
-    }
-    for (const d of this._days) {
-      if (s.includes(d)) {
-        return s.replace(d, this._toEn[d]);
+      for (const [k, v] of Object.entries(this._2En)) {
+        if (s.includes(v as string)) {
+          return s.replace(v as string, k);
+        }
+      }
+    } else {
+      for (const [k, v] of Object.entries(this._2En)) {
+        if (s.includes(k)) {
+          return s.replace(k, v as string);
+        }
       }
     }
-    return s;
-  }
 
-  public static translatePrayName(s: string): string {
-    const lang = SettingService.getCurrLang();
-    if (!lang || lang == 'tr') {
-      return s;
-    }
-    for (const d of this._prays) {
-      if (s.includes(d)) {
-        return s.replace(d, this._toEn[d]);
-      }
-    }
-    return s;
-  }
-
-  public static translateMonthName(s: string): string {
-    const lang = SettingService.getCurrLang();
-    if (!lang || lang == 'tr') {
-      return s;
-    }
-    for (const d of this._months) {
-      if (s.includes(d)) {
-        return s.replace(d, this._toEn[d]);
-      }
-    }
     return s;
   }
 
