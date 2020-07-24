@@ -1,9 +1,10 @@
 <template>
-  <v-app>
+  <v-app v-bind:style="{ zoom:  currZoom + '%' }">
     <v-navigation-drawer v-model="isSideBarOpen" app>
       <SideBarContent
         v-on:curr-times-updated="currTimesUpdated($event)"
         v-on:lang-selected="langSelected($event)"
+        v-on:zoom-changed="zoomChanged($event)"
       />
     </v-navigation-drawer>
 
@@ -72,8 +73,8 @@ import { ApiClient } from "./ApiClient";
 
 @Component({
   components: {
-    SideBarContent
-  }
+    SideBarContent,
+  },
 })
 export default class App extends Vue {
   private isSideBarOpen = false;
@@ -88,16 +89,18 @@ export default class App extends Vue {
     { pre: "Öğle:", key: "Ogle" },
     { pre: "İkindi:", key: "Ikindi" },
     { pre: "Akşam:", key: "Aksam" },
-    { pre: "Yatsı:", key: "Yatsi" }
+    { pre: "Yatsı:", key: "Yatsi" },
   ];
   private substrTranslate = SubstrTranslator;
   private currLang = SettingService.getCurrLang();
   private _api: ApiClient = new ApiClient();
+  private currZoom = 100;
 
   created() {
     this._api = new ApiClient();
     this.currTimes = SettingService.getTimes4CurrentLocation();
     this.currLoc = SettingService.getCurrLocation();
+    this.currZoom = SettingService.getCurrZoom();
     this.setCurrDayIdx();
     // update remaining time for current pray every second
     setInterval(() => {
@@ -158,6 +161,19 @@ export default class App extends Vue {
     this.currLang = SettingService.getCurrLang();
   }
 
+  zoomChanged(isIncrease: boolean) {
+    if (isIncrease) {
+      if (this.currZoom < 400) {
+        this.currZoom = this.currZoom + 10;
+      }
+    } else {
+      if (this.currZoom > 20) {
+        this.currZoom = this.currZoom - 10;
+      }
+    }
+    SettingService.setCurrZoom(this.currZoom);
+  }
+
   private updateTimes4Current() {
     const k = SettingService.getDataKey4CurrentLocation();
     if (!k) {
@@ -165,7 +181,7 @@ export default class App extends Vue {
     }
     const arr = k.split("_");
 
-    this._api.getTimes4District(arr[arr.length - 2], e => {
+    this._api.getTimes4District(arr[arr.length - 2], (e) => {
       const id = arr.slice(0, -1).join("_") + "_" + e[0].MiladiTarihKisa;
       const loc = SettingService.getCurrLocation();
       if (loc) {
@@ -279,8 +295,5 @@ export default class App extends Vue {
 }
 .normal-font {
   font-weight: normal;
-}
-.bold-font {
-  font-weight: bold;
 }
 </style>

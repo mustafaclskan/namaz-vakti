@@ -71,6 +71,16 @@
         :label="$t('changeLocation')"
         :placeholder="$t('changeLocation')"
       />
+      <div>
+        <div v-if="currLang && currLang.code == 'tr'" class="m-5"><span>{{$t('changeZoom')}} (%{{currZoom}}) </span></div>
+        <div v-else class="m-5"><span>{{$t('changeZoom')}} ({{currZoom}}%) </span></div>
+        <v-btn class="m-5" v-on:click="zoomIn()" icon color="primary">
+          <v-icon>mdi-magnify-plus</v-icon>
+        </v-btn>
+        <v-btn class="m-5" v-on:click="zoomOut()" icon color="primary">
+          <v-icon>mdi-magnify-minus</v-icon>
+        </v-btn>
+      </div>
     </v-card>
   </div>
 </template>
@@ -82,7 +92,7 @@ import TR_CITIES from "../assets/cities.json";
 import { Country, City, District, THEMES, UiLanguage } from "./MetaType";
 import { ApiClient } from "../ApiClient";
 import { SettingService } from "../SettingService";
-import { SubstrTranslator } from '../SubstrTranslator';
+import { SubstrTranslator } from "../SubstrTranslator";
 
 @Component
 export default class SideBarContent extends Vue {
@@ -97,13 +107,13 @@ export default class SideBarContent extends Vue {
   private themes = ["Light", "Dark"];
   private langs: UiLanguage[] = [
     { txt: "English", code: "en" },
-    { txt: "Türkçe", code: "tr" }
+    { txt: "Türkçe", code: "tr" },
   ];
   private _api: ApiClient = new ApiClient();
   private currLocation: string | null = "";
   private currTheme: string | null = "";
   private currLang: UiLanguage | undefined = undefined;
-  
+  private currZoom = 100;
 
   // special life-cycle hook for vue
   created() {
@@ -111,6 +121,7 @@ export default class SideBarContent extends Vue {
     this.savedLocations = SettingService.getSavedLocations();
     this.currLocation = SettingService.getCurrLocation();
     this.currTheme = SettingService.getCurrTheme();
+    this.currZoom = SettingService.getCurrZoom();
     if (this.currTheme) {
       this.currTheme = this.$tc(this.currTheme);
     }
@@ -118,7 +129,7 @@ export default class SideBarContent extends Vue {
       this.themes[i] = this.$tc(this.themes[i]);
     }
     this.currLang = this.langs.find(
-      x => x.code === SettingService.getCurrLang() || "tr"
+      (x) => x.code === SettingService.getCurrLang() || "tr"
     );
     this.$vuetify.theme.dark =
       this.currTheme === "Dark" || this.currTheme === "Koyu";
@@ -130,7 +141,7 @@ export default class SideBarContent extends Vue {
       //   this.$vuetify.theme.themes.dark[i] = THEMES[e][i];
       //   this.$vuetify.theme.themes.light[i] = THEMES[e][i];
       // }
-      console.log('save theme');
+      console.log("save theme");
       SettingService.saveTheme(e);
       this.$vuetify.theme.dark = e === "Dark" || e === "Koyu";
     }
@@ -138,13 +149,13 @@ export default class SideBarContent extends Vue {
 
   onLangSelected(e: { txt: string; code: string }) {
     if (e) {
-      console.log('save lang');
+      console.log("save lang");
       SettingService.saveLang(e.code);
       this.$i18n.locale = e.code;
       for (let i = 0; i < this.themes.length; i++) {
         this.themes[i] = this.$tc(this.themes[i]);
       }
-      this.$emit('lang-selected', e.code);
+      this.$emit("lang-selected", e.code);
     }
   }
 
@@ -156,7 +167,7 @@ export default class SideBarContent extends Vue {
       this.selectedCity = null;
       this.selectedDistrict = null;
     } else {
-      this._api.getCities4Country(c.UlkeID, e => {
+      this._api.getCities4Country(c.UlkeID, (e) => {
         this.cities = e;
         this.selectedCity = null;
         this.selectedDistrict = null;
@@ -165,13 +176,13 @@ export default class SideBarContent extends Vue {
   }
 
   onCitySelected(c: City) {
-    this._api.getDistricts4City(c.sehirID, e => {
+    this._api.getDistricts4City(c.sehirID, (e) => {
       this.districts = e;
     });
   }
 
   onDistrictSelected(d: District) {
-    this._api.getTimes4District(d.IlceID, e => {
+    this._api.getTimes4District(d.IlceID, (e) => {
       if (
         this.selectedCountry != null &&
         this.selectedCity != null &&
@@ -206,6 +217,16 @@ export default class SideBarContent extends Vue {
 
   filterByTxt(item: object, queryText: string, itemText: string): boolean {
     return itemText.toLowerCase().includes(queryText.toLowerCase());
+  }
+
+  zoomIn() {
+    this.$emit("zoom-changed", true);
+    this.currZoom = SettingService.getCurrZoom();
+  }
+
+  zoomOut() {
+    this.$emit("zoom-changed", false);
+    this.currZoom = SettingService.getCurrZoom();
   }
 }
 </script>

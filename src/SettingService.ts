@@ -6,6 +6,7 @@ export class SettingService {
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
   private static CURR_LANG_KEY = 'currLang';
+  private static CUR_ZOOM_KEY = 'currZoom';
 
   static saveTheme(theme: string) {
     localStorage.setItem(this.THEME_KEY, theme);
@@ -21,6 +22,18 @@ export class SettingService {
 
   static getCurrLocation(): string | null {
     return localStorage.getItem(this.CURR_LOC_KEY);
+  }
+
+  static getCurrZoom(): number {
+    const v = localStorage.getItem(this.CUR_ZOOM_KEY);
+    if (v === null) {
+      return 100;
+    }
+    return +v;
+  }
+
+  static setCurrZoom(v: number) {
+    localStorage.setItem(this.CUR_ZOOM_KEY, v + '');
   }
 
   static setCurrLocation(loc: string) {
@@ -102,7 +115,7 @@ export class SettingService {
   }
 
   static getTimes4CurrentLocation(now = 0): TimesData[] | null {
-    
+
     const keyOfRecent = SettingService.getDataKey4CurrentLocation();
     if (!keyOfRecent) {
       return null;

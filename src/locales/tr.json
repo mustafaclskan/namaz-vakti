@@ -9,5 +9,6 @@
   "changeLocation": "Konum değiştirin",
   "Light": "Açık",
   "Dark": "Koyu",
-  "noTimeData": "Zaman verisi bulunamadı. Konum eklemeyi deneyin."
+  "noTimeData": "Zaman verisi bulunamadı. Konum eklemeyi deneyin.",
+  "changeZoom": "Büyütme küçültme"
 }

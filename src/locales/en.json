@@ -9,5 +9,6 @@
   "changeLocation": "Change location",
   "Light": "Light",
   "Dark": "Dark",
-  "noTimeData": "There is no time data. Try adding a location."
+  "noTimeData": "There is no time data. Try adding a location.",
+  "changeZoom": "Change zoom level"
 }
