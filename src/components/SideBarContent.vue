@@ -70,7 +70,7 @@
         :label="$t('changeLocation')"
         :placeholder="$t('changeLocation')"
       />
-      <div>
+      <!-- do not change zoom level <div>
         <div v-if="currLang && currLang.code == 'tr'" class="m-5">
           <span>{{$t('changeZoom')}} (%{{currZoom}})</span>
         </div>
@@ -85,7 +85,7 @@
             <v-icon>mdi-magnify-minus</v-icon>
           </v-btn>
         </div>
-      </div>
+      </div> -->
     </v-card>
   </div>
 </template>

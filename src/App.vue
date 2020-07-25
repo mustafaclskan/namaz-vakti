@@ -1,5 +1,5 @@
 <template>
-  <v-app v-bind:style="{ zoom:  currZoom + '%' }">
+  <v-app>
     <v-navigation-drawer v-model="isSideBarOpen" app>
       <SideBarContent
         v-on:curr-times-updated="currTimesUpdated($event)"
