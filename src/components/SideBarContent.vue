@@ -47,7 +47,6 @@
         :items="langs"
         item-text="txt"
         v-on:input="onLangSelected"
-        :filter="filterByTxt"
         :label="$t('selectLanguage')"
         :placeholder="$t('selectLanguage')"
         return-object
@@ -57,7 +56,6 @@
         v-model="currTheme"
         :items="themes"
         v-on:input="onThemeSelected"
-        :filter="filterByTxt"
         :label="$t('selectTheme')"
         :placeholder="$t('selectTheme')"
       />
@@ -85,7 +83,7 @@
             <v-icon>mdi-magnify-minus</v-icon>
           </v-btn>
         </div>
-      </div> -->
+      </div>-->
     </v-card>
   </div>
 </template>
@@ -94,10 +92,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import COUNTRIES from "../assets/countries.json";
 import TR_CITIES from "../assets/cities.json";
-import { Country, City, District, THEMES, UiLanguage } from "./MetaType";
+import { Country, City, District, UiLanguage } from "./MetaType";
 import { ApiClient } from "../ApiClient";
 import { SettingService } from "../SettingService";
-import { SubstrTranslator } from "../SubstrTranslator";
 
 @Component
 export default class SideBarContent extends Vue {
@@ -121,18 +118,13 @@ export default class SideBarContent extends Vue {
   private currZoom = 100;
 
   // special life-cycle hook for vue
-  created() {
+  created(): void {
     this._api = new ApiClient();
     this.savedLocations = SettingService.getSavedLocations();
     this.currLocation = SettingService.getCurrLocation();
     this.currTheme = SettingService.getCurrTheme();
     this.currZoom = SettingService.getCurrZoom();
-    if (this.currTheme) {
-      this.currTheme = this.$tc(this.currTheme);
-    }
-    for (let i = 0; i < this.themes.length; i++) {
-      this.themes[i] = this.$tc(this.themes[i]);
-    }
+
     this.currLang = this.langs.find(
       (x) => x.code === SettingService.getCurrLang()
     );
@@ -144,12 +136,8 @@ export default class SideBarContent extends Vue {
       this.currTheme === "Dark" || this.currTheme === "Koyu";
   }
 
-  onThemeSelected(e: string) {
+  onThemeSelected(e: string): void {
     if (e) {
-      // for (const i in THEMES[e]) {
-      //   this.$vuetify.theme.themes.dark[i] = THEMES[e][i];
-      //   this.$vuetify.theme.themes.light[i] = THEMES[e][i];
-      // }
       SettingService.saveTheme(e);
       this.$vuetify.theme.dark = e === "Dark" || e === "Koyu";
     }
@@ -162,6 +150,22 @@ export default class SideBarContent extends Vue {
       for (let i = 0; i < this.themes.length; i++) {
         this.themes[i] = this.$tc(this.themes[i]);
       }
+      if (e.code == "tr") {
+        if (this.currTheme == "Dark") {
+          this.currTheme = "Koyu";
+        }
+        if (this.currTheme == "Light") {
+          this.currTheme = "Açık";
+        }
+      } else if (e.code == "en") {
+        if (this.currTheme == "Koyu") {
+          this.currTheme = "Dark";
+        }
+        if (this.currTheme == "Açık") {
+          this.currTheme = "Light";
+        }
+      }
+      SettingService.saveTheme(this.currTheme || "Açık");
       this.$emit("lang-selected", e.code);
     }
   }
@@ -222,7 +226,7 @@ export default class SideBarContent extends Vue {
     this.$emit("curr-times-updated", SettingService.getData4SavedLocation(e));
   }
 
-  filterByTxt(item: object, queryText: string, itemText: string): boolean {
+  filterByTxt(item: any, queryText: string, itemText: string): boolean {
     return itemText.toLowerCase().includes(queryText.toLowerCase());
   }
 

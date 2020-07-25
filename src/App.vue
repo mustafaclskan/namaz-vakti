@@ -23,7 +23,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <div class="txt-center" v-if="!currTimes || !currTimes[currDayIdx]">
         <h2 class="normal-font">{{$t('noTimeData')}}</h2>
       </div>
@@ -59,7 +59,7 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

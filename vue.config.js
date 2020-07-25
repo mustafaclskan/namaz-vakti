@@ -10,5 +10,8 @@ module.exports = {
       localeDir: 'locales',
       enableInSFC: true
     }
-  }
+  },
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/namaz-vakti/'
+    : '/'
 }
