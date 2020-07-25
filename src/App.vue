@@ -112,7 +112,6 @@ export default class App extends Vue {
     setInterval(() => {
       this.updateCurrPrayIdx();
     }, 60000);
-    this.langSelected();
   }
 
   setCurrDayIdx() {

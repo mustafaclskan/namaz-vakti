@@ -61,7 +61,6 @@
         :label="$t('selectTheme')"
         :placeholder="$t('selectTheme')"
       />
-      <br />
       <v-autocomplete
         class="m-5"
         v-model="currLocation"
@@ -72,14 +71,20 @@
         :placeholder="$t('changeLocation')"
       />
       <div>
-        <div v-if="currLang && currLang.code == 'tr'" class="m-5"><span>{{$t('changeZoom')}} (%{{currZoom}}) </span></div>
-        <div v-else class="m-5"><span>{{$t('changeZoom')}} ({{currZoom}}%) </span></div>
-        <v-btn class="m-5" v-on:click="zoomIn()" icon color="primary">
-          <v-icon>mdi-magnify-plus</v-icon>
-        </v-btn>
-        <v-btn class="m-5" v-on:click="zoomOut()" icon color="primary">
-          <v-icon>mdi-magnify-minus</v-icon>
-        </v-btn>
+        <div v-if="currLang && currLang.code == 'tr'" class="m-5">
+          <span>{{$t('changeZoom')}} (%{{currZoom}})</span>
+        </div>
+        <div v-else class="m-5">
+          <span>{{$t('changeZoom')}} ({{currZoom}}%)</span>
+        </div>
+        <div>
+          <v-btn class="m-5" v-on:click="zoomIn()" icon color="primary">
+            <v-icon>mdi-magnify-plus</v-icon>
+          </v-btn>
+          <v-btn class="m-5" v-on:click="zoomOut()" icon color="primary">
+            <v-icon>mdi-magnify-minus</v-icon>
+          </v-btn>
+        </div>
       </div>
     </v-card>
   </div>
@@ -129,8 +134,12 @@ export default class SideBarContent extends Vue {
       this.themes[i] = this.$tc(this.themes[i]);
     }
     this.currLang = this.langs.find(
-      (x) => x.code === SettingService.getCurrLang() || "tr"
+      (x) => x.code === SettingService.getCurrLang()
     );
+    if (!this.currLang) {
+      this.currLang = this.langs[0];
+    }
+    this.onLangSelected(this.currLang);
     this.$vuetify.theme.dark =
       this.currTheme === "Dark" || this.currTheme === "Koyu";
   }
@@ -141,7 +150,6 @@ export default class SideBarContent extends Vue {
       //   this.$vuetify.theme.themes.dark[i] = THEMES[e][i];
       //   this.$vuetify.theme.themes.light[i] = THEMES[e][i];
       // }
-      console.log("save theme");
       SettingService.saveTheme(e);
       this.$vuetify.theme.dark = e === "Dark" || e === "Koyu";
     }
@@ -149,7 +157,6 @@ export default class SideBarContent extends Vue {
 
   onLangSelected(e: { txt: string; code: string }) {
     if (e) {
-      console.log("save lang");
       SettingService.saveLang(e.code);
       this.$i18n.locale = e.code;
       for (let i = 0; i < this.themes.length; i++) {
