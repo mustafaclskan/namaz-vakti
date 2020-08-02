@@ -16,7 +16,7 @@
       <v-autocomplete
         class="m-5"
         v-model="selectedCity"
-        v-if="selectedCountry != null"
+        :disabled="selectedCountry == null"
         :items="cities"
         :filter="filterByTxt"
         item-text="sehirAdi"
@@ -29,7 +29,7 @@
       <v-autocomplete
         class="m-5"
         v-model="selectedDistrict"
-        v-if="selectedCity != null"
+        :disabled="selectedCity == null"
         :items="districts"
         :filter="filterByTxt"
         item-text="IlceAdi"
@@ -68,14 +68,14 @@
         :label="$t('changeLocation')"
         :placeholder="$t('changeLocation')"
       />
-      <!-- do not change zoom level <div>
+      <div>
         <div v-if="currLang && currLang.code == 'tr'" class="m-5">
           <span>{{$t('changeZoom')}} (%{{currZoom}})</span>
         </div>
         <div v-else class="m-5">
           <span>{{$t('changeZoom')}} ({{currZoom}}%)</span>
         </div>
-        <div>
+        <div style="heigth: 100px">
           <v-btn class="m-5" v-on:click="zoomIn()" icon color="primary">
             <v-icon>mdi-magnify-plus</v-icon>
           </v-btn>
@@ -83,7 +83,7 @@
             <v-icon>mdi-magnify-minus</v-icon>
           </v-btn>
         </div>
-      </div>-->
+      </div>
     </v-card>
   </div>
 </template>

@@ -23,7 +23,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main>
+    <v-main v-bind:style="{zoom: currZoom + '%' }">
       <div class="txt-center" v-if="!currTimes || !currTimes[currDayIdx]">
         <h2 class="normal-font">{{$t('noTimeData')}}</h2>
       </div>
