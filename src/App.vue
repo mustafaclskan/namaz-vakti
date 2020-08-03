@@ -8,7 +8,7 @@
       />
     </v-navigation-drawer>
 
-    <v-app-bar app dense>
+    <v-app-bar app dense v-bind:style="{zoom: currZoom + '%' }">
       <v-app-bar-nav-icon @click.stop="isSideBarOpen = !isSideBarOpen" color="primary"></v-app-bar-nav-icon>
       <v-toolbar-title>{{currLoc}}</v-toolbar-title>
       <v-spacer></v-spacer>
