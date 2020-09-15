@@ -99,6 +99,7 @@ export default class App extends Vue {
   created() {
     this._api = new ApiClient();
     this.currTimes = SettingService.getTimes4CurrentLocation();
+    this.decodeCurrTimes();
     this.currLoc = SettingService.getCurrLocation();
     this.currZoom = SettingService.getCurrZoom();
     this.setCurrDayIdx();
@@ -150,6 +151,7 @@ export default class App extends Vue {
 
   currTimesUpdated(data: TimesData[] | null) {
     this.currTimes = data;
+    this.decodeCurrTimes();
     this.setCurrDayIdx();
   }
 
@@ -171,6 +173,26 @@ export default class App extends Vue {
       }
     }
     SettingService.setCurrZoom(this.currZoom);
+  }
+
+  private decodeCurrTimes() {
+    if (!this.currTimes) {
+      return;
+    }
+    for (let i = 0; i < this.currTimes.length; i++) {
+      const keys = Object.keys(this.currTimes[i]);
+      for (let j = 0; j < keys.length; j++) {
+        (this.currTimes[i] as any)[keys[j]] = this.decodeHTML(
+          (this.currTimes[i] as any)[keys[j]]
+        );
+      }
+    }
+  }
+
+  private decodeHTML(str: string): string {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = str;
+    return txt.value;
   }
 
   private updateTimes4Current() {
