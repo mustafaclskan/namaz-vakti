@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:style="{zoom: currZoom + '%' }">
     <v-card class="m-5">
       <v-card-title>{{$t('addNewLocation')}}</v-card-title>
       <v-autocomplete
