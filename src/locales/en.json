@@ -7,8 +7,6 @@
   "selectLanguage": "Select a language",
   "selectTheme": "Select a theme",
   "changeLocation": "Change location",
-  "Açık": "Light",
-  "Koyu": "Dark",
   "noTimeData": "There is no time data. Try adding a location.",
   "changeZoom": "Change zoom level"
 }

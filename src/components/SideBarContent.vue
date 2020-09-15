@@ -132,14 +132,13 @@ export default class SideBarContent extends Vue {
       this.currLang = this.langs[0];
     }
     this.onLangSelected(this.currLang);
-    this.$vuetify.theme.dark =
-      this.currTheme === "Dark" || this.currTheme === "Koyu";
+    this.$vuetify.theme.dark = this.currTheme === "Dark";
   }
 
   onThemeSelected(e: string): void {
     if (e) {
       SettingService.saveTheme(e);
-      this.$vuetify.theme.dark = e === "Dark" || e === "Koyu";
+      this.$vuetify.theme.dark = e === "Dark";
     }
   }
 
@@ -150,22 +149,7 @@ export default class SideBarContent extends Vue {
       for (let i = 0; i < this.themes.length; i++) {
         this.themes[i] = this.$tc(this.themes[i]);
       }
-      if (e.code == "tr") {
-        if (this.currTheme == "Dark") {
-          this.currTheme = "Koyu";
-        }
-        if (this.currTheme == "Light") {
-          this.currTheme = "Açık";
-        }
-      } else if (e.code == "en") {
-        if (this.currTheme == "Koyu") {
-          this.currTheme = "Dark";
-        }
-        if (this.currTheme == "Açık") {
-          this.currTheme = "Light";
-        }
-      }
-      SettingService.saveTheme(this.currTheme || "Açık");
+      SettingService.saveTheme(this.currTheme || "Light");
       this.$emit("lang-selected", e.code);
     }
   }
