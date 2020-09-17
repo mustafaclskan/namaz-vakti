@@ -5,9 +5,9 @@ export interface Country {
 }
 
 export interface City {
-  sehirAdi: string;
-  sehirAdiEn: string;
-  sehirID: string;
+  SehirAdi: string;
+  SehirAdiEn: string;
+  SehirID: string;
 }
 
 export interface District {

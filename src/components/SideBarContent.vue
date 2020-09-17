@@ -19,7 +19,7 @@
         :disabled="selectedCountry == null"
         :items="cities"
         :filter="filterByTxt"
-        item-text="sehirAdi"
+        item-text="SehirAdi"
         v-on:input="onCitySelected"
         :label="$t('selectCity')"
         :placeholder="$t('selectCity')"
@@ -171,7 +171,8 @@ export default class SideBarContent extends Vue {
   }
 
   onCitySelected(c: City) {
-    this._api.getDistricts4City(c.sehirID, (e) => {
+    const country = this.selectedCountry ? this.selectedCountry.UlkeID : "";
+    this._api.getDistricts4City(country, c.SehirID, (e) => {
       this.districts = e;
     });
   }
@@ -186,7 +187,7 @@ export default class SideBarContent extends Vue {
         const id =
           this.selectedCountry.UlkeID +
           "_" +
-          this.selectedCity.sehirID +
+          this.selectedCity.SehirID +
           "_" +
           this.selectedDistrict.IlceID +
           "_" +

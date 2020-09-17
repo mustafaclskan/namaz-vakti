@@ -3,15 +3,16 @@ import { TimesData } from './components/MetaType';
 export class ApiClient {
   private _url: string;
   constructor() {
-    this._url = 'https://canbax.herokuapp.com/'
+    this._url = 'https://canbax.herokuapp.com/';
+    this._url = 'http://localhost:3000/';
   }
 
   getCities4Country(countryID: string, cb: (e: any) => void) {
     this.httpGet(this._url + 'sehirler?ulke=' + countryID, cb);
   }
 
-  getDistricts4City(cityID: string, cb: (e: any) => void) {
-    this.httpGet(this._url + 'ilceler?sehir=' + cityID, cb);
+  getDistricts4City(countryID: string, cityID: string, cb: (e: any) => void) {
+    this.httpGet(this._url + 'ilceler?sehir=' + cityID + '&ulke=' + countryID, cb);
   }
 
   getTimes4District(districtID: string, cb: (e: TimesData[]) => void) {
