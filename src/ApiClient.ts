@@ -8,15 +8,15 @@ export class ApiClient {
   }
 
   getCities4Country(countryID: string, cb: (e: any) => void) {
-    this.httpGet(this._url + 'sehirler?ulke=' + countryID, cb);
+    this.httpGet(this._url + 'cities?country=' + countryID, cb);
   }
 
   getDistricts4City(countryID: string, cityID: string, cb: (e: any) => void) {
-    this.httpGet(this._url + 'ilceler?sehir=' + cityID + '&ulke=' + countryID, cb);
+    this.httpGet(this._url + 'regions?city=' + cityID + '&country=' + countryID, cb);
   }
 
   getTimes4District(districtID: string, cb: (e: TimesData[]) => void) {
-    this.httpGet(this._url + 'vakitler?ilce=' + districtID, cb);
+    this.httpGet(this._url + 'data?region=' + districtID, cb);
   }
 
   private httpGet(url: string, cb: (e: any) => void) {
