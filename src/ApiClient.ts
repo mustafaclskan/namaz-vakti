@@ -3,7 +3,7 @@ import { TimesData } from './components/MetaType';
 export class ApiClient {
   private _url: string;
   constructor() {
-    this._url = 'https://canbax.herokuapp.com/';
+    this._url = 'https://namaz-vakti-api.herokuapp.com/';
     this._url = 'http://localhost:3000/';
   }
 
