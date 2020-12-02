@@ -114,7 +114,7 @@ export class SettingService {
     }
   }
 
-  static getTimes4CurrentLocation(now = 0): TimesData[] | null {
+  static getTimes4CurrentLocation(now = 0): string[][] | null {
 
     const keyOfRecent = SettingService.getDataKey4CurrentLocation();
     if (!keyOfRecent) {
@@ -124,7 +124,7 @@ export class SettingService {
     if (obj == null) {
       return null;
     }
-    return JSON.parse(obj) as TimesData[];
+    return JSON.parse(obj) as string[][];
   }
 
   static getDataKey4CurrentLocation(): string | null {

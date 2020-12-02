@@ -4,7 +4,7 @@ export class ApiClient {
   private _url: string;
   constructor() {
     this._url = 'https://namaz-vakti-api.herokuapp.com/';
-    this._url = 'http://localhost:3000/';
+    // this._url = 'http://localhost:3000/';
   }
 
   getCities4Country(countryID: string, cb: (e: any) => void) {

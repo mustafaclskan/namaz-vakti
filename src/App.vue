@@ -8,9 +8,12 @@
       />
     </v-navigation-drawer>
 
-    <v-app-bar app dense v-bind:style="{zoom: currZoom + '%' }">
-      <v-app-bar-nav-icon @click.stop="isSideBarOpen = !isSideBarOpen" color="primary"></v-app-bar-nav-icon>
-      <v-toolbar-title>{{currLoc}}</v-toolbar-title>
+    <v-app-bar app dense v-bind:style="{ zoom: currZoom + '%' }">
+      <v-app-bar-nav-icon
+        @click.stop="isSideBarOpen = !isSideBarOpen"
+        color="primary"
+      ></v-app-bar-nav-icon>
+      <v-toolbar-title>{{ currLoc }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-on:click="decreaseCurrDay()" icon color="primary">
         <v-icon>mdi-calendar-arrow-left</v-icon>
@@ -23,38 +26,52 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main v-bind:style="{zoom: currZoom + '%' }">
+    <v-main v-bind:style="{ zoom: currZoom + '%' }">
       <div class="txt-center" v-if="!currTimes || !currTimes[currDayIdx]">
-        <h2 class="normal-font">{{$t('noTimeData')}}</h2>
+        <h2 class="normal-font">{{ $t("noTimeData") }}</h2>
       </div>
       <div class="txt-center" v-if="currTimes && currTimes[currDayIdx]">
-        <h2
-          class="normal-font"
-        >{{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx]['MiladiTarihUzun']))}}</h2>
-        <h4 class="normal-font">{{currTimes[currDayIdx]['HicriTarihUzun']}}</h4>
+        <h2 class="normal-font">
+          {{
+            substrTranslate.t(
+              substrTranslate.t(currTimes[currDayIdx][0])
+            )
+          }}
+        </h2>
+        <h4 class="normal-font">
+          <!-- {{ currTimes[currDayIdx]["HicriTarihUzun"] }} -->
+        </h4>
       </div>
       <v-divider></v-divider>
-      <v-list :flat="true" disabled v-if="currTimes && currTimes[currDayIdx]" class="txt-center">
+      <v-list
+        :flat="true"
+        disabled
+        v-if="currTimes && currTimes[currDayIdx]"
+        class="txt-center"
+      >
         <v-list-item-group>
           <v-list-item v-for="(item, i) in timeItems" :key="i">
             <v-list-item-content>
               <h2 v-bind:class="{ 'normal-font': i != currPrayIdx }">
-                {{item.pre}} {{currTimes[currDayIdx][item.key]}}
-                <v-icon v-if="i == currPrayIdx" style="vertical-align: initial">mdi-clock</v-icon>
+                {{ item.pre }} {{ currTimes[currDayIdx][item.key] }}
+                <v-icon v-if="i == currPrayIdx" style="vertical-align: initial"
+                  >mdi-clock</v-icon
+                >
               </h2>
             </v-list-item-content>
           </v-list-item>
           <v-divider></v-divider>
           <v-list-item>
             <v-list-item-content>
-              <h2
-                class="normal-font"
-                v-if="currLang && currLang == 'tr'"
-              >{{ timeItems[currPrayIdx].pre.slice(0,-1) }} vakti için kalan süre {{remainingTime}}</h2>
-              <h2
-                class="normal-font"
-                v-else
-              >Remaining time for {{ timeItems[currPrayIdx].pre.slice(0,-1) }} {{remainingTime}}</h2>
+              <h2 class="normal-font" v-if="currLang && currLang == 'tr'">
+                {{ timeItems[currPrayIdx].pre.slice(0, -1) }} vakti için kalan
+                süre {{ remainingTime }}
+              </h2>
+              <h2 class="normal-font" v-else>
+                Remaining time for
+                {{ timeItems[currPrayIdx].pre.slice(0, -1) }}
+                {{ remainingTime }}
+              </h2>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -78,7 +95,7 @@ import { ApiClient } from "./ApiClient";
 })
 export default class App extends Vue {
   private isSideBarOpen = false;
-  private currTimes: TimesData[] | null = null;
+  private currTimes: string[][] | null = null;
   private currDayIdx = 0;
   private currLoc: string | null = "";
   private currPrayIdx = 2;
@@ -124,7 +141,7 @@ export default class App extends Vue {
     const today = new Date();
     let idx = 0;
     for (const d of this.currTimes) {
-      if (this.date2str(today) == d.MiladiTarihKisa) {
+      if (d[0].toLowerCase().includes(this.date2str(today).toLowerCase())) {
         this.currDayIdx = idx;
         return;
       }
@@ -149,7 +166,7 @@ export default class App extends Vue {
     }
   }
 
-  currTimesUpdated(data: TimesData[] | null) {
+  currTimesUpdated(data: string[][] | null) {
     this.currTimes = data;
     this.decodeCurrTimes();
     this.setCurrDayIdx();
@@ -295,18 +312,44 @@ export default class App extends Vue {
     if (!d) {
       d = new Date();
     }
-    let month = "" + (d.getMonth() + 1);
+    let month = this.month2Turkish(d.getMonth());
     let day = "" + d.getDate();
     const year = d.getFullYear();
 
-    if (month.length < 2) {
-      month = "0" + month;
-    }
     if (day.length < 2) {
       day = "0" + day;
     }
 
-    return [day, month, year].join(".");
+    return [day, month, year].join(" ");
+  }
+
+  private month2Turkish(m: number) {
+    switch (m) {
+      case 0:
+        return "Ocak";
+      case 1:
+        return "Şubat";
+      case 2:
+        return "Mart";
+      case 3:
+        return "Nisan";
+      case 4:
+        return "Mayıs";
+      case 5:
+        return "Haziran";
+      case 6:
+        return "Temmuz";
+      case 7:
+        return "Ağustos";
+      case 8:
+        return "Eylül";
+      case 9:
+        return "Ekim";
+      case 10:
+        return "Kasım";
+      case 11:
+        return "Aralık";
+    }
   }
 }
 </script>
