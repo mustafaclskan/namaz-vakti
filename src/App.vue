@@ -80,7 +80,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import SideBarContent from "./components/SideBarContent.vue";
-import { TimesData } from "./components/MetaType";
 import { SettingService } from "./SettingService";
 import { SubstrTranslator } from "./SubstrTranslator";
 import { ApiClient } from "./ApiClient";
@@ -113,6 +112,7 @@ export default class App extends Vue {
 
   created() {
     this._api = new ApiClient();
+    console.log('get times for data on created');
     this.currTimes = SettingService.getTimes4CurrentLocation();
     this.decodeCurrTimes();
     this.currLoc = SettingService.getCurrLocation();
@@ -216,7 +216,7 @@ export default class App extends Vue {
     const arr = k.split("_");
 
     this._api.getTimes4District(arr[arr.length - 2], (e) => {
-      const id = arr.slice(0, -1).join("_") + "_" + e[0].MiladiTarihKisa;
+      const id = arr.slice(0, -1).join("_") + "_" + e[0][0].replace(/\s/g, '');
       const loc = SettingService.getCurrLocation();
       if (loc) {
         SettingService.addTimesData(id, e, loc);

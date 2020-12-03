@@ -1,5 +1,3 @@
-import { TimesData } from './components/MetaType';
-
 export class SettingService {
   private static QUEUE_LIMIT = 33;
   private static QUEUE_KEY = 'timesQueue';
@@ -61,7 +59,7 @@ export class SettingService {
   }
 
   // needs change
-  static getData4SavedLocation(loc: string): TimesData | null {
+  static getData4SavedLocation(loc: string): string[] | null {
     const locs = localStorage.getItem(this.QUEUE_KEY);
     if (locs != null) {
       const arr = JSON.parse(locs) as any[];
@@ -69,7 +67,7 @@ export class SettingService {
         if (Object.values(arr[i])[0] == loc) {
           const data = localStorage.getItem(Object.keys(arr[i])[0]);
           if (data != null) {
-            return JSON.parse(data) as TimesData;
+            return JSON.parse(data) as string[];
           }
         }
       }
@@ -78,6 +76,7 @@ export class SettingService {
   }
 
   static addTimesData(key: string, data: any, locName: string) {
+    console.log('add times data settings: ');
     localStorage.setItem(key, JSON.stringify(data));
     let d = localStorage.getItem(this.QUEUE_KEY);
     SettingService.setCurrLocation(locName);
@@ -115,7 +114,7 @@ export class SettingService {
   }
 
   static getTimes4CurrentLocation(now = 0): string[][] | null {
-
+    console.log('settings service get times for current loc');
     const keyOfRecent = SettingService.getDataKey4CurrentLocation();
     if (!keyOfRecent) {
       return null;

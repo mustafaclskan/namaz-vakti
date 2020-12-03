@@ -21,21 +21,6 @@ export interface UiLanguage {
   code: string;
 }
 
-export interface TimesData {
-  MiladiTarihKisa: string;
-  MiladiTarihUzun: string;
-  HicriTarihKisa: string;
-  HicriTarihUzun: string;
-  Imsak: string;
-  Gunes: string;
-  Ogle: string;
-  Ikindi: string;
-  Aksam: string;
-  Yatsi: string;
-  KibleAcisi: string;
-  KibleSaati: string;
-}
-
 export const THEMES: any = {
   light1: {
     primary: '#1976D2',

@@ -191,7 +191,7 @@ export default class SideBarContent extends Vue {
           "_" +
           this.selectedDistrict.IlceID +
           "_" +
-          e[0].MiladiTarihKisa;
+          e[0][0].replace(/\s/g, '');
         SettingService.addTimesData(id, e, d.IlceAdi);
         this.savedLocations = SettingService.getSavedLocations();
         this.currLocation = SettingService.getCurrLocation();

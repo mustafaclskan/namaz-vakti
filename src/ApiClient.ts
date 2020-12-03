@@ -1,5 +1,3 @@
-import { TimesData } from './components/MetaType';
-
 export class ApiClient {
   private _url: string;
   constructor() {
@@ -15,7 +13,7 @@ export class ApiClient {
     this.httpGet(this._url + 'regions?city=' + cityID + '&country=' + countryID, cb);
   }
 
-  getTimes4District(districtID: string, cb: (e: TimesData[]) => void) {
+  getTimes4District(districtID: string, cb: (e: string[][]) => void) {
     this.httpGet(this._url + 'data?region=' + districtID, cb);
   }
 
