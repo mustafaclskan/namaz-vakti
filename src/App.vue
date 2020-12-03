@@ -32,15 +32,8 @@
       </div>
       <div class="txt-center" v-if="currTimes && currTimes[currDayIdx]">
         <h2 class="normal-font">
-          {{
-            substrTranslate.t(
-              substrTranslate.t(currTimes[currDayIdx][0])
-            )
-          }}
+          {{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx][0])) }}
         </h2>
-        <h4 class="normal-font">
-          <!-- {{ currTimes[currDayIdx]["HicriTarihUzun"] }} -->
-        </h4>
       </div>
       <v-divider></v-divider>
       <v-list
@@ -52,11 +45,14 @@
         <v-list-item-group>
           <v-list-item v-for="(item, i) in timeItems" :key="i">
             <v-list-item-content>
-              <h2 v-bind:class="{ 'normal-font': i != currPrayIdx }">
-                {{ item.pre }} {{ currTimes[currDayIdx][item.key] }}
-                <v-icon v-if="i == currPrayIdx" style="vertical-align: initial"
-                  >mdi-clock</v-icon
+              <h2 v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }">
+                {{ item }} {{ currTimes[currDayIdx][i + 1] }}
+                <v-icon
+                  v-if="i == currPrayIdx - 1"
+                  style="vertical-align: initial"
                 >
+                  mdi-clock
+                </v-icon>
               </h2>
             </v-list-item-content>
           </v-list-item>
@@ -64,12 +60,13 @@
           <v-list-item>
             <v-list-item-content>
               <h2 class="normal-font" v-if="currLang && currLang == 'tr'">
-                {{ timeItems[currPrayIdx].pre.slice(0, -1) }} vakti için kalan
-                süre {{ remainingTime }}
+                {{ timeItems[currPrayIdx - 1].slice(0, -1) }} vakti için kalan
+                süre
+                {{ remainingTime }}
               </h2>
               <h2 class="normal-font" v-else>
                 Remaining time for
-                {{ timeItems[currPrayIdx].pre.slice(0, -1) }}
+                {{ timeItems[currPrayIdx - 1].slice(0, -1) }}
                 {{ remainingTime }}
               </h2>
             </v-list-item-content>
@@ -95,18 +92,19 @@ import { ApiClient } from "./ApiClient";
 })
 export default class App extends Vue {
   private isSideBarOpen = false;
+  // array of array of strings, first is the date the rest 6 are times for prayings
   private currTimes: string[][] | null = null;
   private currDayIdx = 0;
   private currLoc: string | null = "";
   private currPrayIdx = 2;
   private remainingTime = "";
   private timeItems = [
-    { pre: "İmsak:", key: "Imsak" },
-    { pre: "Güneş:", key: "Gunes" },
-    { pre: "Öğle:", key: "Ogle" },
-    { pre: "İkindi:", key: "Ikindi" },
-    { pre: "Akşam:", key: "Aksam" },
-    { pre: "Yatsı:", key: "Yatsi" },
+    "İmsak:",
+    "Güneş:",
+    "Öğle:",
+    "İkindi:",
+    "Akşam:",
+    "Yatsı:",
   ];
   private substrTranslate = SubstrTranslator;
   private currLang = SettingService.getCurrLang();
@@ -167,6 +165,7 @@ export default class App extends Vue {
   }
 
   currTimesUpdated(data: string[][] | null) {
+    console.log("curr times updated");
     this.currTimes = data;
     this.decodeCurrTimes();
     this.setCurrDayIdx();
@@ -174,7 +173,7 @@ export default class App extends Vue {
 
   langSelected() {
     for (let i = 0; i < this.timeItems.length; i++) {
-      this.timeItems[i].pre = SubstrTranslator.t(this.timeItems[i].pre);
+      this.timeItems[i] = SubstrTranslator.t(this.timeItems[i]);
     }
     this.currLang = SettingService.getCurrLang();
   }
@@ -197,11 +196,8 @@ export default class App extends Vue {
       return;
     }
     for (let i = 0; i < this.currTimes.length; i++) {
-      const keys = Object.keys(this.currTimes[i]);
-      for (let j = 0; j < keys.length; j++) {
-        (this.currTimes[i] as any)[keys[j]] = this.decodeHTML(
-          (this.currTimes[i] as any)[keys[j]]
-        );
+      for (let j = 0; j < this.currTimes[i].length; j++) {
+        this.currTimes[i][j] = this.decodeHTML(this.currTimes[i][j]);
       }
     }
   }
@@ -238,11 +234,9 @@ export default class App extends Vue {
     const sec = d.getSeconds();
     const currSeconds = h * 3600 + m * 60 + sec;
     const prayTimeInSeconds = this.strTime2TotalSec(
-      (this.currTimes as any)[this.currDayIdx][
-        this.timeItems[this.currPrayIdx].key
-      ] as string
+      this.currTimes[this.currDayIdx][this.currPrayIdx]
     );
-    if (currSeconds > prayTimeInSeconds && this.currPrayIdx != 0) {
+    if (currSeconds > prayTimeInSeconds && this.currPrayIdx != 1) {
       this.updateCurrPrayIdx();
       return;
     }
@@ -268,11 +262,11 @@ export default class App extends Vue {
     const h = d.getHours();
     const m = d.getMinutes();
     const totalSec = h * 3600 + m * 60;
-    this.currPrayIdx = 0;
-    for (let i = 0; i < this.timeItems.length; i++) {
-      const curr = (this.currTimes as any)[this.currDayIdx][
-        this.timeItems[i].key
-      ] as string;
+    // if not found a greater total seconds it means it is the first
+    this.currPrayIdx = 1;
+    // first item in `currTimes` is date
+    for (let i = 1; i < this.timeItems.length + 1; i++) {
+      const curr = this.currTimes[this.currDayIdx][i];
       const totalSec2 = this.strTime2TotalSec(curr);
       if (totalSec < totalSec2) {
         this.currPrayIdx = i;
