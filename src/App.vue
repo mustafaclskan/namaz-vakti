@@ -172,10 +172,10 @@ export default class App extends Vue {
   }
 
   currTimesUpdated(data: string[][] | null): void {
-    console.log("curr times updated");
     this.currTimes = data;
     this.decodeCurrTimes();
     this.setCurrDayIdx();
+    this.currLoc = SettingService.getCurrLocation();
   }
 
   langSelected(): void {
@@ -209,7 +209,6 @@ export default class App extends Vue {
     }
   }
 
-  
   private updateTimes4Current(): void {
     const k = SettingService.getDataKey4CurrentLocation();
     if (!k) {
