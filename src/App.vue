@@ -82,6 +82,7 @@ import { Component, Vue } from "vue-property-decorator";
 import SideBarContent from "./components/SideBarContent.vue";
 import { SettingService } from "./SettingService";
 import { SubstrTranslator } from "./SubstrTranslator";
+import { date2str, month2Turkish, seconds2str, strTime2TotalSec, turkishDateStr2Date } from "./helper";
 import { ApiClient } from "./ApiClient";
 
 @Component({
@@ -112,7 +113,7 @@ export default class App extends Vue {
 
   created() {
     this._api = new ApiClient();
-    console.log('get times for data on created');
+    console.log("get times for data on created");
     this.currTimes = SettingService.getTimes4CurrentLocation();
     this.decodeCurrTimes();
     this.currLoc = SettingService.getCurrLocation();
@@ -139,7 +140,7 @@ export default class App extends Vue {
     const today = new Date();
     let idx = 0;
     for (const d of this.currTimes) {
-      if (d[0].toLowerCase().includes(this.date2str(today).toLowerCase())) {
+      if (d[0].toLowerCase().includes(date2str(today).toLowerCase())) {
         this.currDayIdx = idx;
         return;
       }
@@ -216,7 +217,8 @@ export default class App extends Vue {
     const arr = k.split("_");
 
     this._api.getTimes4District(arr[arr.length - 2], (e) => {
-      const id = arr.slice(0, -1).join("_") + "_" + e[0][0].replace(/\s/g, '');
+      const unix_date = turkishDateStr2Date(e[0][0]);
+      const id = arr.slice(0, -1).join("_") + "_" + unix_date;
       const loc = SettingService.getCurrLocation();
       if (loc) {
         SettingService.addTimesData(id, e, loc);
@@ -233,7 +235,7 @@ export default class App extends Vue {
     const m = d.getMinutes();
     const sec = d.getSeconds();
     const currSeconds = h * 3600 + m * 60 + sec;
-    const prayTimeInSeconds = this.strTime2TotalSec(
+    const prayTimeInSeconds = strTime2TotalSec(
       this.currTimes[this.currDayIdx][this.currPrayIdx]
     );
     if (currSeconds > prayTimeInSeconds && this.currPrayIdx != 1) {
@@ -245,13 +247,10 @@ export default class App extends Vue {
     if (secDiff < 0) {
       secDiff = 86400 - currSeconds + prayTimeInSeconds;
     }
-    this.remainingTime = this.seconds2str(secDiff);
+    this.remainingTime = seconds2str(secDiff);
   }
 
-  // from a string with format 22:21, return total number of seconds
-  private strTime2TotalSec(s: string): number {
-    return 3600 * +s.slice(0, 2) + 60 * +s.slice(3, 5);
-  }
+  
 
   private updateCurrPrayIdx() {
     if (!this.currTimes) {
@@ -267,7 +266,7 @@ export default class App extends Vue {
     // first item in `currTimes` is date
     for (let i = 1; i < this.timeItems.length + 1; i++) {
       const curr = this.currTimes[this.currDayIdx][i];
-      const totalSec2 = this.strTime2TotalSec(curr);
+      const totalSec2 = strTime2TotalSec(curr);
       if (totalSec < totalSec2) {
         this.currPrayIdx = i;
         break;
@@ -275,76 +274,7 @@ export default class App extends Vue {
     }
   }
 
-  private seconds2str(i: number): string {
-    let s = "";
-    const h = Math.floor(i / 3600);
-    if (h > 0) {
-      if (h < 10) {
-        s += "0" + h;
-      } else {
-        s += h;
-      }
-      s += ":";
-    }
-    const m = Math.floor((i - 3600 * h) / 60);
-    if (m < 10) {
-      s += "0" + m;
-    } else {
-      s += m;
-    }
-    s += ":";
-    const sec = i - 3600 * h - 60 * m;
-    if (sec < 10) {
-      s += "0" + sec;
-    } else {
-      s += sec;
-    }
-    return s;
-  }
-
-  private date2str(d: Date | null = null): string {
-    if (!d) {
-      d = new Date();
-    }
-    let month = this.month2Turkish(d.getMonth());
-    let day = "" + d.getDate();
-    const year = d.getFullYear();
-
-    if (day.length < 2) {
-      day = "0" + day;
-    }
-
-    return [day, month, year].join(" ");
-  }
-
-  private month2Turkish(m: number) {
-    switch (m) {
-      case 0:
-        return "Ocak";
-      case 1:
-        return "Şubat";
-      case 2:
-        return "Mart";
-      case 3:
-        return "Nisan";
-      case 4:
-        return "Mayıs";
-      case 5:
-        return "Haziran";
-      case 6:
-        return "Temmuz";
-      case 7:
-        return "Ağustos";
-      case 8:
-        return "Eylül";
-      case 9:
-        return "Ekim";
-      case 10:
-        return "Kasım";
-      case 11:
-        return "Aralık";
-    }
-  }
+  
 }
 </script>
 <style scoped>

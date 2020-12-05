@@ -1,7 +1,7 @@
 <template>
-  <div v-bind:style="{zoom: currZoom + '%' }">
+  <div v-bind:style="{ zoom: currZoom + '%' }">
     <v-card class="m-5">
-      <v-card-title>{{$t('addNewLocation')}}</v-card-title>
+      <v-card-title>{{ $t("addNewLocation") }}</v-card-title>
       <v-autocomplete
         class="m-5"
         v-model="selectedCountry"
@@ -40,7 +40,7 @@
       />
     </v-card>
     <v-card class="m-5">
-      <v-card-title>{{$t('settings')}}</v-card-title>
+      <v-card-title>{{ $t("settings") }}</v-card-title>
       <v-select
         class="m-5"
         v-model="currLang"
@@ -70,10 +70,10 @@
       />
       <div>
         <div v-if="currLang && currLang.code == 'tr'" class="m-5">
-          <span>{{$t('changeZoom')}} (%{{currZoom}})</span>
+          <span>{{ $t("changeZoom") }} (%{{ currZoom }})</span>
         </div>
         <div v-else class="m-5">
-          <span>{{$t('changeZoom')}} ({{currZoom}}%)</span>
+          <span>{{ $t("changeZoom") }} ({{ currZoom }}%)</span>
         </div>
         <div style="heigth: 100px">
           <v-btn class="m-5" v-on:click="zoomIn()" icon color="primary">
@@ -95,6 +95,7 @@ import TR_CITIES from "../assets/cities.json";
 import { Country, City, District, UiLanguage } from "./MetaType";
 import { ApiClient } from "../ApiClient";
 import { SettingService } from "../SettingService";
+import { turkishDateStr2Date } from "@/helper";
 
 @Component
 export default class SideBarContent extends Vue {
@@ -142,7 +143,7 @@ export default class SideBarContent extends Vue {
     }
   }
 
-  onLangSelected(e: { txt: string; code: string }) {
+  onLangSelected(e: { txt: string; code: string }): void {
     if (e) {
       SettingService.saveLang(e.code);
       this.$i18n.locale = e.code;
@@ -154,7 +155,7 @@ export default class SideBarContent extends Vue {
     }
   }
 
-  onCountrySelected(c: Country) {
+  onCountrySelected(c: Country): void {
     console.log(" on country selected: ", c);
     // Turkey is cached
     if (c.UlkeAdi == "TURKIYE") {
@@ -170,20 +171,21 @@ export default class SideBarContent extends Vue {
     }
   }
 
-  onCitySelected(c: City) {
+  onCitySelected(c: City): void {
     const country = this.selectedCountry ? this.selectedCountry.UlkeID : "";
     this._api.getDistricts4City(country, c.SehirID, (e) => {
       this.districts = e;
     });
   }
 
-  onDistrictSelected(d: District) {
+  onDistrictSelected(d: District): void {
     this._api.getTimes4District(d.IlceID, (e) => {
       if (
         this.selectedCountry != null &&
         this.selectedCity != null &&
         this.selectedDistrict != null
       ) {
+        const unix_date = turkishDateStr2Date(e[0][0]);
         const id =
           this.selectedCountry.UlkeID +
           "_" +
@@ -191,7 +193,7 @@ export default class SideBarContent extends Vue {
           "_" +
           this.selectedDistrict.IlceID +
           "_" +
-          e[0][0].replace(/\s/g, '');
+          unix_date;
         SettingService.addTimesData(id, e, d.IlceAdi);
         this.savedLocations = SettingService.getSavedLocations();
         this.currLocation = SettingService.getCurrLocation();
@@ -202,7 +204,7 @@ export default class SideBarContent extends Vue {
     });
   }
 
-  onSavedLocationSelected(e: string) {
+  onSavedLocationSelected(e: string): void {
     SettingService.setCurrLocation(e);
     console.log(
       " on saved location selected: ",
@@ -211,16 +213,17 @@ export default class SideBarContent extends Vue {
     this.$emit("curr-times-updated", SettingService.getData4SavedLocation(e));
   }
 
-  filterByTxt(item: any, queryText: string, itemText: string): boolean {
+  filterByTxt(item: Country, queryText: string, itemText: string): boolean {
+    console.log("filter by txt item: ", item);
     return itemText.toLowerCase().includes(queryText.toLowerCase());
   }
 
-  zoomIn() {
+  zoomIn(): void {
     this.$emit("zoom-changed", true);
     this.currZoom = SettingService.getCurrZoom();
   }
 
-  zoomOut() {
+  zoomOut(): void {
     this.$emit("zoom-changed", false);
     this.currZoom = SettingService.getCurrZoom();
   }

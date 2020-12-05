@@ -6,11 +6,11 @@ export class SettingService {
   private static CURR_LANG_KEY = 'currLang';
   private static CUR_ZOOM_KEY = 'currZoom';
 
-  static saveTheme(theme: string) {
+  static saveTheme(theme: string): void {
     localStorage.setItem(this.THEME_KEY, theme);
   }
 
-  static saveLang(theme: string) {
+  static saveLang(theme: string): void {
     localStorage.setItem(this.CURR_LANG_KEY, theme);
   }
 
@@ -30,11 +30,11 @@ export class SettingService {
     return +v;
   }
 
-  static setCurrZoom(v: number) {
+  static setCurrZoom(v: number): void {
     localStorage.setItem(this.CUR_ZOOM_KEY, v + '');
   }
 
-  static setCurrLocation(loc: string) {
+  static setCurrLocation(loc: string): void {
     localStorage.setItem(this.CURR_LOC_KEY, loc);
   }
 
@@ -75,7 +75,7 @@ export class SettingService {
     return null;
   }
 
-  static addTimesData(key: string, data: any, locName: string) {
+  static addTimesData(key: string, data: string[][], locName: string): void {
     console.log('add times data settings: ');
     localStorage.setItem(key, JSON.stringify(data));
     let d = localStorage.getItem(this.QUEUE_KEY);
@@ -153,8 +153,7 @@ export class SettingService {
     let keyOfMin = '';
     for (const k of timesQueueKeys) {
       const arr = k.split('_');
-      const dateStr = arr[arr.length - 1];
-      const d = new Date(+(dateStr.substr(6, 4)), +(dateStr.substr(3, 2)) - 1, +(dateStr.substr(0, 2))).getTime();
+      const d = Number(arr[arr.length - 1]);
       const currDiff = now - d;
       if (currDiff < minDiff) {
         minDiff = currDiff;

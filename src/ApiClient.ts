@@ -5,11 +5,11 @@ export class ApiClient {
     // this._url = 'http://localhost:3000/';
   }
 
-  getCities4Country(countryID: string, cb: (e: any) => void) {
+  getCities4Country(countryID: string, cb: (e: any[]) => void) {
     this.httpGet(this._url + 'cities?country=' + countryID, cb);
   }
 
-  getDistricts4City(countryID: string, cityID: string, cb: (e: any) => void) {
+  getDistricts4City(countryID: string, cityID: string, cb: (e: any[]) => void) {
     this.httpGet(this._url + 'regions?city=' + cityID + '&country=' + countryID, cb);
   }
 

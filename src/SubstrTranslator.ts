@@ -2,7 +2,7 @@ import { SettingService } from './SettingService';
 
 export class SubstrTranslator {
 
-  private static _2En = {
+  private static _2En: { [key: string]: string } = {
     "Ocak": "January",
     "Şubat": "February",
     "Mart": "March",
@@ -28,7 +28,7 @@ export class SubstrTranslator {
     "İkindi": "Asr",
     "Akşam": "Maghrib",
     "Yatsı": "Isha'a"
-  } as any;
+  };
 
   public static t(s: string): string {
     const lang = SettingService.getCurrLang();
