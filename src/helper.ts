@@ -116,3 +116,9 @@ export function date2str(d: Date | null = null): string {
 export function strTime2TotalSec(s: string): number {
   return 3600 * +s.slice(0, 2) + 60 * +s.slice(3, 5);
 }
+
+export function decodeHTML(str: string): string {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = str;
+  return txt.value;
+}

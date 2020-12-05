@@ -1,3 +1,5 @@
+import { StringDict } from './components/MetaType';
+
 export class SettingService {
   private static QUEUE_LIMIT = 33;
   private static QUEUE_KEY = 'timesQueue';
@@ -46,7 +48,7 @@ export class SettingService {
   static getSavedLocations(): string[] {
     const locs = localStorage.getItem(this.QUEUE_KEY);
     if (locs) {
-      const arr = JSON.parse(locs) as any[];
+      const arr = JSON.parse(locs) as StringDict[];
       const s: string[] = [];
       // keys are IDS for data, values are human readable location names
       for (let i = 0; i < arr.length; i++) {
@@ -62,7 +64,7 @@ export class SettingService {
   static getData4SavedLocation(loc: string): string[] | null {
     const locs = localStorage.getItem(this.QUEUE_KEY);
     if (locs != null) {
-      const arr = JSON.parse(locs) as any[];
+      const arr = JSON.parse(locs) as StringDict[];
       for (let i = 0; i < arr.length; i++) {
         if (Object.values(arr[i])[0] == loc) {
           const data = localStorage.getItem(Object.keys(arr[i])[0]);
@@ -82,14 +84,14 @@ export class SettingService {
     SettingService.setCurrLocation(locName);
     // insert item to the queue
     if (d != null) {
-      const arr = JSON.parse(d) as any[];
+      const arr = JSON.parse(d) as StringDict[];
       for (let i = 0; i < arr.length; i++) {
         // do not add redundant data
         if (Object.keys(arr[i])[0] == key) {
           return;
         }
       }
-      const obj = {} as any;
+      const obj = {} as StringDict;
       obj[key] = locName;
       arr.push(obj);
       localStorage.setItem(this.QUEUE_KEY, JSON.stringify(arr));
@@ -102,7 +104,7 @@ export class SettingService {
     if (d == null) {
       return;
     }
-    const arr = JSON.parse(d) as any[];
+    const arr = JSON.parse(d) as StringDict[];
     if (arr.length <= this.QUEUE_LIMIT) {
       return;
     }
@@ -113,7 +115,7 @@ export class SettingService {
     }
   }
 
-  static getTimes4CurrentLocation(now = 0): string[][] | null {
+  static getTimes4CurrentLocation(): string[][] | null {
     console.log('settings service get times for current loc');
     const keyOfRecent = SettingService.getDataKey4CurrentLocation();
     if (!keyOfRecent) {
@@ -135,7 +137,7 @@ export class SettingService {
     if (d == null) {
       return null;
     }
-    const arr = JSON.parse(d) as any[];
+    const arr = JSON.parse(d) as StringDict[];
     const queueKeys: string[] = [];
     for (let i = arr.length - 1; i > -1; i--) {
       if (Object.values(arr[i])[0] == currLoc) {

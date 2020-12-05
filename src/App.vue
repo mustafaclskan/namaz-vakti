@@ -82,7 +82,13 @@ import { Component, Vue } from "vue-property-decorator";
 import SideBarContent from "./components/SideBarContent.vue";
 import { SettingService } from "./SettingService";
 import { SubstrTranslator } from "./SubstrTranslator";
-import { date2str, month2Turkish, seconds2str, strTime2TotalSec, turkishDateStr2Date } from "./helper";
+import {
+  date2str,
+  decodeHTML,
+  seconds2str,
+  strTime2TotalSec,
+  turkishDateStr2Date,
+} from "./helper";
 import { ApiClient } from "./ApiClient";
 
 @Component({
@@ -111,7 +117,7 @@ export default class App extends Vue {
   private _api: ApiClient = new ApiClient();
   private currZoom = 100;
 
-  created() {
+  created(): void {
     this._api = new ApiClient();
     console.log("get times for data on created");
     this.currTimes = SettingService.getTimes4CurrentLocation();
@@ -131,7 +137,7 @@ export default class App extends Vue {
     }, 60000);
   }
 
-  setCurrDayIdx() {
+  setCurrDayIdx(): void {
     if (!this.currTimes) {
       console.log("times data not exists");
       this.isSideBarOpen = true;
@@ -150,7 +156,7 @@ export default class App extends Vue {
     this.updateTimes4Current();
   }
 
-  increaseCurrDay() {
+  increaseCurrDay(): void {
     if (!this.currTimes) {
       return;
     }
@@ -159,27 +165,27 @@ export default class App extends Vue {
     }
   }
 
-  decreaseCurrDay() {
+  decreaseCurrDay(): void {
     if (this.currDayIdx > 0) {
       this.currDayIdx--;
     }
   }
 
-  currTimesUpdated(data: string[][] | null) {
+  currTimesUpdated(data: string[][] | null): void {
     console.log("curr times updated");
     this.currTimes = data;
     this.decodeCurrTimes();
     this.setCurrDayIdx();
   }
 
-  langSelected() {
+  langSelected(): void {
     for (let i = 0; i < this.timeItems.length; i++) {
       this.timeItems[i] = SubstrTranslator.t(this.timeItems[i]);
     }
     this.currLang = SettingService.getCurrLang();
   }
 
-  zoomChanged(isIncrease: boolean) {
+  zoomChanged(isIncrease: boolean): void {
     if (isIncrease) {
       if (this.currZoom < 400) {
         this.currZoom = this.currZoom + 10;
@@ -192,24 +198,19 @@ export default class App extends Vue {
     SettingService.setCurrZoom(this.currZoom);
   }
 
-  private decodeCurrTimes() {
+  private decodeCurrTimes(): void {
     if (!this.currTimes) {
       return;
     }
     for (let i = 0; i < this.currTimes.length; i++) {
       for (let j = 0; j < this.currTimes[i].length; j++) {
-        this.currTimes[i][j] = this.decodeHTML(this.currTimes[i][j]);
+        this.currTimes[i][j] = decodeHTML(this.currTimes[i][j]);
       }
     }
   }
 
-  private decodeHTML(str: string): string {
-    var txt = document.createElement("textarea");
-    txt.innerHTML = str;
-    return txt.value;
-  }
-
-  private updateTimes4Current() {
+  
+  private updateTimes4Current(): void {
     const k = SettingService.getDataKey4CurrentLocation();
     if (!k) {
       return;
@@ -226,7 +227,7 @@ export default class App extends Vue {
     });
   }
 
-  private updateRemainingTime() {
+  private updateRemainingTime(): void {
     if (!this.currTimes) {
       return;
     }
@@ -250,9 +251,7 @@ export default class App extends Vue {
     this.remainingTime = seconds2str(secDiff);
   }
 
-  
-
-  private updateCurrPrayIdx() {
+  private updateCurrPrayIdx(): void {
     if (!this.currTimes) {
       return;
     }
@@ -273,8 +272,6 @@ export default class App extends Vue {
       }
     }
   }
-
-  
 }
 </script>
 <style scoped>

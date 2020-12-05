@@ -1,8 +1,9 @@
+import { StringDict } from './components/MetaType';
 import { SettingService } from './SettingService';
 
 export class SubstrTranslator {
 
-  private static _2En: { [key: string]: string } = {
+  private static _2En: StringDict = {
     "Ocak": "January",
     "Şubat": "February",
     "Mart": "March",
