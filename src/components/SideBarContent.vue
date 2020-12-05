@@ -92,7 +92,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import COUNTRIES from "../assets/countries.json";
 import TR_CITIES from "../assets/cities.json";
-import { Country, City, District, UiLanguage } from "./MetaType";
+import { Country, City, District, UiLanguage } from "../MetaType";
 import { ApiClient } from "../ApiClient";
 import { SettingService } from "../SettingService";
 import { turkishDateStr2Date } from "@/helper";

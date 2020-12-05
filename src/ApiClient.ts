@@ -1,4 +1,4 @@
-import { City, District } from './components/MetaType';
+import { City, District } from './MetaType';
 
 export class ApiClient {
   private _url: string;

@@ -1,4 +1,4 @@
-import { StringDict } from './components/MetaType';
+import { StringDict } from './MetaType';
 import { SettingService } from './SettingService';
 
 export class SubstrTranslator {

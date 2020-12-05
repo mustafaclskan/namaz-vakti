@@ -57,3 +57,7 @@ export interface UiLanguage {
 export interface StringDict {
   [key: string]: string;
 }
+
+export interface IntDict {
+  [key: number]: number[];
+}

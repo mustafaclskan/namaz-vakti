@@ -1,4 +1,4 @@
-import { StringDict } from './components/MetaType';
+import { StringDict } from './MetaType';
 
 export class SettingService {
   private static QUEUE_LIMIT = 33;
