@@ -78,12 +78,16 @@
 </template>
 
 <script lang="ts">
+// Bismillahirrahmanirrahim بسم الله الرحمن الرحيم
 import { Component, Vue } from "vue-property-decorator";
 import SideBarContent from "./components/SideBarContent.vue";
 import { SettingService } from "./SettingService";
 import { SubstrTranslator } from "./SubstrTranslator";
 import { runAllHijriDateTests } from "./HijriDate-test";
+import { HijriDate } from "./HijriDate";
+
 import {
+  clearHours,
   date2str,
   decodeHTML,
   seconds2str,
@@ -117,6 +121,7 @@ export default class App extends Vue {
   private currLang = SettingService.getCurrLang();
   private _api: ApiClient = new ApiClient();
   private currZoom = 100;
+  private hijri = new HijriDate();
 
   created(): void {
     this._api = new ApiClient();
@@ -136,7 +141,11 @@ export default class App extends Vue {
       this.updateCurrPrayIdx();
     }, 60000);
 
-    runAllHijriDateTests();
+    // runAllHijriDateTests();
+    const today = clearHours(new Date());
+    console.log("today in hijri: ", this.hijri.toHijri(today).toStr());
+    console.log("nearest sabb: ", this.hijri.getNearestSabbatical(today));
+    console.log("nearest sabb: ", this.hijri.getAllSabbaticalsNear(today, 30));
   }
 
   setCurrDayIdx(): void {

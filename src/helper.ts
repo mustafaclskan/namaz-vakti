@@ -122,3 +122,11 @@ export function decodeHTML(str: string): string {
   txt.innerHTML = str;
   return txt.value;
 }
+
+export function clearHours(d: Date) {
+  d.setHours(0);
+  d.setMinutes(0);
+  d.setSeconds(0);
+  d.setMilliseconds(0);
+  return d;
+}

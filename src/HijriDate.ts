@@ -1,4 +1,4 @@
-import { IntDict } from './MetaType';
+import { IntDict, Sabbatical } from './MetaType';
 
 export class HijriDate {
 
@@ -6,11 +6,13 @@ export class HijriDate {
   private readonly month: number;
   private readonly day: number;
   // months are 0 indexed, the others are 1 indexed
-  // private readonly BASE_HIJRI = new HijriDate(1442, 3, 20);
-  readonly BASE_GREGORORIAN = new Date(2020, 11, 5);
-  readonly MIN_YEAR = 1440;
-  readonly MAX_YEAR = 1600;
-  readonly YEARS: IntDict = {
+  private readonly BASE_HIJRI = { year: 1442, month: 3, day: 20 };
+  private readonly BASE_GREGORORIAN = new Date(2020, 11, 5);
+  private readonly MIN_YEAR = 1440;
+  private readonly MAX_YEAR = 1600;
+  private readonly MS_IN_DAY = 86400000;
+
+  private readonly YEARS: IntDict = {
     1440: [29, 30, 29, 30, 30, 30, 29, 30, 29, 30, 29, 29],
     1441: [30, 29, 30, 29, 30, 30, 29, 30, 30, 29, 30, 29],
     1442: [29, 30, 29, 30, 29, 30, 29, 30, 30, 29, 30, 29],
@@ -174,15 +176,147 @@ export class HijriDate {
     1600: [29, 29, 30, 29, 30, 29, 29, 30, 30, 30, 29, 30]
   }
 
-  constructor(year: number, month: number, day: number) {
+  private readonly SABBATICALS: Sabbatical[] = [
+    { month: 0, day: 1, name: 'year_beginning' },
+    { month: 0, day: 10, name: 'day_of_ashura' },
+    { month: 2, day: 11, name: 'mawlid_al_nabi' },
+    { month: 6, day: 1, name: 'start_of_sacred3_months' },
+    { month: 6, day: 3, name: 'laylat_al_raghaib ' },
+    { month: 6, day: 26, name: 'miraj' },
+    { month: 7, day: 14, name: 'baraat_night' },
+    { month: 7, day: 14, name: 'baraat_night' },
+    { month: 8, day: 1, name: 'start_of_ramadan' },
+    { month: 8, day: 26, name: 'qadr_night' },
+    { month: 8, day: 30, name: 'eve_of_eid_ramadan' },
+    { month: 9, day: 1, name: 'eid_ramadan_1' },
+    { month: 9, day: 2, name: 'eid_ramadan_2' },
+    { month: 9, day: 3, name: 'eid_ramadan_3' },
+    { month: 11, day: 9, name: 'eve_of_eid_qurban' },
+    { month: 11, day: 10, name: 'eid_qurban_1' },
+    { month: 11, day: 11, name: 'eid_qurban_2' },
+    { month: 11, day: 12, name: 'eid_qurban_3' },
+    { month: 11, day: 13, name: 'eid_qurban_4' },
+  ]
+
+  constructor(year = 1442, month = 3, day = 20) {
     this.isValidAndSupported(year, month, day);
     this.year = year;
     this.month = month;
     this.day = day;
   }
-
+  /** converts gregorian date to HijriDate
+   * @param  {Date} date
+   * @returns HijriDate
+   */
   toHijri(date: Date): HijriDate {
-    return new HijriDate(1, 2, 3);
+    const dayDiff = (date.getTime() - this.BASE_GREGORORIAN.getTime()) / this.MS_IN_DAY;
+    return this.addDays(this.BASE_HIJRI.year, this.BASE_HIJRI.month, this.BASE_HIJRI.day, dayDiff);
+  }
+
+  toStr(): string {
+    return this.year + ' ' + this.month + ' ' + this.day;
+  }
+
+  /** return the nearest Sabbatical after the provided date
+   * @param  {Date} d
+   */
+  getNearestSabbatical(after: Date): { cnt: number, sabb: Sabbatical | undefined } {
+    let hijri = this.toHijri(after);
+    let cnt = 0;
+    while (!this.getSabbaticalObj4Date(hijri)) {
+      hijri = hijri.addDays(hijri.year, hijri.month, hijri.day, 1);
+      cnt++;
+    }
+    return { cnt: cnt, sabb: this.getSabbaticalObj4Date(hijri) };
+  }
+
+  /** get sabbatical object from date if it corresponds to a sabbatical date
+   * @param  {HijriDate} date
+   * @returns Sabbatical
+   */
+  getSabbaticalObj4Date(date: HijriDate): Sabbatical | undefined {
+    const m = date.getMonth();
+    const d = date.getDay();
+    return this.SABBATICALS.find(x => x.day === d && x.month === m);
+  }
+
+  /** return `cnt` number of Sabbaticals before `date` and `cnt` number of Sabbaticals after `date` 
+   * @param  {Date} d
+   */
+  getAllSabbaticalsNear(date: Date, cnt = 19): { hijri: HijriDate, gre: Date, sabb: Sabbatical }[] {
+    let hijri = this.toHijri(date);
+    const sabbs = [];
+    let tmpDate = new Date(date.getTime());
+    let cntSabb = 0;
+    while (cntSabb < cnt) {
+      const sabbCand = this.getSabbaticalObj4Date(hijri);
+      while (!sabbCand) {
+        hijri = hijri.addDays(hijri.year, hijri.month, hijri.day, -1);
+        tmpDate = new Date(tmpDate.getTime() - this.MS_IN_DAY);
+      }
+      cntSabb++;
+      sabbs.push({ hijri: hijri, gre: tmpDate, sabb: sabbCand });
+    }
+    // now increase the date
+    hijri = this.toHijri(date);
+    tmpDate = new Date(date.getTime());
+    cntSabb = 0;
+    while (cntSabb < cnt) {
+      const sabbCand = this.getSabbaticalObj4Date(hijri);
+      while (!sabbCand) {
+        hijri = hijri.addDays(hijri.year, hijri.month, hijri.day, 1);
+        tmpDate = new Date(tmpDate.getTime() + this.MS_IN_DAY);
+      }
+      cntSabb++;
+      sabbs.push({ hijri: hijri, gre: tmpDate, sabb: sabbCand });
+    }
+    return sabbs;
+  }
+
+  getYear(): number {
+    return this.year;
+  }
+
+  getMonth(): number {
+    return this.month;
+  }
+
+  getDay(): number {
+    return this.day;
+  }
+
+  // add days to an hijri Year,Month,Day in linear time
+  addDays(year: number, month: number, day: number, diff: number): HijriDate {
+    const isPos = diff > 0;
+
+    while (diff != 0) {
+      if (isPos) {
+        if (day < this.YEARS[year][month]) { // can increase the day
+          day++;
+        } else if (month < 11) { // should increase the month
+          month++;
+          day = 1;
+        } else {
+          year++;
+          month = 0;
+          day = 1;
+        }
+        diff--;
+      } else {
+        if (day > 1) { // can decrease the day
+          day--;
+        } else if (month > 0) { // should decrease the month
+          month--;
+          day = this.YEARS[year][month];
+        } else {
+          year--;
+          month = 11;
+          day = this.YEARS[year][month];
+        }
+        diff++;
+      }
+    }
+    return new HijriDate(year, month, day);
   }
 
   dayDiff(date2: HijriDate): number {

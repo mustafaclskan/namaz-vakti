@@ -61,3 +61,9 @@ export interface StringDict {
 export interface IntDict {
   [key: number]: number[];
 }
+
+export interface Sabbatical {
+  month: number;
+  day: number;
+  name: string;
+};
