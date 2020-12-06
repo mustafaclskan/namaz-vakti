@@ -145,7 +145,15 @@ export default class App extends Vue {
     const today = clearHours(new Date());
     console.log("today in hijri: ", this.hijri.toHijri(today).toStr());
     console.log("nearest sabb: ", this.hijri.getNearestSabbatical(today));
-    console.log("nearest sabb: ", this.hijri.getAllSabbaticalsNear(today, 30));
+    console.log(
+      "all sabbs: ",
+      this.hijri
+        .getAllSabbaticalsNear(today, 30)
+        .map(
+          (x) =>
+            x.hijri.toStr() + " -> " + x.gre.toDateString() + ": " + x.sabb.name
+        )
+    );
   }
 
   setCurrDayIdx(): void {
