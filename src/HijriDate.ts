@@ -6,7 +6,7 @@ export class HijriDate {
   private readonly month: number;
   private readonly day: number;
   // months are 0 indexed, the others are 1 indexed
-  private readonly BASE_HIJRI = new HijriDate(1442, 3, 20);
+  // private readonly BASE_HIJRI = new HijriDate(1442, 3, 20);
   readonly BASE_GREGORORIAN = new Date(2020, 11, 5);
   readonly MIN_YEAR = 1440;
   readonly MAX_YEAR = 1600;
@@ -175,7 +175,7 @@ export class HijriDate {
   }
 
   constructor(year: number, month: number, day: number) {
-    this.doSupportYear(year);
+    this.isValidAndSupported(year, month, day);
     this.year = year;
     this.month = month;
     this.day = day;
@@ -186,15 +186,16 @@ export class HijriDate {
   }
 
   dayDiff(date2: HijriDate): number {
-    this.doSupportYear(this.year);
-    this.doSupportYear(date2.year);
-    const comparison = this.compare(date2);
+    this.isValidAndSupported(date2.year, date2.month, date2.day);
+    let comparison = this.compare(date2);
     if (comparison === 0) {
       return 0;
     }
     let daySum = 0;
     const bigDate = comparison > 0 ? this : date2;
     const smallDate = comparison < 0 ? this : date2;
+
+    comparison = Math.abs(comparison);
 
     if (comparison === 1) {
       return bigDate.day - smallDate.day;
@@ -221,16 +222,22 @@ export class HijriDate {
     return -1;
   }
 
-  doSupportYear(y: number): boolean {
-    const isSupports = y >= 1440 && y <= 1600;
+  isValidAndSupported(year: number, month: number, day: number): boolean {
+    const isSupports = year >= 1440 && year <= 1600;
     if (!isSupports) {
       throw "Currently hijri years from " + this.MIN_YEAR + " to " + this.MAX_YEAR + " are supported";
+    }
+    if (month < 0 || month > 11) {
+      throw "month should be in range [0,11] (both inclusive)";
+    }
+    if (day < 1 || day > this.YEARS[year][month]) {
+      throw "day is either smaller than 1 or greater than maximum days in the month";
     }
     return true;
   }
 
   // return positive if `this` is greater, 0 if equal, negative if smaller
-  compare(d: HijriDate) {
+  compare(d: HijriDate): number {
     if (this.year > d.year) {
       return 3;
     } else if (d.year > this.year) {

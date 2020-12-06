@@ -82,6 +82,7 @@ import { Component, Vue } from "vue-property-decorator";
 import SideBarContent from "./components/SideBarContent.vue";
 import { SettingService } from "./SettingService";
 import { SubstrTranslator } from "./SubstrTranslator";
+import { runAllHijriDateTests } from "./HijriDate-test";
 import {
   date2str,
   decodeHTML,
@@ -119,7 +120,6 @@ export default class App extends Vue {
 
   created(): void {
     this._api = new ApiClient();
-    console.log("get times for data on created");
     this.currTimes = SettingService.getTimes4CurrentLocation();
     this.decodeCurrTimes();
     this.currLoc = SettingService.getCurrLocation();
@@ -135,6 +135,8 @@ export default class App extends Vue {
     setInterval(() => {
       this.updateCurrPrayIdx();
     }, 60000);
+
+    runAllHijriDateTests();
   }
 
   setCurrDayIdx(): void {

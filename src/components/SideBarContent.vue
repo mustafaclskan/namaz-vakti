@@ -156,7 +156,6 @@ export default class SideBarContent extends Vue {
   }
 
   onCountrySelected(c: Country): void {
-    console.log(" on country selected: ", c);
     // Turkey is cached
     if (c.UlkeAdi == "TURKIYE") {
       this.cities = TR_CITIES;
@@ -206,15 +205,10 @@ export default class SideBarContent extends Vue {
 
   onSavedLocationSelected(e: string): void {
     SettingService.setCurrLocation(e);
-    console.log(
-      " on saved location selected: ",
-      SettingService.getData4SavedLocation(e)
-    );
     this.$emit("curr-times-updated", SettingService.getData4SavedLocation(e));
   }
 
   filterByTxt(item: Country, queryText: string, itemText: string): boolean {
-    console.log("filter by txt item: ", item);
     return itemText.toLowerCase().includes(queryText.toLowerCase());
   }
 

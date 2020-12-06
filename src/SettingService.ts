@@ -78,7 +78,6 @@ export class SettingService {
   }
 
   static addTimesData(key: string, data: string[][], locName: string): void {
-    console.log('add times data settings: ');
     localStorage.setItem(key, JSON.stringify(data));
     let d = localStorage.getItem(this.QUEUE_KEY);
     SettingService.setCurrLocation(locName);
@@ -116,7 +115,6 @@ export class SettingService {
   }
 
   static getTimes4CurrentLocation(): string[][] | null {
-    console.log('settings service get times for current loc');
     const keyOfRecent = SettingService.getDataKey4CurrentLocation();
     if (!keyOfRecent) {
       return null;
