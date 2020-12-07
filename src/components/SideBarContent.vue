@@ -1,6 +1,6 @@
 <template>
   <div v-bind:style="{ zoom: currZoom + '%' }">
-    <v-expansion-panels class="m-5">
+    <v-expansion-panels multiple v-model="openPanels">
       <v-expansion-panel>
         <v-expansion-panel-header>
           {{ $t("addNewLocation") }}
@@ -128,6 +128,7 @@ export default class SideBarContent extends Vue {
   private currTheme: string | null = "";
   private currLang: UiLanguage | undefined = undefined;
   private currZoom = 100;
+  private openPanels = [];
 
   // special life-cycle hook for vue
   created(): void {
@@ -145,6 +146,10 @@ export default class SideBarContent extends Vue {
     }
     this.onLangSelected(this.currLang);
     this.$vuetify.theme.dark = this.currTheme === "Dark";
+    console.log("on side bar created");
+    if (!SettingService.getCurrLocation()) {
+      this.openPanels = [0];
+    }
   }
 
   onThemeSelected(e: string): void {

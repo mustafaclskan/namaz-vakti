@@ -145,16 +145,16 @@ export default class App extends Vue {
 
     // runAllHijriDateTests();
     const today = clearHours(new Date());
-    console.log("nearest sabb: ", this.hijri.getNearestSabbatical(today));
-    console.log(
-      "all sabbs: ",
-      this.hijri
-        .getAllSabbaticalsNear(today, 30)
-        .map(
-          (x) =>
-            x.hijri.toStr() + " -> " + x.gre.toDateString() + ": " + x.sabb.name
-        )
-    );
+    // console.log("nearest sabb: ", this.hijri.getNearestSabbatical(today));
+    // console.log(
+    //   "all sabbs: ",
+    //   this.hijri
+    //     .getAllSabbaticalsNear(today, 30)
+    //     .map(
+    //       (x) =>
+    //         x.hijri.toStr() + " -> " + x.gre.toDateString() + ": " + x.sabb.name
+    //     )
+    // );
   }
 
   setCurrDayIdx(): void {
@@ -225,7 +225,6 @@ export default class App extends Vue {
   }
 
   setHijriDateStr() {
-    console.log("set hijri date string");
     if (!this.currTimes || !this.currTimes[this.currDayIdx]) {
       return;
     }
