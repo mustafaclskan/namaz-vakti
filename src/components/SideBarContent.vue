@@ -1,90 +1,101 @@
 <template>
   <div v-bind:style="{ zoom: currZoom + '%' }">
-    <v-card class="m-5">
-      <v-card-title>{{ $t("addNewLocation") }}</v-card-title>
-      <v-autocomplete
-        class="m-5"
-        v-model="selectedCountry"
-        :items="countries"
-        :filter="filterByTxt"
-        item-text="UlkeAdi"
-        v-on:input="onCountrySelected"
-        :placeholder="$t('selectCountry')"
-        return-object
-      />
-      <br />
-      <v-autocomplete
-        class="m-5"
-        v-model="selectedCity"
-        :disabled="selectedCountry == null"
-        :items="cities"
-        :filter="filterByTxt"
-        item-text="SehirAdi"
-        v-on:input="onCitySelected"
-        :label="$t('selectCity')"
-        :placeholder="$t('selectCity')"
-        return-object
-      />
-      <br />
-      <v-autocomplete
-        class="m-5"
-        v-model="selectedDistrict"
-        :disabled="selectedCity == null"
-        :items="districts"
-        :filter="filterByTxt"
-        item-text="IlceAdi"
-        v-on:input="onDistrictSelected"
-        :label="$t('selectDistrict')"
-        :placeholder="$t('selectDistrict')"
-        return-object
-      />
-    </v-card>
-    <v-card class="m-5">
-      <v-card-title>{{ $t("settings") }}</v-card-title>
-      <v-select
-        class="m-5"
-        v-model="currLang"
-        :items="langs"
-        item-text="txt"
-        v-on:input="onLangSelected"
-        :label="$t('selectLanguage')"
-        :placeholder="$t('selectLanguage')"
-        return-object
-      />
-      <v-select
-        class="m-5"
-        v-model="currTheme"
-        :items="themes"
-        v-on:input="onThemeSelected"
-        :label="$t('selectTheme')"
-        :placeholder="$t('selectTheme')"
-      />
-      <v-autocomplete
-        class="m-5"
-        v-model="currLocation"
-        :items="savedLocations"
-        :filter="filterByTxt"
-        v-on:input="onSavedLocationSelected"
-        :label="$t('changeLocation')"
-        :placeholder="$t('changeLocation')"
-      />
-      <div>
-        <div v-if="currLang && currLang.code == 'tr'" class="m-5">
-          <span>{{ $t("changeZoom") }} (%{{ currZoom }})</span>
-        </div>
-        <div v-else class="m-5">
-          <span>{{ $t("changeZoom") }} ({{ currZoom }}%)</span>
-        </div>
-        <div style="heigth: 100px">
-          <v-btn class="m-5" v-on:click="zoomIn()" icon color="primary">
-            <v-icon>mdi-magnify-plus</v-icon>
-          </v-btn>
-          <v-btn class="m-5" v-on:click="zoomOut()" icon color="primary">
-            <v-icon>mdi-magnify-minus</v-icon>
-          </v-btn>
-        </div>
-      </div>
-    </v-card>
+    <v-expansion-panels class="m-5">
+      <v-expansion-panel>
+        <v-expansion-panel-header>
+          {{ $t("addNewLocation") }}
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-autocomplete
+            class="m-5"
+            v-model="selectedCountry"
+            :items="countries"
+            :filter="filterByTxt"
+            item-text="UlkeAdi"
+            v-on:input="onCountrySelected"
+            :placeholder="$t('selectCountry')"
+            return-object
+          />
+          <br />
+          <v-autocomplete
+            class="m-5"
+            v-model="selectedCity"
+            :disabled="selectedCountry == null"
+            :items="cities"
+            :filter="filterByTxt"
+            item-text="SehirAdi"
+            v-on:input="onCitySelected"
+            :label="$t('selectCity')"
+            :placeholder="$t('selectCity')"
+            return-object
+          />
+          <br />
+          <v-autocomplete
+            class="m-5"
+            v-model="selectedDistrict"
+            :disabled="selectedCity == null"
+            :items="districts"
+            :filter="filterByTxt"
+            item-text="IlceAdi"
+            v-on:input="onDistrictSelected"
+            :label="$t('selectDistrict')"
+            :placeholder="$t('selectDistrict')"
+            return-object
+          />
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+
+      <v-expansion-panel>
+        <v-expansion-panel-header>
+          {{ $t("settings") }}
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-select
+            class="m-5"
+            v-model="currLang"
+            :items="langs"
+            item-text="txt"
+            v-on:input="onLangSelected"
+            :label="$t('selectLanguage')"
+            :placeholder="$t('selectLanguage')"
+            return-object
+          />
+          <v-select
+            class="m-5"
+            v-model="currTheme"
+            :items="themes"
+            v-on:input="onThemeSelected"
+            :label="$t('selectTheme')"
+            :placeholder="$t('selectTheme')"
+          />
+          <v-autocomplete
+            class="m-5"
+            v-model="currLocation"
+            :items="savedLocations"
+            :filter="filterByTxt"
+            v-on:input="onSavedLocationSelected"
+            :label="$t('changeLocation')"
+            :placeholder="$t('changeLocation')"
+          />
+          <div>
+            <div v-if="currLang && currLang.code == 'tr'" class="m-5">
+              <span>{{ $t("changeZoom") }} (%{{ currZoom }})</span>
+            </div>
+            <div v-else class="m-5">
+              <span>{{ $t("changeZoom") }} ({{ currZoom }}%)</span>
+            </div>
+            <div style="heigth: 100px">
+              <v-btn class="m-5" v-on:click="zoomIn()" icon color="primary">
+                <v-icon>mdi-magnify-plus</v-icon>
+              </v-btn>
+              <v-btn class="m-5" v-on:click="zoomOut()" icon color="primary">
+                <v-icon>mdi-magnify-minus</v-icon>
+              </v-btn>
+            </div>
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
   </div>
 </template>
 
