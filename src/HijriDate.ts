@@ -380,7 +380,7 @@ export class HijriDate {
     const d = date.getDay();
     // special check for eve of ramadan eid (ramadan might be 29 days)
     if (m === 8 && this.YEARS[date.getYear()][8] == d) {
-      return this.SABBATICALS[9];
+      return this.SABBATICALS[8];
     }
     // { month: 6, day: 3, name: 'laylat_al_raghaib ' }, // first thursday in Rejeb month !
     if (m === 6 && d < 8 && date2.getDay() === 4) {
@@ -440,6 +440,7 @@ export class HijriDate {
     return this.year;
   }
 
+  // months are 0 indexed, the others are 1 indexed
   getMonth(): number {
     return this.month;
   }

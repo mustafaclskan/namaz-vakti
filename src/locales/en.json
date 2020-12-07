@@ -8,5 +8,17 @@
   "selectTheme": "Select a theme",
   "changeLocation": "Change location",
   "noTimeData": "There is no time data. Try adding a location.",
-  "changeZoom": "Change zoom level"
+  "changeZoom": "Change zoom level",
+  "hijri_month0": "Muharam",
+  "hijri_month1": "Safar",
+  "hijri_month2": "Rabi Al Awwal",
+  "hijri_month3": "Rabi Al Thani",
+  "hijri_month4": "Jumada Al Oula",
+  "hijri_month5": "Jumada Al Akhira",
+  "hijri_month6": "Rajab",
+  "hijri_month7": "Shaban",
+  "hijri_month8": "Ramadan",
+  "hijri_month9": "Shawwal",
+  "hijri_month10": "Dhul Qidah",
+  "hijri_month11": "Dhul Hijjah"
 }

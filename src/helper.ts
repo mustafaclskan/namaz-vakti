@@ -123,6 +123,9 @@ export function decodeHTML(str: string): string {
   return txt.value;
 }
 
+/** zero hour, minute, second and ms
+ * @param  {Date} d
+ */
 export function clearHours(d: Date) {
   d.setHours(0);
   d.setMinutes(0);

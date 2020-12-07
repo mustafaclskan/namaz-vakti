@@ -34,6 +34,7 @@
         <h2 class="normal-font">
           {{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx][0])) }}
         </h2>
+        <h4 class="normal-font">{{ currHijriDate }}</h4>
       </div>
       <v-divider></v-divider>
       <v-list
@@ -57,18 +58,17 @@
             </v-list-item-content>
           </v-list-item>
           <v-divider></v-divider>
-          <v-list-item>
+          <v-list-item v-if="isShowingToday">
             <v-list-item-content>
-              <h2 class="normal-font" v-if="currLang && currLang == 'tr'">
+              <span class="normal-font" v-if="currLang && currLang == 'tr'">
                 {{ timeItems[currPrayIdx - 1].slice(0, -1) }} vakti için kalan
                 süre
-                {{ remainingTime }}
-              </h2>
-              <h2 class="normal-font" v-else>
+              </span>
+              <span class="normal-font" v-else>
                 Remaining time for
                 {{ timeItems[currPrayIdx - 1].slice(0, -1) }}
-                {{ remainingTime }}
-              </h2>
+              </span>
+              <h2>{{ remainingTime }}</h2>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -122,6 +122,8 @@ export default class App extends Vue {
   private _api: ApiClient = new ApiClient();
   private currZoom = 100;
   private hijri = new HijriDate();
+  private currHijriDate = "";
+  private isShowingToday = true;
 
   created(): void {
     this._api = new ApiClient();
@@ -143,7 +145,6 @@ export default class App extends Vue {
 
     // runAllHijriDateTests();
     const today = clearHours(new Date());
-    console.log("today in hijri: ", this.hijri.toHijri(today).toStr());
     console.log("nearest sabb: ", this.hijri.getNearestSabbatical(today));
     console.log(
       "all sabbs: ",
@@ -167,6 +168,8 @@ export default class App extends Vue {
     for (const d of this.currTimes) {
       if (d[0].toLowerCase().includes(date2str(today).toLowerCase())) {
         this.currDayIdx = idx;
+        this.setHijriDateStr();
+        this.setIsShowingToday();
         return;
       }
       idx++;
@@ -181,12 +184,16 @@ export default class App extends Vue {
     }
     if (this.currDayIdx < this.currTimes.length - 1) {
       this.currDayIdx++;
+      this.setHijriDateStr();
+      this.setIsShowingToday();
     }
   }
 
   decreaseCurrDay(): void {
     if (this.currDayIdx > 0) {
       this.currDayIdx--;
+      this.setHijriDateStr();
+      this.setIsShowingToday();
     }
   }
 
@@ -215,6 +222,35 @@ export default class App extends Vue {
       }
     }
     SettingService.setCurrZoom(this.currZoom);
+  }
+
+  setHijriDateStr() {
+    console.log("set hijri date string");
+    if (!this.currTimes || !this.currTimes[this.currDayIdx]) {
+      return;
+    }
+    const date = new Date(
+      turkishDateStr2Date(this.currTimes[this.currDayIdx][0])
+    );
+    const hij = this.hijri.toHijri(date);
+    this.currHijriDate =
+      hij.getDay() +
+      " " +
+      this.$tc("hijri_month" + hij.getMonth()) +
+      " " +
+      hij.getYear();
+  }
+
+  setIsShowingToday() {
+    if (!this.currTimes || !this.currTimes[this.currDayIdx]) {
+      return;
+    }
+    const t = new Date();
+    const d = new Date(turkishDateStr2Date(this.currTimes[this.currDayIdx][0]));
+    this.isShowingToday =
+      d.getMonth() === t.getMonth() &&
+      d.getFullYear() === t.getFullYear() &&
+      d.getDate() == t.getDate();
   }
 
   private decodeCurrTimes(): void {

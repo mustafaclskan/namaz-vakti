@@ -8,5 +8,17 @@
   "selectTheme": "Tema seçin",
   "changeLocation": "Konum değiştirin",
   "noTimeData": "Zaman verisi bulunamadı. Konum eklemeyi deneyin.",
-  "changeZoom": "Büyütme küçültme"
+  "changeZoom": "Büyütme küçültme",
+  "hijri_month0": "Muharrem",
+  "hijri_month1": "Safer",
+  "hijri_month2": "Rebiülevvel",
+  "hijri_month3": "Rabiülahir",
+  "hijri_month4": "Cemaziyelevvel",
+  "hijri_month5": "Cemaziyelahir",
+  "hijri_month6": "Recep",
+  "hijri_month7": "Şaban",
+  "hijri_month8": "Ramazan",
+  "hijri_month9": "Şevval",
+  "hijri_month10": "Zilkade",
+  "hijri_month11": "Zilhicce"
 }
