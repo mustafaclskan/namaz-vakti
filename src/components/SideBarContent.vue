@@ -95,6 +95,14 @@
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
+      <v-expansion-panel>
+        <v-expansion-panel-header>
+          {{ $t("about") }}
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          {{ $t("aboutTxt") }}
+        </v-expansion-panel-content>
+      </v-expansion-panel>
     </v-expansion-panels>
   </div>
 </template>
