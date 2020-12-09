@@ -48,10 +48,7 @@
             <v-list-item-content>
               <h2 v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }">
                 {{ item }} {{ currTimes[currDayIdx][i + 1] }}
-                <v-icon
-                  v-if="i == currPrayIdx - 1"
-                  style="vertical-align: initial"
-                >
+                <v-icon v-if="i == currPrayIdx - 1" style="vertical-align: initial">
                   mdi-clock
                 </v-icon>
               </h2>
@@ -61,8 +58,7 @@
           <v-list-item v-if="isShowingToday">
             <v-list-item-content>
               <span class="normal-font" v-if="currLang && currLang == 'tr'">
-                {{ timeItems[currPrayIdx - 1].slice(0, -1) }} vakti için kalan
-                süre
+                {{ timeItems[currPrayIdx - 1].slice(0, -1) }} vakti için kalan süre
               </span>
               <span class="normal-font" v-else>
                 Remaining time for
@@ -109,14 +105,7 @@ export default class App extends Vue {
   private currLoc: string | null = "";
   private currPrayIdx = 2;
   private remainingTime = "";
-  private timeItems = [
-    "İmsak:",
-    "Güneş:",
-    "Öğle:",
-    "İkindi:",
-    "Akşam:",
-    "Yatsı:",
-  ];
+  private timeItems = ["İmsak:", "Güneş:", "Öğle:", "İkindi:", "Akşam:", "Yatsı:"];
   private substrTranslate = SubstrTranslator;
   private currLang = SettingService.getCurrLang();
   private _api: ApiClient = new ApiClient();
@@ -225,19 +214,20 @@ export default class App extends Vue {
   }
 
   setHijriDateStr() {
-    if (!this.currTimes || !this.currTimes[this.currDayIdx]) {
-      return;
-    }
-    const date = new Date(
-      turkishDateStr2Date(this.currTimes[this.currDayIdx][0])
-    );
-    const hij = this.hijri.toHijri(date);
-    this.currHijriDate =
-      hij.getDay() +
-      " " +
-      this.$tc("hijri_month" + hij.getMonth()) +
-      " " +
-      hij.getYear();
+    console.log("set hijri date str");
+    setTimeout(() => {
+      if (!this.currTimes || !this.currTimes[this.currDayIdx]) {
+        return;
+      }
+      const date = new Date(turkishDateStr2Date(this.currTimes[this.currDayIdx][0]));
+      const hij = this.hijri.toHijri(date);
+      this.currHijriDate =
+        hij.getDay() +
+        " " +
+        this.$t("hijri_month" + hij.getMonth()) +
+        " " +
+        hij.getYear();
+    }, 0);
   }
 
   setIsShowingToday() {

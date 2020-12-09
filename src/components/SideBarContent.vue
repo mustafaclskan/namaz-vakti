@@ -136,7 +136,7 @@ export default class SideBarContent extends Vue {
   private currTheme: string | null = "";
   private currLang: UiLanguage | undefined = undefined;
   private currZoom = 100;
-  private openPanels = [];
+  private openPanels: number[] = [];
 
   // special life-cycle hook for vue
   created(): void {
