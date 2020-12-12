@@ -7,7 +7,7 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-autocomplete
-            class="m-5"
+            class="m5"
             v-model="selectedCountry"
             :items="countries"
             :filter="filterByTxt"
@@ -18,7 +18,7 @@
           />
           <br />
           <v-autocomplete
-            class="m-5"
+            class="m5"
             v-model="selectedCity"
             :disabled="selectedCountry == null"
             :items="cities"
@@ -31,7 +31,7 @@
           />
           <br />
           <v-autocomplete
-            class="m-5"
+            class="m5"
             v-model="selectedDistrict"
             :disabled="selectedCity == null"
             :items="districts"
@@ -51,7 +51,7 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-select
-            class="m-5"
+            class="m5"
             v-model="currLang"
             :items="langs"
             item-text="txt"
@@ -61,7 +61,7 @@
             return-object
           />
           <v-select
-            class="m-5"
+            class="m5"
             v-model="currTheme"
             :items="themes"
             v-on:input="onThemeSelected"
@@ -69,7 +69,7 @@
             :placeholder="$t('selectTheme')"
           />
           <v-autocomplete
-            class="m-5"
+            class="m5"
             v-model="currLocation"
             :items="savedLocations"
             :filter="filterByTxt"
@@ -78,17 +78,17 @@
             :placeholder="$t('changeLocation')"
           />
           <div>
-            <div v-if="currLang && currLang.code == 'tr'" class="m-5">
+            <div v-if="currLang && currLang.code == 'tr'" class="m5">
               <span>{{ $t("changeZoom") }} (%{{ currZoom }})</span>
             </div>
-            <div v-else class="m-5">
+            <div v-else class="m5">
               <span>{{ $t("changeZoom") }} ({{ currZoom }}%)</span>
             </div>
             <div style="heigth: 100px">
-              <v-btn class="m-5" v-on:click="zoomIn()" icon color="primary">
+              <v-btn class="m5" v-on:click="zoomIn()" icon color="primary">
                 <v-icon>mdi-magnify-plus</v-icon>
               </v-btn>
-              <v-btn class="m-5" v-on:click="zoomOut()" icon color="primary">
+              <v-btn class="m5" v-on:click="zoomOut()" icon color="primary">
                 <v-icon>mdi-magnify-minus</v-icon>
               </v-btn>
             </div>
@@ -146,9 +146,7 @@ export default class SideBarContent extends Vue {
     this.currTheme = SettingService.getCurrTheme();
     this.currZoom = SettingService.getCurrZoom();
 
-    this.currLang = this.langs.find(
-      (x) => x.code === SettingService.getCurrLang()
-    );
+    this.currLang = this.langs.find((x) => x.code === SettingService.getCurrLang());
     if (!this.currLang) {
       this.currLang = this.langs[0];
     }
@@ -250,7 +248,7 @@ export default class SideBarContent extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.m-5 {
+.m5 {
   margin: 5px;
 }
 </style>

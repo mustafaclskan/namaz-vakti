@@ -1,11 +1,24 @@
 <template>
   <v-app>
     <v-navigation-drawer v-model="isSideBarOpen" app>
-      <SideBarContent
+      <!-- <SideBarContent
         v-on:curr-times-updated="currTimesUpdated($event)"
         v-on:lang-selected="langSelected($event)"
         v-on:zoom-changed="zoomChanged($event)"
-      />
+      /> -->
+      <v-list nav dense>
+        <v-list-item-group v-model="selectedItem">
+          <v-list-item v-for="item in menuItems" :key="item.title" link>
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>{{ $t(item.title) }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
     </v-navigation-drawer>
 
     <v-app-bar app dense v-bind:style="{ zoom: currZoom + '%' }">
@@ -26,49 +39,65 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main v-bind:style="{ zoom: currZoom + '%' }">
-      <div class="txt-center" v-if="!currTimes || !currTimes[currDayIdx]">
-        <h2 class="normal-font">{{ $t("noTimeData") }}</h2>
+    <v-main v-bind:style="{ zoom: currZoom + '%' }" class="m5">
+      <div v-if="selectedItem == 0">
+        <div class="txt-center" v-if="!currTimes || !currTimes[currDayIdx]">
+          <h2 class="normal-font">{{ $t("noTimeData") }}</h2>
+        </div>
+        <div class="txt-center" v-if="currTimes && currTimes[currDayIdx]">
+          <h2 class="normal-font">
+            {{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx][0])) }}
+          </h2>
+          <h4 class="normal-font">{{ currHijriDate }}</h4>
+        </div>
+        <v-divider></v-divider>
+        <v-list
+          :flat="true"
+          disabled
+          v-if="currTimes && currTimes[currDayIdx]"
+          class="txt-center"
+        >
+          <v-list-item-group>
+            <v-list-item v-for="(item, i) in timeItems" :key="i">
+              <v-list-item-content>
+                <h2 v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }">
+                  {{ item }} {{ currTimes[currDayIdx][i + 1] }}
+                  <v-icon v-if="i == currPrayIdx - 1" style="vertical-align: initial">
+                    mdi-clock
+                  </v-icon>
+                </h2>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider></v-divider>
+            <v-list-item v-if="isShowingToday">
+              <v-list-item-content>
+                <span class="normal-font" v-if="currLang && currLang == 'tr'">
+                  {{ timeItems[currPrayIdx - 1].slice(0, -1) }} vakti için kalan süre
+                </span>
+                <span class="normal-font" v-else>
+                  Remaining time for
+                  {{ timeItems[currPrayIdx - 1].slice(0, -1) }}
+                </span>
+                <h2>{{ remainingTime }}</h2>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
       </div>
-      <div class="txt-center" v-if="currTimes && currTimes[currDayIdx]">
-        <h2 class="normal-font">
-          {{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx][0])) }}
-        </h2>
-        <h4 class="normal-font">{{ currHijriDate }}</h4>
-      </div>
-      <v-divider></v-divider>
-      <v-list
-        :flat="true"
-        disabled
-        v-if="currTimes && currTimes[currDayIdx]"
-        class="txt-center"
-      >
-        <v-list-item-group>
-          <v-list-item v-for="(item, i) in timeItems" :key="i">
-            <v-list-item-content>
-              <h2 v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }">
-                {{ item }} {{ currTimes[currDayIdx][i + 1] }}
-                <v-icon v-if="i == currPrayIdx - 1" style="vertical-align: initial">
-                  mdi-clock
-                </v-icon>
-              </h2>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item v-if="isShowingToday">
-            <v-list-item-content>
-              <span class="normal-font" v-if="currLang && currLang == 'tr'">
-                {{ timeItems[currPrayIdx - 1].slice(0, -1) }} vakti için kalan süre
-              </span>
-              <span class="normal-font" v-else>
-                Remaining time for
-                {{ timeItems[currPrayIdx - 1].slice(0, -1) }}
-              </span>
-              <h2>{{ remainingTime }}</h2>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
+      <AddLocation
+        v-if="selectedItem == 1"
+        v-on:curr-times-updated="currTimesUpdated($event)"
+        v-on:lang-selected="langSelected($event)"
+        v-on:zoom-changed="zoomChanged($event)"
+      />
+      <Sabbaticals v-if="selectedItem == 2" />
+      <Settings
+        v-if="selectedItem == 3"
+        v-on:curr-times-updated="currTimesUpdated($event)"
+        v-on:lang-selected="langSelected($event)"
+        v-on:zoom-changed="zoomChanged($event)"
+      />
+      <About v-if="selectedItem == 4" />
     </v-main>
   </v-app>
 </template>
@@ -77,6 +106,10 @@
 // Bismillahirrahmanirrahim بسم الله الرحمن الرحيم
 import { Component, Vue } from "vue-property-decorator";
 import SideBarContent from "./components/SideBarContent.vue";
+import AddLocation from "./components/AddLocation.vue";
+import Settings from "./components/Settings.vue";
+import Sabbaticals from "./components/Sabbaticals.vue";
+import About from "./components/About.vue";
 import { SettingService } from "./SettingService";
 import { SubstrTranslator } from "./SubstrTranslator";
 import { runAllHijriDateTests } from "./HijriDate-test";
@@ -95,6 +128,10 @@ import { ApiClient } from "./ApiClient";
 @Component({
   components: {
     SideBarContent,
+    AddLocation,
+    Settings,
+    Sabbaticals,
+    About,
   },
 })
 export default class App extends Vue {
@@ -113,6 +150,14 @@ export default class App extends Vue {
   private hijri = new HijriDate();
   private currHijriDate = "";
   private isShowingToday = true;
+  private menuItems: { icon: string; title: string; idx: number }[] = [
+    { icon: "mdi-clock-time-four-outline", title: "times", idx: 0 },
+    { icon: "mdi-map-marker-plus", title: "addNewLocation", idx: 1 },
+    { icon: "mdi-calendar-month-outline", title: "sabbaticals", idx: 2 },
+    { icon: "mdi-cog-outline", title: "settings", idx: 3 },
+    { icon: "mdi-information-outline", title: "about", idx: 4 },
+  ];
+  private selectedItem = 0;
 
   created(): void {
     this._api = new ApiClient();
@@ -323,5 +368,8 @@ export default class App extends Vue {
 }
 .normal-font {
   font-weight: normal;
+}
+.m5 {
+  margin: 5px;
 }
 </style>
