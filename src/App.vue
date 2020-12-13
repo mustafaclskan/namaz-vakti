@@ -26,7 +26,13 @@
         @click.stop="isSideBarOpen = !isSideBarOpen"
         color="primary"
       ></v-app-bar-nav-icon>
-      <v-toolbar-title>{{ currLoc }}</v-toolbar-title>
+      <v-toolbar-title>
+        <span v-if="selectedItem == 0">{{ currLoc }}</span>
+        <span v-if="selectedItem == 1">{{ $t("addNewLocation") }}</span>
+        <span v-if="selectedItem == 2">{{ $t("sabbaticals") }}</span>
+        <span v-if="selectedItem == 3">{{ $t("settings") }}</span>
+        <span v-if="selectedItem == 4">{{ $t("about") }}</span>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
       <span v-if="selectedItem == 0">
         <v-btn v-on:click="decreaseCurrDay()" icon color="primary">
@@ -51,7 +57,10 @@
             <h2 class="normal-font">
               {{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx][0])) }}
             </h2>
-            <h4 class="normal-font">{{ currHijriDate }}</h4>
+            <h4 class="normal-font">
+              {{ currHijriDate }}
+              <span v-if="nearSabbaticalStr"></span>
+            </h4>
           </div>
           <v-divider></v-divider>
           <v-list
@@ -100,12 +109,15 @@
         />
         <About v-if="selectedItem == 4" />
       </div>
-      <v-progress-circular
-        v-if="isLoading"
-        :size="70"
-        :width="7"
-        indeterminate
-      ></v-progress-circular>
+
+      <div class="spinner-container" v-if="isLoading">
+        <v-progress-circular
+          color="primary"
+          :size="319"
+          :width="19"
+          indeterminate
+        ></v-progress-circular>
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -168,6 +180,8 @@ export default class App extends Vue {
   ];
   private selectedItem = 0;
   private isLoading = false;
+  private nearSabbaticalStr: string | null = null;
+  private readonly PRE_SABB_LIMIT = 3;
 
   created(): void {
     this._api = new ApiClient();
@@ -202,12 +216,20 @@ export default class App extends Vue {
     StateService.addListener((x: boolean) => {
       this.isLoading = x;
     });
+    const currLang = SettingService.getCurrLang();
+    if (currLang) {
+      this.$i18n.locale = currLang;
+    }
+
+    const currTheme = SettingService.getCurrTheme();
+    this.$vuetify.theme.dark = currTheme === "Dark";
   }
 
   setCurrDayIdx(): void {
     if (!this.currTimes) {
       console.log("times data not exists");
       this.isSideBarOpen = true;
+      this.selectedItem = 1;
       return;
     }
     const today = new Date();
@@ -245,6 +267,7 @@ export default class App extends Vue {
   }
 
   currTimesUpdated(data: string[][] | null): void {
+    this.selectedItem = 0;
     this.currTimes = data;
     this.decodeCurrTimes();
     this.setCurrDayIdx();
@@ -279,13 +302,19 @@ export default class App extends Vue {
       }
       const date = new Date(turkishDateStr2Date(this.currTimes[this.currDayIdx][0]));
       const hij = this.hijri.toHijri(date);
-      this.currHijriDate =
-        hij.getDay() +
-        " " +
-        this.$t("hijri_month" + hij.getMonth()) +
-        " " +
-        hij.getYear();
+      this.currHijriDate = this.hijri2str(hij);
+      this.setNearestSabbatical(date);
     }, 0);
+  }
+
+  setNearestSabbatical(date: Date) {
+    const sabb = this.hijri.getNearestSabbatical(date);
+    if (sabb.cnt < this.PRE_SABB_LIMIT) {
+      // this.nearSabbaticalStr = sabb.sabb?.name;
+    } else {
+      this.nearSabbaticalStr = null;
+    }
+    console.log("sabb: ", sabb);
   }
 
   setIsShowingToday() {
@@ -298,6 +327,10 @@ export default class App extends Vue {
       d.getMonth() === t.getMonth() &&
       d.getFullYear() === t.getFullYear() &&
       d.getDate() == t.getDate();
+  }
+
+  private hijri2str(h: HijriDate): string {
+  return h.getDay() + " " + this.$t("hijriMonth" + h.getMonth()) + " " + h.getYear();
   }
 
   private decodeCurrTimes(): void {
@@ -387,5 +420,15 @@ export default class App extends Vue {
 }
 .h0 {
   display: none;
+}
+.spinner-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
 }
 </style>

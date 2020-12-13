@@ -358,7 +358,7 @@ export class HijriDate {
   /** return the nearest Sabbatical after the provided date
    * @param  {Date} d
    */
-  getNearestSabbatical(after: Date): { cnt: number, sabb: Sabbatical | undefined } {
+  getNearestSabbatical(after: Date): { cnt: number, sabb: Sabbatical | undefined, hijri: HijriDate, gre: Date } {
     let hijri = this.toHijri(after);
     let tmpDate = new Date(after.getTime());
     let cnt = 0;
@@ -367,7 +367,7 @@ export class HijriDate {
       tmpDate = new Date(tmpDate.getTime() + this.MS_IN_DAY);
       cnt++;
     }
-    return { cnt: cnt, sabb: this.getSabbaticalObj4Date(hijri, tmpDate) };
+    return { cnt: cnt, sabb: this.getSabbaticalObj4Date(hijri, tmpDate), hijri: hijri, gre: tmpDate };
   }
 
   /** get sabbatical object from date if it corresponds to a sabbatical date
