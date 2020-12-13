@@ -1,7 +1,8 @@
 import { City, District } from './MetaType';
-
+import { StateService } from "./StateService";
 export class ApiClient {
   private _url: string;
+
   constructor() {
     this._url = 'https://namaz-vakti-api.herokuapp.com/';
     // this._url = 'http://localhost:3000/';
@@ -21,9 +22,11 @@ export class ApiClient {
 
   private httpGet(url: string, cb: ((e: City[]) => void) | ((e: District[]) => void) | ((e: string[][]) => void)): void {
     const xmlhttp = new XMLHttpRequest();
+    StateService.setLoading(true);
     xmlhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         cb(JSON.parse(this.responseText));
+        StateService.setLoading(false);
       }
     };
     xmlhttp.open('GET', url, true);
