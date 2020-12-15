@@ -1,4 +1,4 @@
-import { IntDict, Sabbatical } from './MetaType';
+import { IntDict, Sabbatical, SabbaticalCalendar } from './MetaType';
 
 export class HijriDate {
 
@@ -384,7 +384,7 @@ export class HijriDate {
     }
     // { month: 6, day: 3, name: 'laylat_al_raghaib ' }, // first thursday in Rejeb month !
     if (m === 6 && d < 8 && date2.getDay() === 4) {
-      return { month: 6, day: 3, name: 'laylat_al_raghaib ' };
+      return { month: 6, day: 3, name: 'laylat_al_raghaib' };
     }
     return this.SABBATICALS.find(x => x.day === d && x.month === m);
   }
@@ -392,7 +392,7 @@ export class HijriDate {
   /** return `cnt` number of Sabbaticals before `date` and `cnt` number of Sabbaticals after `date` 
    * @param  {Date} d
    */
-  getAllSabbaticalsNear(date: Date, cnt = 19): { hijri: HijriDate, gre: Date, sabb: Sabbatical }[] {
+  getAllSabbaticalsNear(date: Date, cnt = 19): SabbaticalCalendar[] {
     let hijri = this.toHijri(date);
     const sabbs = [];
     let tmpDate = new Date(date.getTime());

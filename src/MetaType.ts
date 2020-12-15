@@ -1,3 +1,5 @@
+import { HijriDate } from "./HijriDate";
+
 export interface Country {
   UlkeAdi: string;
   UlkeAdiEn: string;
@@ -67,3 +69,9 @@ export interface Sabbatical {
   day: number;
   name: string;
 };
+
+export interface SabbaticalCalendar {
+  hijri: HijriDate;
+  gre: Date;
+  sabb: Sabbatical;
+}
