@@ -8,7 +8,12 @@
       /> -->
       <v-list nav dense>
         <v-list-item-group v-model="selectedItem">
-          <v-list-item v-for="item in menuItems" :key="item.title" link>
+          <v-list-item
+            v-for="item in menuItems"
+            :key="item.title"
+            link
+            @click="isSideBarOpen = false"
+          >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -203,18 +208,8 @@ export default class App extends Vue {
       this.updateCurrPrayIdx();
     }, 60000);
 
-    // runAllHijriDateTests();
     const today = clearHours(new Date());
-    // console.log("nearest sabb: ", this.hijri.getNearestSabbatical(today));
-    // console.log(
-    //   "all sabbs: ",
-    //   this.hijri
-    //     .getAllSabbaticalsNear(today, 30)
-    //     .map(
-    //       (x) =>
-    //         x.hijri.toStr() + " -> " + x.gre.toDateString() + ": " + x.sabb.name
-    //     )
-    // );
+
     StateService.addListener((x: boolean) => {
       this.isLoading = x;
     });
