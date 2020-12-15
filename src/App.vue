@@ -59,7 +59,6 @@
             </h2>
             <h4 class="normal-font">
               {{ currHijriDate }}
-              <span v-if="nearSabbaticalStr"></span>
             </h4>
           </div>
           <v-divider></v-divider>
@@ -95,6 +94,9 @@
               </v-list-item>
             </v-list-item-group>
           </v-list>
+          <div class="txt-center" v-if="nearSabbaticalStr">
+            <h4 class="normal-font glow">{{ nearSabbaticalStr }}</h4>
+          </div>
         </div>
         <AddLocation
           v-if="selectedItem == 1"
@@ -181,7 +183,7 @@ export default class App extends Vue {
   private selectedItem = 0;
   private isLoading = false;
   private nearSabbaticalStr: string | null = null;
-  private readonly PRE_SABB_LIMIT = 3;
+  private readonly PRE_SABB_LIMIT = 4;
 
   created(): void {
     this._api = new ApiClient();
@@ -310,11 +312,18 @@ export default class App extends Vue {
   setNearestSabbatical(date: Date) {
     const sabb = this.hijri.getNearestSabbatical(date);
     if (sabb.cnt < this.PRE_SABB_LIMIT) {
-      // this.nearSabbaticalStr = sabb.sabb?.name;
+      if (sabb.sabb?.name) {
+        if (sabb.cnt === 1) {
+          this.nearSabbaticalStr = this.$tc("tomorrow") + " " + this.$tc(sabb.sabb?.name);
+        } else {
+          this.nearSabbaticalStr =
+            sabb.cnt + " " + this.$tc("daysLater") + " " + this.$tc(sabb.sabb?.name);
+        }
+      }
     } else {
       this.nearSabbaticalStr = null;
     }
-    console.log("sabb: ", sabb);
+    console.log("sabb: ", this.nearSabbaticalStr);
   }
 
   setIsShowingToday() {
@@ -330,7 +339,7 @@ export default class App extends Vue {
   }
 
   private hijri2str(h: HijriDate): string {
-  return h.getDay() + " " + this.$t("hijriMonth" + h.getMonth()) + " " + h.getYear();
+    return h.getDay() + " " + this.$t("hijriMonth" + h.getMonth()) + " " + h.getYear();
   }
 
   private decodeCurrTimes(): void {
@@ -430,5 +439,22 @@ export default class App extends Vue {
   -moz-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
+}
+
+.glow {
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out 4 alternate;
+  -moz-animation: glow 1s ease-in-out 4 alternate;
+  animation: glow 1s ease-in-out 4 alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 0px primary;
+  }
+
+  to {
+    text-shadow: 0 0 2px #1976d2;
+  }
 }
 </style>
