@@ -2,15 +2,12 @@
   <v-app>
     <v-navigation-drawer v-model="isSideBarOpen" app>
       <v-list nav dense>
-        <v-list-item-group v-bind:mandatory="true" v-model="selectedItem">
+        <v-list-item-group mandatory v-model="selectedItem">
           <v-list-item
-            v-for="(item, idx) in menuItems"
+            v-for="item in menuItems"
             :key="item.title"
             link
-            @click="
-              isSideBarOpen = false;
-              selectedItem = idx;
-            "
+            @click="isSideBarOpen = false"
           >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
@@ -37,22 +34,11 @@
         <span v-if="selectedItem == 4">{{ $t("about") }}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <span v-if="selectedItem == 0">
-        <v-btn v-on:click="decreaseCurrDay()" icon color="primary">
-          <v-icon>mdi-calendar-arrow-left</v-icon>
-        </v-btn>
-        <v-btn v-on:click="setCurrDayIdx()" icon color="primary">
-          <v-icon>mdi-calendar-today</v-icon>
-        </v-btn>
-        <v-btn v-on:click="increaseCurrDay()" icon color="primary">
-          <v-icon>mdi-calendar-arrow-right</v-icon>
-        </v-btn>
-      </span>
     </v-app-bar>
 
     <v-main v-bind:style="{ zoom: currZoom + '%' }" class="m5">
       <div v-bind:class="{ h0: isLoading }">
-        <div v-if="selectedItem == 0">
+        <div v-bind:class="currSlideCss" v-if="selectedItem == 0">
           <div class="txt-center" v-if="!currTimes || !currTimes[currDayIdx]">
             <h2 class="normal-font">{{ $t("noTimeData") }}</h2>
           </div>
@@ -65,40 +51,41 @@
             </h4>
           </div>
           <v-divider></v-divider>
-          <v-list
-            :flat="true"
-            disabled
-            v-if="currTimes && currTimes[currDayIdx]"
-            class="txt-center"
-          >
-            <v-list-item-group>
-              <v-list-item v-for="(item, i) in timeItems" :key="i">
-                <v-list-item-content>
+          <div class="txt-center">
+            <div class="horizontal">
+              <v-btn x-large v-on:click="decreaseCurrDay()" icon color="primary">
+                <v-icon x-large>mdi-calendar-arrow-left</v-icon>
+              </v-btn>
+              <div>
+                <div v-for="(item, i) in timeItems" :key="i" class="m5">
                   <h2 v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }">
                     {{ item }} {{ currTimes[currDayIdx][i + 1] }}
                     <v-icon v-if="i == currPrayIdx - 1" style="vertical-align: initial">
                       mdi-clock
                     </v-icon>
                   </h2>
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider></v-divider>
-              <v-list-item v-if="isShowingToday">
-                <v-list-item-content>
-                  <span class="normal-font" v-if="currLang && currLang == 'tr'">
-                    {{ timeItems[currPrayIdx - 1].slice(0, -1) }} vakti için kalan süre
-                  </span>
-                  <span class="normal-font" v-else>
-                    Remaining time for
-                    {{ timeItems[currPrayIdx - 1].slice(0, -1) }}
-                  </span>
-                  <h2>{{ remainingTime }}</h2>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-          <div class="txt-center" v-if="nearSabbaticalStr">
-            <h4 class="normal-font glow">{{ nearSabbaticalStr }}</h4>
+                </div>
+              </div>
+              <v-btn x-large v-on:click="increaseCurrDay()" icon color="primary">
+                <v-icon x-large>mdi-calendar-arrow-right</v-icon>
+              </v-btn>
+            </div>
+            <v-divider></v-divider>
+            <div v-if="isShowingToday">
+              <span class="normal-font">
+                {{ timeItems[currPrayIdx - 1].slice(0, -1) }} &nbsp;
+                {{ $t("remainingTime") }}
+              </span>
+              <h2>{{ remainingTime }}</h2>
+            </div>
+            <div v-else>
+              <v-btn x-large v-on:click="setCurrDayIdx()" icon color="primary">
+                <v-icon x-large>mdi-calendar-today</v-icon>
+              </v-btn>
+            </div>
+            <div v-if="nearSabbaticalStr">
+              <h4 class="normal-font glow">{{ nearSabbaticalStr }}</h4>
+            </div>
           </div>
         </div>
         <AddLocation
@@ -172,6 +159,7 @@ export default class App extends Vue {
   private hijri = new HijriDate();
   private currHijriDate = "";
   private isShowingToday = true;
+  private currSlideCss = "";
   private menuItems: { icon: string; title: string; idx: number }[] = [
     { icon: "mdi-clock-time-four-outline", title: "times", idx: 0 },
     { icon: "mdi-map-marker-plus", title: "addNewLocation", idx: 1 },
@@ -227,6 +215,7 @@ export default class App extends Vue {
       this.selectedItem = 1;
       return;
     }
+    this.currSlideCss = 'zoom-css';
     const today = new Date();
     let idx = 0;
     for (const d of this.currTimes) {
@@ -247,17 +236,25 @@ export default class App extends Vue {
       return;
     }
     if (this.currDayIdx < this.currTimes.length - 1) {
-      this.currDayIdx++;
-      this.setHijriDateStr();
-      this.setIsShowingToday();
+      this.currSlideCss = "slide-r2l";
+      setTimeout(() => {
+        this.currSlideCss = "";
+        this.currDayIdx++;
+        this.setHijriDateStr();
+        this.setIsShowingToday();
+      }, 1000);
     }
   }
 
   decreaseCurrDay(): void {
     if (this.currDayIdx > 0) {
-      this.currDayIdx--;
-      this.setHijriDateStr();
-      this.setIsShowingToday();
+      this.currSlideCss = "slide-l2r";
+      setTimeout(() => {
+        this.currSlideCss = "";
+        this.currDayIdx--;
+        this.setHijriDateStr();
+        this.setIsShowingToday();
+      }, 1000);
     }
   }
 
@@ -409,7 +406,7 @@ export default class App extends Vue {
   }
 }
 </script>
-<style scoped>
+<style>
 .txt-center {
   text-align: center;
 }
@@ -447,6 +444,54 @@ export default class App extends Vue {
 
   to {
     text-shadow: 0 0 2px #1976d2;
+  }
+}
+
+.horizontal {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.slide-r2l {
+  position: relative;
+  animation: slide 1s ease-in-out 0s 1 normal;
+}
+
+@keyframes slide {
+  0% {
+    left: 0px;
+  }
+  100% {
+    left: -100%;
+  }
+}
+
+.slide-l2r {
+  position: relative;
+  animation: slide2 1s ease-in-out 0s 1 normal;
+}
+
+@keyframes slide2 {
+  0% {
+    left: 0px;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.zoom-css {
+  animation: zoom 1s ease-in-out 0s 1 normal;
+}
+
+@keyframes zoom {
+  0% {
+    transform: scale(0.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
