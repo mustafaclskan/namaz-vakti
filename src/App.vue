@@ -1,6 +1,10 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="isSideBarOpen" app>
+    <v-navigation-drawer
+      v-model="isSideBarOpen"
+      app
+      v-bind:style="{ zoom: currZoom + '%' }"
+    >
       <v-list nav dense>
         <v-list-item-group mandatory v-model="selectedItem">
           <v-list-item
@@ -215,7 +219,7 @@ export default class App extends Vue {
       this.selectedItem = 1;
       return;
     }
-    this.currSlideCss = 'zoom-css';
+    this.currSlideCss = "zoom-css";
     const today = new Date();
     let idx = 0;
     for (const d of this.currTimes) {
