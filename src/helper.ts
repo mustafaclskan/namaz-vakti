@@ -97,7 +97,7 @@ export function seconds2str(i: number): string {
 }
 
 // from date to string '03 Aralık 2020'
-export function date2str(d: Date | null = null): string {
+export function date2TurkishStr(d: Date | null = null): string {
   if (!d) {
     d = new Date();
   }

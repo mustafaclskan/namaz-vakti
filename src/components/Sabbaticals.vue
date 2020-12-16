@@ -4,7 +4,7 @@
       <tbody>
         <tr
           v-for="(item, idx) in sabbs"
-          :key="item.gre"
+          :key="item.idx"
           v-bind:class="{ 'primary white': idx === NUM_SABBS }"
         >
           <td>{{ item.sabb }}</td>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { clearHours, date2str } from "@/helper";
+import { clearHours } from "@/helper";
 import { HijriDate } from "@/HijriDate";
 import { SabbaticalCalendar } from "@/MetaType";
 import { Component, Vue } from "vue-property-decorator";
@@ -33,24 +33,29 @@ export default class Sabbaticals extends Vue {
   created(): void {
     const today = clearHours(new Date());
     const l = this.hijri.getAllSabbaticalsNear(today, this.NUM_SABBS);
-    console.log('l: ', l);
-    this.sabbs = l.map((x) => {
+    console.log("l: ", l);
+    this.sabbs = l.map((x, i) => {
       return {
         hij: this.hijri2str(x.hijri),
-        gre: date2str(x.gre),
+        gre: this.gre2str(x.gre),
         sabb: this.$tc(x.sabb.name),
+        idx: i,
       };
     });
     console.log("sabbs = ", this.sabbs);
   }
 
   mounted(): void {
-    const el = document.getElementsByTagName("tr")[this.NUM_SABBS-1];
+    const el = document.getElementsByTagName("tr")[this.NUM_SABBS - 1];
     el.scrollIntoView(true);
   }
 
   private hijri2str(h: HijriDate): string {
     return h.getDay() + " " + this.$t("hijriMonth" + h.getMonth()) + " " + h.getYear();
+  }
+
+  private gre2str(d: Date): string {
+    return d.getDay() + " " + this.$t("month" + d.getMonth()) + " " + d.getFullYear();
   }
 }
 </script>

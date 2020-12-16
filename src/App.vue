@@ -145,7 +145,7 @@ import { HijriDate } from "./HijriDate";
 
 import {
   clearHours,
-  date2str,
+  date2TurkishStr,
   decodeHTML,
   seconds2str,
   strTime2TotalSec,
@@ -220,6 +220,7 @@ export default class App extends Vue {
 
     const currTheme = SettingService.getCurrTheme();
     this.$vuetify.theme.dark = currTheme === "Dark";
+    this.langSelected();
   }
 
   setCurrDayIdx(): void {
@@ -232,7 +233,7 @@ export default class App extends Vue {
     const today = new Date();
     let idx = 0;
     for (const d of this.currTimes) {
-      if (d[0].toLowerCase().includes(date2str(today).toLowerCase())) {
+      if (d[0].toLowerCase().includes(date2TurkishStr(today).toLowerCase())) {
         this.currDayIdx = idx;
         this.setHijriDateStr();
         this.setIsShowingToday();
