@@ -8,12 +8,8 @@ export class SettingService {
   private static CURR_LANG_KEY = 'currLang';
   private static CUR_ZOOM_KEY = 'currZoom';
 
-  static saveTheme(theme: string): void {
-    localStorage.setItem(this.THEME_KEY, theme);
-  }
-
-  static saveLang(theme: string): void {
-    localStorage.setItem(this.CURR_LANG_KEY, theme);
+  static setCurrLang(langCode: string): void {
+    localStorage.setItem(this.CURR_LANG_KEY, langCode);
   }
 
   static getCurrLang(): string | null {
@@ -40,11 +36,15 @@ export class SettingService {
     localStorage.setItem(this.CURR_LOC_KEY, loc);
   }
 
+
+  static setCurrTheme(theme: string): void {
+    localStorage.setItem(this.THEME_KEY, theme);
+  }
+
   static getCurrTheme(): string | null {
     return localStorage.getItem(this.THEME_KEY);
   }
 
-  // needs change
   static getSavedLocations(): string[] {
     const locs = localStorage.getItem(this.QUEUE_KEY);
     if (locs) {

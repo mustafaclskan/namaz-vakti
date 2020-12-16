@@ -70,7 +70,7 @@ export default class AddLocation extends Vue {
 
   onThemeSelected(e: string): void {
     if (e) {
-      SettingService.saveTheme(e);
+      SettingService.setCurrTheme(e);
       this.$vuetify.theme.dark = e === "Dark";
     }
   }

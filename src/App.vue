@@ -1,11 +1,6 @@
 <template>
   <v-app>
     <v-navigation-drawer v-model="isSideBarOpen" app>
-      <!-- <SideBarContent
-        v-on:curr-times-updated="currTimesUpdated($event)"
-        v-on:lang-selected="langSelected($event)"
-        v-on:zoom-changed="zoomChanged($event)"
-      /> -->
       <v-list nav dense>
         <v-list-item-group v-model="selectedItem">
           <v-list-item
@@ -213,9 +208,13 @@ export default class App extends Vue {
     StateService.addListener((x: boolean) => {
       this.isLoading = x;
     });
-    const currLang = SettingService.getCurrLang();
-    if (currLang) {
-      this.$i18n.locale = currLang;
+    this.currLang = SettingService.getCurrLang();
+    if (this.currLang) {
+      this.$i18n.locale = this.currLang;
+    } else { // set default language if it does not exist
+      this.$i18n.locale = 'tr';
+      this.currLang = 'tr';
+      SettingService.setCurrLang('tr');
     }
 
     const currTheme = SettingService.getCurrTheme();
@@ -265,6 +264,8 @@ export default class App extends Vue {
   }
 
   currTimesUpdated(data: string[][] | null): void {
+    console.log("curr times updated");
+    this.langSelected();
     this.selectedItem = 0;
     this.currTimes = data;
     this.decodeCurrTimes();
