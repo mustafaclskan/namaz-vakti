@@ -7,6 +7,7 @@ export class SettingService {
   private static CURR_LOC_KEY = 'currLoc';
   private static CURR_LANG_KEY = 'currLang';
   private static CUR_ZOOM_KEY = 'currZoom';
+  private static IS_SHOW_HIJRI_KEY = 'showHijri';
 
   static setCurrLang(langCode: string): void {
     localStorage.setItem(this.CURR_LANG_KEY, langCode);
@@ -32,10 +33,24 @@ export class SettingService {
     localStorage.setItem(this.CUR_ZOOM_KEY, v + '');
   }
 
+  static getIsShowHijri(): boolean {
+    const v = localStorage.getItem(this.IS_SHOW_HIJRI_KEY);
+    if (!v) {
+      return true;
+    }
+    if (v === 'true') {
+      return true;
+    }
+    return false;
+  }
+
+  static setIsShowHijri(v: boolean): void {
+    localStorage.setItem(this.IS_SHOW_HIJRI_KEY, v + '');
+  }
+
   static setCurrLocation(loc: string): void {
     localStorage.setItem(this.CURR_LOC_KEY, loc);
   }
-
 
   static setCurrTheme(theme: string): void {
     localStorage.setItem(this.THEME_KEY, theme);

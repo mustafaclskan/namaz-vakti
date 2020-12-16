@@ -16,7 +16,6 @@
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
-
             <v-list-item-content>
               <v-list-item-title>{{ $t(item.title) }}</v-list-item-title>
             </v-list-item-content>
@@ -26,10 +25,8 @@
     </v-navigation-drawer>
 
     <v-app-bar app dense v-bind:style="{ zoom: currZoom + '%' }">
-      <v-app-bar-nav-icon
-        @click.stop="isSideBarOpen = !isSideBarOpen"
-        color="primary"
-      ></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="isSideBarOpen = !isSideBarOpen" color="primary">
+      </v-app-bar-nav-icon>
       <v-toolbar-title>
         <span v-if="selectedItem == 0">{{ currLoc }}</span>
         <span v-if="selectedItem == 1">{{ $t("addNewLocation") }}</span>
@@ -50,7 +47,7 @@
             <h2 class="normal-font">
               {{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx][0])) }}
             </h2>
-            <h4 class="normal-font">
+            <h4 class="normal-font" v-if="isShowCurrHijri">
               {{ currHijriDate }}
             </h4>
           </div>
@@ -102,6 +99,7 @@
           v-on:curr-times-updated="currTimesUpdated($event)"
           v-on:lang-selected="langSelected($event)"
           v-on:zoom-changed="zoomChanged($event)"
+          v-on:is-show-hijri-changed="isShowHijriChanged($event)"
         />
         <About v-if="selectedItem == 4" />
       </div>
@@ -164,6 +162,7 @@ export default class App extends Vue {
   private currHijriDate = "";
   private isShowingToday = true;
   private currSlideCss = "";
+  private isShowCurrHijri = true;
   private menuItems: { icon: string; title: string; idx: number }[] = [
     { icon: "mdi-clock-time-four-outline", title: "times", idx: 0 },
     { icon: "mdi-map-marker-plus", title: "addNewLocation", idx: 1 },
@@ -182,6 +181,7 @@ export default class App extends Vue {
     this.decodeCurrTimes();
     this.currLoc = SettingService.getCurrLocation();
     this.currZoom = SettingService.getCurrZoom();
+    this.isShowCurrHijri = SettingService.getIsShowHijri();
     this.setCurrDayIdx();
     // update remaining time for current pray every second
     setInterval(() => {
@@ -289,6 +289,10 @@ export default class App extends Vue {
       }
     }
     SettingService.setCurrZoom(this.currZoom);
+  }
+
+  isShowHijriChanged(isShow: boolean): void {
+    this.isShowCurrHijri = isShow;
   }
 
   setHijriDateStr(): void {
@@ -458,9 +462,13 @@ export default class App extends Vue {
   align-items: center;
 }
 
+:root {
+  --animdur: 0.5s;
+}
+
 .slide-r2l {
   position: relative;
-  animation: slide 1s ease-in-out 0s 1 normal;
+  animation: slide var(--animdur) ease-in-out 0s 1 normal;
 }
 
 @keyframes slide {
@@ -474,7 +482,7 @@ export default class App extends Vue {
 
 .slide-l2r {
   position: relative;
-  animation: slide2 1s ease-in-out 0s 1 normal;
+  animation: slide2 var(--animdur) ease-in-out 0s 1 normal;
 }
 
 @keyframes slide2 {
@@ -487,7 +495,7 @@ export default class App extends Vue {
 }
 
 .zoom-css {
-  animation: zoom 1s ease-in-out 0s 1 normal;
+  animation: zoom var(--animdur) ease-in-out 0s 1 normal;
 }
 
 @keyframes zoom {

@@ -27,6 +27,12 @@
       :label="$t('changeLocation')"
       :placeholder="$t('changeLocation')"
     />
+    <v-checkbox
+      v-model="isShowHijriDate"
+      @click="isShowHijriClicked()"
+      :label="$t('isShowHijriDate')"
+    >
+    </v-checkbox>
     <div>
       <div v-if="currLang && currLang.code == 'tr'" class="m5">
         <span>{{ $t("changeZoom") }} (%{{ currZoom }})</span>
@@ -65,6 +71,7 @@ export default class Settings extends Vue {
   private currTheme: string | null = "";
   private currLang: UiLanguage | undefined = undefined;
   private currZoom = 100;
+  private isShowHijriDate = true;
 
   // special life-cycle hook for vue
   created(): void {
@@ -74,12 +81,14 @@ export default class Settings extends Vue {
     this.currTheme = SettingService.getCurrTheme();
     this.currZoom = SettingService.getCurrZoom();
 
+    this.isShowHijriDate = SettingService.getIsShowHijri();
+
     this.currLang = this.langs.find((x) => x.code === SettingService.getCurrLang());
     if (!this.currLang) {
       this.currLang = this.langs[1]; // default is turkish
     }
     if (!this.currTheme) {
-      this.currTheme = 'Light'
+      this.currTheme = "Light";
     }
     this.onLangSelected(this.currLang);
     this.$vuetify.theme.dark = this.currTheme === "Dark";
@@ -121,6 +130,11 @@ export default class Settings extends Vue {
   zoomOut(): void {
     this.$emit("zoom-changed", false);
     this.currZoom = SettingService.getCurrZoom();
+  }
+
+  isShowHijriClicked(): void {
+    SettingService.setIsShowHijri(this.isShowHijriDate);
+    this.$emit("is-show-hijri-changed", this.isShowHijriDate);
   }
 }
 </script>
