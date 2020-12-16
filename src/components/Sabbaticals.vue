@@ -22,7 +22,6 @@
 <script lang="ts">
 import { clearHours } from "@/helper";
 import { HijriDate } from "@/HijriDate";
-import { SabbaticalCalendar } from "@/MetaType";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
@@ -33,7 +32,6 @@ export default class Sabbaticals extends Vue {
   created(): void {
     const today = clearHours(new Date());
     const l = this.hijri.getAllSabbaticalsNear(today, this.NUM_SABBS);
-    console.log("l: ", l);
     this.sabbs = l.map((x, i) => {
       return {
         hij: this.hijri2str(x.hijri),
@@ -42,7 +40,6 @@ export default class Sabbaticals extends Vue {
         idx: i,
       };
     });
-    console.log("sabbs = ", this.sabbs);
   }
 
   mounted(): void {

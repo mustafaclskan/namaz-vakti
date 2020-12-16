@@ -62,7 +62,6 @@ export default class AddLocation extends Vue {
   // special life-cycle hook for vue
   created(): void {
     this._api = new ApiClient();
-    console.log("add location component created");
     if (!SettingService.getCurrLocation()) {
       this.openPanels = [0];
     }

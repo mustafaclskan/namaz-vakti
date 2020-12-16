@@ -76,7 +76,10 @@ export default class Settings extends Vue {
 
     this.currLang = this.langs.find((x) => x.code === SettingService.getCurrLang());
     if (!this.currLang) {
-      this.currLang = this.langs[0];
+      this.currLang = this.langs[1]; // default is turkish
+    }
+    if (!this.currTheme) {
+      this.currTheme = 'Light'
     }
     this.onLangSelected(this.currLang);
     this.$vuetify.theme.dark = this.currTheme === "Dark";
@@ -84,19 +87,19 @@ export default class Settings extends Vue {
 
   onThemeSelected(e: string): void {
     if (e) {
-      SettingService.saveTheme(e);
+      SettingService.setCurrTheme(e);
       this.$vuetify.theme.dark = e === "Dark";
     }
   }
 
   onLangSelected(e: { txt: string; code: string }): void {
     if (e) {
-      SettingService.saveLang(e.code);
+      SettingService.setCurrLang(e.code);
       this.$i18n.locale = e.code;
       for (let i = 0; i < this.themes.length; i++) {
         this.themes[i] = this.$tc(this.themes[i]);
       }
-      SettingService.saveTheme(this.currTheme || "Light");
+      SettingService.setCurrTheme(this.currTheme || "Light");
       this.$emit("lang-selected", e.code);
     }
   }

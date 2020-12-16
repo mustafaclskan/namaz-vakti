@@ -2,12 +2,15 @@
   <v-app>
     <v-navigation-drawer v-model="isSideBarOpen" app>
       <v-list nav dense>
-        <v-list-item-group v-model="selectedItem">
+        <v-list-item-group v-bind:mandatory="true" v-model="selectedItem">
           <v-list-item
-            v-for="item in menuItems"
+            v-for="(item, idx) in menuItems"
             :key="item.title"
             link
-            @click="isSideBarOpen = false"
+            @click="
+              isSideBarOpen = false;
+              selectedItem = idx;
+            "
           >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
@@ -127,7 +130,6 @@
 <script lang="ts">
 // Bismillahirrahmanirrahim بسم الله الرحمن الرحيم
 import { Component, Vue } from "vue-property-decorator";
-import SideBarContent from "./components/SideBarContent.vue";
 import AddLocation from "./components/AddLocation.vue";
 import Settings from "./components/Settings.vue";
 import Sabbaticals from "./components/Sabbaticals.vue";
@@ -135,11 +137,9 @@ import About from "./components/About.vue";
 import { SettingService } from "./SettingService";
 import { StateService } from "./StateService";
 import { SubstrTranslator } from "./SubstrTranslator";
-import { runAllHijriDateTests } from "./HijriDate-test";
 import { HijriDate } from "./HijriDate";
 
 import {
-  clearHours,
   date2TurkishStr,
   decodeHTML,
   seconds2str,
@@ -150,7 +150,6 @@ import { ApiClient } from "./ApiClient";
 
 @Component({
   components: {
-    SideBarContent,
     AddLocation,
     Settings,
     Sabbaticals,
@@ -203,18 +202,17 @@ export default class App extends Vue {
       this.updateCurrPrayIdx();
     }, 60000);
 
-    const today = clearHours(new Date());
-
     StateService.addListener((x: boolean) => {
       this.isLoading = x;
     });
     this.currLang = SettingService.getCurrLang();
     if (this.currLang) {
       this.$i18n.locale = this.currLang;
-    } else { // set default language if it does not exist
-      this.$i18n.locale = 'tr';
-      this.currLang = 'tr';
-      SettingService.setCurrLang('tr');
+    } else {
+      // set default language if it does not exist
+      this.$i18n.locale = "tr";
+      this.currLang = "tr";
+      SettingService.setCurrLang("tr");
     }
 
     const currTheme = SettingService.getCurrTheme();
@@ -264,7 +262,6 @@ export default class App extends Vue {
   }
 
   currTimesUpdated(data: string[][] | null): void {
-    console.log("curr times updated");
     this.langSelected();
     this.selectedItem = 0;
     this.currTimes = data;
@@ -293,8 +290,7 @@ export default class App extends Vue {
     SettingService.setCurrZoom(this.currZoom);
   }
 
-  setHijriDateStr() {
-    console.log("set hijri date str");
+  setHijriDateStr(): void {
     setTimeout(() => {
       if (!this.currTimes || !this.currTimes[this.currDayIdx]) {
         return;
@@ -306,7 +302,7 @@ export default class App extends Vue {
     }, 0);
   }
 
-  setNearestSabbatical(date: Date) {
+  setNearestSabbatical(date: Date): void {
     const sabb = this.hijri.getNearestSabbatical(date);
     if (sabb.cnt < this.PRE_SABB_LIMIT) {
       if (sabb.sabb?.name) {
@@ -320,10 +316,9 @@ export default class App extends Vue {
     } else {
       this.nearSabbaticalStr = null;
     }
-    console.log("sabb: ", this.nearSabbaticalStr);
   }
 
-  setIsShowingToday() {
+  setIsShowingToday(): void {
     if (!this.currTimes || !this.currTimes[this.currDayIdx]) {
       return;
     }
