@@ -44,7 +44,7 @@
             <h2 class="normal-font">{{ $t("noTimeData") }}</h2>
           </div>
           <div class="txt-center" v-if="currTimes && currTimes[currDayIdx]">
-            <h2 class="normal-font">
+            <h2 class="normal-font" style="white-space: pre">
               {{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx][0])) }}
             </h2>
             <h4 class="normal-font" v-if="isShowCurrHijri">
@@ -174,6 +174,8 @@ export default class App extends Vue {
   private isLoading = false;
   private nearSabbaticalStr: string | null = null;
   private readonly PRE_SABB_LIMIT = 4;
+  private readonly SLIDE_ANIM_DUR = 1000;
+  private readonly SLIDE_ANIM_UPDATE_LATENCY = 200;
 
   created(): void {
     this._api = new ApiClient();
@@ -243,10 +245,12 @@ export default class App extends Vue {
       this.currSlideCss = "slide-r2l";
       setTimeout(() => {
         this.currSlideCss = "";
+      }, this.SLIDE_ANIM_DUR);
+      setTimeout(() => {
         this.currDayIdx++;
         this.setHijriDateStr();
         this.setIsShowingToday();
-      }, 1000);
+      }, this.SLIDE_ANIM_UPDATE_LATENCY);
     }
   }
 
@@ -255,10 +259,12 @@ export default class App extends Vue {
       this.currSlideCss = "slide-l2r";
       setTimeout(() => {
         this.currSlideCss = "";
+      }, this.SLIDE_ANIM_DUR);
+      setTimeout(() => {
         this.currDayIdx--;
         this.setHijriDateStr();
         this.setIsShowingToday();
-      }, 1000);
+      }, this.SLIDE_ANIM_UPDATE_LATENCY);
     }
   }
 
