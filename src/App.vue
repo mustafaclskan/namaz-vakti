@@ -35,6 +35,9 @@
         <span v-if="selectedItem == 4">{{ $t("about") }}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn v-on:click="updateTimes4Current()" icon color="primary">
+        <v-icon>mdi-sync</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <v-main v-bind:style="{ zoom: currZoom + '%' }" class="m5">
