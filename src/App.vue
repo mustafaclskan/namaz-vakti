@@ -174,8 +174,7 @@ export default class App extends Vue {
   private isLoading = false;
   private nearSabbaticalStr: string | null = null;
   private readonly PRE_SABB_LIMIT = 4;
-  private readonly SLIDE_ANIM_DUR = 1000;
-  private readonly SLIDE_ANIM_UPDATE_LATENCY = 200;
+  private readonly SLIDE_ANIM_DUR = 500;
 
   created(): void {
     this._api = new ApiClient();
@@ -244,13 +243,11 @@ export default class App extends Vue {
     if (this.currDayIdx < this.currTimes.length - 1) {
       this.currSlideCss = "slide-r2l";
       setTimeout(() => {
-        this.currSlideCss = "";
-      }, this.SLIDE_ANIM_DUR);
-      setTimeout(() => {
         this.currDayIdx++;
         this.setHijriDateStr();
         this.setIsShowingToday();
-      }, this.SLIDE_ANIM_UPDATE_LATENCY);
+        this.currSlideCss = "";
+      }, this.SLIDE_ANIM_DUR);
     }
   }
 
@@ -258,13 +255,11 @@ export default class App extends Vue {
     if (this.currDayIdx > 0) {
       this.currSlideCss = "slide-l2r";
       setTimeout(() => {
-        this.currSlideCss = "";
-      }, this.SLIDE_ANIM_DUR);
-      setTimeout(() => {
         this.currDayIdx--;
         this.setHijriDateStr();
         this.setIsShowingToday();
-      }, this.SLIDE_ANIM_UPDATE_LATENCY);
+        this.currSlideCss = "";
+      }, this.SLIDE_ANIM_DUR);
     }
   }
 
