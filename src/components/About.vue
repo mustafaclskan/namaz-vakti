@@ -11,7 +11,7 @@
         {{ $t("contact") }}
       </a>
     </div>
-    <br>
+    <br />
     <div>
       Icons made by
       <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>

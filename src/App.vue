@@ -48,7 +48,7 @@
           </div>
           <div class="txt-center" v-if="currTimes && currTimes[currDayIdx]">
             <h2 class="normal-font" style="white-space: pre">
-              {{ substrTranslate.t(substrTranslate.t(currTimes[currDayIdx][0])) }}
+              {{ currGreDate }}
             </h2>
             <h4 class="normal-font" v-if="isShowCurrHijri">
               {{ currHijriDate }}
@@ -163,6 +163,7 @@ export default class App extends Vue {
   private currZoom = 100;
   private hijri = new HijriDate();
   private currHijriDate = "";
+  private currGreDate = "";
   private isShowingToday = true;
   private currSlideCss = "";
   private isShowCurrHijri = true;
@@ -229,7 +230,7 @@ export default class App extends Vue {
     for (const d of this.currTimes) {
       if (d[0].toLowerCase().includes(date2TurkishStr(today).toLowerCase())) {
         this.currDayIdx = idx;
-        this.setHijriDateStr();
+        this.setDateStrs();
         this.setIsShowingToday();
         return;
       }
@@ -247,7 +248,7 @@ export default class App extends Vue {
       this.currSlideCss = "slide-r2l";
       setTimeout(() => {
         this.currDayIdx++;
-        this.setHijriDateStr();
+        this.setDateStrs();
         this.setIsShowingToday();
         this.currSlideCss = "";
       }, this.SLIDE_ANIM_DUR);
@@ -259,7 +260,7 @@ export default class App extends Vue {
       this.currSlideCss = "slide-l2r";
       setTimeout(() => {
         this.currDayIdx--;
-        this.setHijriDateStr();
+        this.setDateStrs();
         this.setIsShowingToday();
         this.currSlideCss = "";
       }, this.SLIDE_ANIM_DUR);
@@ -280,6 +281,7 @@ export default class App extends Vue {
       this.timeItems[i] = SubstrTranslator.t(this.timeItems[i]);
     }
     this.currLang = SettingService.getCurrLang();
+    this.setDateStrs();
   }
 
   zoomChanged(isIncrease: boolean): void {
@@ -299,7 +301,7 @@ export default class App extends Vue {
     this.isShowCurrHijri = isShow;
   }
 
-  setHijriDateStr(): void {
+  setDateStrs(): void {
     setTimeout(() => {
       if (!this.currTimes || !this.currTimes[this.currDayIdx]) {
         return;
@@ -307,6 +309,7 @@ export default class App extends Vue {
       const date = new Date(turkishDateStr2Date(this.currTimes[this.currDayIdx][0]));
       const hij = this.hijri.toHijri(date);
       this.currHijriDate = this.hijri2str(hij);
+      this.currGreDate = this.gre2str(date);
       this.setNearestSabbatical(date);
     }, 0);
   }
@@ -337,6 +340,10 @@ export default class App extends Vue {
       d.getMonth() === t.getMonth() &&
       d.getFullYear() === t.getFullYear() &&
       d.getDate() == t.getDate();
+  }
+
+  private gre2str(d: Date): string {
+    return d.getDate() + " " + this.$t("month" + d.getMonth()) + " " + d.getFullYear();
   }
 
   private hijri2str(h: HijriDate): string {
