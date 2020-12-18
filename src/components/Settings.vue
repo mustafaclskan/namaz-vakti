@@ -1,7 +1,14 @@
 <template>
-  <div>
+  <v-container fluid>
+    <v-autocomplete
+      v-model="currLocation"
+      :items="savedLocations"
+      :filter="filterByTxt"
+      v-on:input="onSavedLocationSelected"
+      :label="$t('changeLocation')"
+      :placeholder="$t('changeLocation')"
+    />
     <v-select
-      class="m5"
       v-model="currLang"
       :items="langs"
       item-text="txt"
@@ -11,45 +18,63 @@
       return-object
     />
     <v-select
-      class="m5"
       v-model="currTheme"
       :items="themes"
       v-on:input="onThemeSelected"
       :label="$t('selectTheme')"
       :placeholder="$t('selectTheme')"
     />
-    <v-autocomplete
-      class="m5"
-      v-model="currLocation"
-      :items="savedLocations"
-      :filter="filterByTxt"
-      v-on:input="onSavedLocationSelected"
-      :label="$t('changeLocation')"
-      :placeholder="$t('changeLocation')"
-    />
     <v-checkbox
       v-model="isShowHijriDate"
       @click="isShowHijriClicked()"
       :label="$t('isShowHijriDate')"
-    >
-    </v-checkbox>
+    />
+    <v-row align="center">
+      <v-col class="d-flex" cols="4">
+        <v-select
+          v-model="currTheme"
+          :items="yearFormats"
+          v-on:input="onThemeSelected"
+          :label="$t('yearFormat')"
+          :placeholder="$t('yearFormat')"
+        />
+      </v-col>
+      <v-col class="d-flex" cols="4">
+        <v-select
+          v-model="currTheme"
+          :items="monthFormats"
+          v-on:input="onThemeSelected"
+          :label="$t('monthFormat')"
+          :placeholder="$t('monthFormat')"
+        />
+      </v-col>
+      <v-col class="d-flex" cols="4">
+        <v-select
+          v-model="currTheme"
+          :items="weekDayFormats"
+          v-on:input="onThemeSelected"
+          :label="$t('weekDayFormat')"
+          :placeholder="$t('weekDayFormat')"
+        />
+      </v-col>
+    </v-row>
     <div>
-      <div v-if="currLang && currLang.code == 'tr'" class="m5">
+      <div v-if="currLang && currLang.code == 'tr'">
         <span>{{ $t("changeZoom") }} (%{{ currZoom }})</span>
       </div>
-      <div v-else class="m5">
+      <div v-else>
         <span>{{ $t("changeZoom") }} ({{ currZoom }}%)</span>
       </div>
       <div style="heigth: 100px">
-        <v-btn class="m5" v-on:click="zoomIn()" icon color="primary">
+        <v-btn v-on:click="zoomIn()" icon color="primary">
           <v-icon>mdi-magnify-plus</v-icon>
         </v-btn>
-        <v-btn class="m5" v-on:click="zoomOut()" icon color="primary">
+        <v-btn v-on:click="zoomOut()" icon color="primary">
           <v-icon>mdi-magnify-minus</v-icon>
         </v-btn>
       </div>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -72,6 +97,9 @@ export default class Settings extends Vue {
   private currLang: UiLanguage | undefined = undefined;
   private currZoom = 100;
   private isShowHijriDate = true;
+  private yearFormats: string[] = ["YYYY", "YY", "-"];
+  private monthFormats: string[] = ["MMMM", "MMM", "MM"];
+  private weekDayFormats: string[] = ["DDDD", "DDD", "-"];
 
   // special life-cycle hook for vue
   created(): void {

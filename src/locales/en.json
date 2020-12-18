@@ -73,5 +73,8 @@
   "weekday3": "Wednesday",
   "weekday4": "Thursday",
   "weekday5": "Friday",
-  "weekday6": "Saturday"
+  "weekday6": "Saturday",
+  "yearFormat": "Year Format",
+  "monthFormat": "Month Format",
+  "weekdayFormat": "Weekday Format"
 }

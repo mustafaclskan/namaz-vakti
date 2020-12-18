@@ -73,5 +73,8 @@
   "weekday3": "Çarşamba",
   "weekday4": "Perşembe",
   "weekday5": "Cuma",
-  "weekday6": "Cumartesi"
+  "weekday6": "Cumartesi",
+  "yearFormat": "Yıl Gösterimi",
+  "monthFormat": "Ay Gösterimi",
+  "weekdayFormat": "Hafta günü Gösterimi"
 }
