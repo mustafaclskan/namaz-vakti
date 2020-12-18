@@ -76,5 +76,6 @@
   "weekday6": "Cumartesi",
   "yearFormat": "Yıl Gösterimi",
   "monthFormat": "Ay Gösterimi",
-  "weekdayFormat": "Hafta günü Gösterimi"
+  "weekdayFormat": "Hafta günü Gösterimi",
+  "dateFormat": "Tarih gösterimi"
 }

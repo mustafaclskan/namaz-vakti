@@ -3,6 +3,9 @@ import { StringDict } from './MetaType';
 export class SettingService {
   private static QUEUE_LIMIT = 33;
   private static QUEUE_KEY = 'timesQueue';
+  private static YEAR_FMT_KEY = 'yearFormat';
+  private static MONTH_FMT_KEY = 'monthFormat';
+  private static WEEKDAY_FMT_KEY = 'weekdayFormat';
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
   private static CURR_LANG_KEY = 'currLang';
@@ -58,6 +61,42 @@ export class SettingService {
 
   static getCurrTheme(): string | null {
     return localStorage.getItem(this.THEME_KEY);
+  }
+
+  static setCurrYearFormat(theme: string): void {
+    localStorage.setItem(this.YEAR_FMT_KEY, theme);
+  }
+
+  static getCurrYearFormat(): string {
+    const r = localStorage.getItem(this.YEAR_FMT_KEY);
+    if (r) {
+      return r;
+    }
+    return 'YYYY';
+  }
+
+  static setCurrMonthFormat(theme: string): void {
+    localStorage.setItem(this.MONTH_FMT_KEY, theme);
+  }
+
+  static getCurrMonthFormat(): string {
+    const r = localStorage.getItem(this.MONTH_FMT_KEY);
+    if (r) {
+      return r;
+    }
+    return 'MMMM';
+  }
+
+  static setCurrWeekdayFormat(theme: string): void {
+    localStorage.setItem(this.WEEKDAY_FMT_KEY, theme);
+  }
+
+  static getCurrWeekdayFormat(): string {
+    const r = localStorage.getItem(this.WEEKDAY_FMT_KEY);
+    if (r) {
+      return r;
+    }
+    return 'DDDD';
   }
 
   static getSavedLocations(): string[] {

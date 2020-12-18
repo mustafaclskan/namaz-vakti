@@ -76,5 +76,6 @@
   "weekday6": "Saturday",
   "yearFormat": "Year Format",
   "monthFormat": "Month Format",
-  "weekdayFormat": "Weekday Format"
+  "weekdayFormat": "Weekday Format",
+  "dateFormat": "Date format"
 }

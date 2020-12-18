@@ -29,35 +29,52 @@
       @click="isShowHijriClicked()"
       :label="$t('isShowHijriDate')"
     />
-    <v-row align="center">
-      <v-col class="d-flex" cols="4">
-        <v-select
-          v-model="currTheme"
-          :items="yearFormats"
-          v-on:input="onThemeSelected"
-          :label="$t('yearFormat')"
-          :placeholder="$t('yearFormat')"
-        />
-      </v-col>
-      <v-col class="d-flex" cols="4">
-        <v-select
-          v-model="currTheme"
-          :items="monthFormats"
-          v-on:input="onThemeSelected"
-          :label="$t('monthFormat')"
-          :placeholder="$t('monthFormat')"
-        />
-      </v-col>
-      <v-col class="d-flex" cols="4">
-        <v-select
-          v-model="currTheme"
-          :items="weekDayFormats"
-          v-on:input="onThemeSelected"
-          :label="$t('weekDayFormat')"
-          :placeholder="$t('weekDayFormat')"
-        />
-      </v-col>
-    </v-row>
+    <v-card elevation="2">
+      <v-card-title>{{ $t("dateFormat") }}</v-card-title>
+      <v-container>
+        <v-row align="center">
+          <v-col class="d-flex" cols="4">
+            <v-select
+              v-model="currYearFormat"
+              :items="yearFormats"
+              v-on:input="
+                (x) => {
+                  onDateFormatSelected(x, 0);
+                }
+              "
+              :label="$t('yearFormat')"
+              :placeholder="$t('yearFormat')"
+            />
+          </v-col>
+          <v-col class="d-flex" cols="4">
+            <v-select
+              v-model="currMonthFormat"
+              :items="monthFormats"
+              v-on:input="
+                (x) => {
+                  onDateFormatSelected(x, 1);
+                }
+              "
+              :label="$t('monthFormat')"
+              :placeholder="$t('monthFormat')"
+            />
+          </v-col>
+          <v-col class="d-flex" cols="4">
+            <v-select
+              v-model="currWeekdayFormat"
+              :items="weekdayFormats"
+              v-on:input="
+                (x) => {
+                  onDateFormatSelected(x, 2);
+                }
+              "
+              :label="$t('weekDayFormat')"
+              :placeholder="$t('weekDayFormat')"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card>
     <div>
       <div v-if="currLang && currLang.code == 'tr'">
         <span>{{ $t("changeZoom") }} (%{{ currZoom }})</span>
@@ -99,7 +116,10 @@ export default class Settings extends Vue {
   private isShowHijriDate = true;
   private yearFormats: string[] = ["YYYY", "YY", "-"];
   private monthFormats: string[] = ["MMMM", "MMM", "MM"];
-  private weekDayFormats: string[] = ["DDDD", "DDD", "-"];
+  private weekdayFormats: string[] = ["DDDD", "DDD", "-"];
+  private currYearFormat = "";
+  private currMonthFormat = "";
+  private currWeekdayFormat = "";
 
   // special life-cycle hook for vue
   created(): void {
@@ -108,6 +128,9 @@ export default class Settings extends Vue {
     this.currLocation = SettingService.getCurrLocation();
     this.currTheme = SettingService.getCurrTheme();
     this.currZoom = SettingService.getCurrZoom();
+    this.currYearFormat = SettingService.getCurrYearFormat();
+    this.currMonthFormat = SettingService.getCurrMonthFormat();
+    this.currWeekdayFormat = SettingService.getCurrWeekdayFormat();
 
     this.isShowHijriDate = SettingService.getIsShowHijri();
 
@@ -126,6 +149,18 @@ export default class Settings extends Vue {
     if (e) {
       SettingService.setCurrTheme(e);
       this.$vuetify.theme.dark = e === "Dark";
+    }
+  }
+
+  onDateFormatSelected(e: string, n = 0): void {
+    if (e) {
+      if (n === 0) {
+        SettingService.setCurrYearFormat(e);
+      } else if (n === 1) {
+        SettingService.setCurrMonthFormat(e);
+      } else if (n === 2) {
+        SettingService.setCurrWeekdayFormat(e);
+      }
     }
   }
 
