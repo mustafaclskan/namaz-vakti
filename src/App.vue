@@ -63,7 +63,7 @@
               <div>
                 <div v-for="(item, i) in timeItems" :key="i" class="m5">
                   <h2 v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }">
-                    {{ item }} {{ currTimes[currDayIdx][i + 1] }}
+                    {{ item }}:&nbsp;{{ currTimes[currDayIdx][i + 1] }}
                     <v-icon v-if="i == currPrayIdx - 1" style="vertical-align: initial">
                       mdi-clock
                     </v-icon>
@@ -77,7 +77,7 @@
             <v-divider></v-divider>
             <div v-if="isShowingToday">
               <span class="normal-font">
-                {{ timeItems[currPrayIdx - 1].slice(0, -1) }} &nbsp;
+                {{ timeItems[currPrayIdx - 1] }} &nbsp;
                 {{ $t("remainingTime") }}
               </span>
               <h2>{{ remainingTime }}</h2>
@@ -128,7 +128,6 @@ import Sabbaticals from "./components/Sabbaticals.vue";
 import About from "./components/About.vue";
 import { SettingService } from "./SettingService";
 import { StateService } from "./StateService";
-import { SubstrTranslator } from "./SubstrTranslator";
 import { HijriDate } from "./HijriDate";
 
 import {
@@ -156,8 +155,7 @@ export default class App extends Vue {
   private currLoc: string | null = "";
   private currPrayIdx = 2;
   private remainingTime = "";
-  private timeItems = ["İmsak:", "Güneş:", "Öğle:", "İkindi:", "Akşam:", "Yatsı:"];
-  private substrTranslate = SubstrTranslator;
+  private timeItems: string[] = [];
   private currLang = SettingService.getCurrLang();
   private _api: ApiClient = new ApiClient();
   private currZoom = 100;
@@ -277,8 +275,9 @@ export default class App extends Vue {
   }
 
   langSelected(): void {
-    for (let i = 0; i < this.timeItems.length; i++) {
-      this.timeItems[i] = SubstrTranslator.t(this.timeItems[i]);
+    this.timeItems = [];
+    for (let i = 0; i < 6; i++) {
+      this.timeItems.push(this.$tc("timeItem" + i));
     }
     this.currLang = SettingService.getCurrLang();
     this.setDateStrs();

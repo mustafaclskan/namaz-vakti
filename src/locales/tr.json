@@ -60,5 +60,18 @@
   "eid_qurban_3": "Kurban Bayramı 3. Gün",
   "eid_qurban_4": "Kurban Bayramı 4. Gün",
   "remainingTime": "için kalan süre",
-  "isShowHijriDate": "Hicri tarih gösterilsin mi?"
+  "isShowHijriDate": "Hicri tarih gösterilsin mi?",
+  "timeItem0": "İmsak",
+  "timeItem1": "Güneş",
+  "timeItem2": "Öğle",
+  "timeItem3": "İkindi",
+  "timeItem4": "Akşam",
+  "timeItem5": "Yatsı",
+  "weekday0": "Pazar",
+  "weekday1": "Pazartesi",
+  "weekday2": "Salı",
+  "weekday3": "Çarşamba",
+  "weekday4": "Perşembe",
+  "weekday5": "Cuma",
+  "weekday6": "Cumartesi"
 }

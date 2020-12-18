@@ -60,5 +60,18 @@
   "eid_qurban_3": "Third Day of Eid Qurban",
   "eid_qurban_4": "Forth Day of Eid Qurban",
   "remainingTime": "remaining time",
-  "isShowHijriDate": "Is show hijri date?"
+  "isShowHijriDate": "Is show hijri date?",
+  "timeItem0": "Fajr",
+  "timeItem1": "Sunrise",
+  "timeItem2": "Dhuhr",
+  "timeItem3": "Asr",
+  "timeItem4": "Maghrib",
+  "timeItem5": "Isha'a",
+  "weekday0": "Sunday",
+  "weekday1": "Monday",
+  "weekday2": "Tuesday",
+  "weekday3": "Wednesday",
+  "weekday4": "Thursday",
+  "weekday5": "Friday",
+  "weekday6": "Saturday"
 }
