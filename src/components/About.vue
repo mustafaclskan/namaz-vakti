@@ -16,13 +16,15 @@
     <br />
     <div>
       <span>
-        <b>{{ $t("lastUpdateTime") }}: 19/12/2020 20:25:29 GMT+0300</b> 
+        <b>{{ $t("lastUpdateTime") }}:</b> 19/12/2020 20:39:29 GMT+0300
       </span>
     </div>
     <br />
     <div>
       Icons made by
-      <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
+      <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
+        >Freepik</a
+      >
       from
       <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
     </div>

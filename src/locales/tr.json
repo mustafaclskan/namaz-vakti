@@ -89,6 +89,6 @@
   "hour": "saat",
   "minute": "dakika",
   "second": "saniye",
-  "lastUpdateTime":"Son yazılım güncellenme tarihi:",
+  "lastUpdateTime":"Son yazılım güncellenme tarihi",
   "InternetErr":"İnternet bağlantı hatası!"
 }
