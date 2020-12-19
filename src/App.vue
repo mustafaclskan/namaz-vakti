@@ -44,7 +44,7 @@
     </v-app-bar>
 
     <v-main v-bind:style="{ zoom: currZoom + '%' }" class="m5">
-      <div v-bind:class="{ h0: isLoading }">
+      <div v-bind:class="{ h0: isLoading || isError }">
         <div v-bind:class="currSlideCss" v-if="selectedItem == 0">
           <div class="txt-center" v-if="!currTimes || !currTimes[currDayIdx]">
             <h2 class="normal-font">{{ $t("noTimeData") }}</h2>
@@ -72,7 +72,7 @@
                 <table class="m5">
                   <tbody>
                     <tr v-for="(item, i) in timeItems" :key="i" class="m5">
-                      <td style="text-align: right; padding-right: 10px;">
+                      <td style="text-align: right; padding-right: 10px">
                         <h2
                           v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }"
                         >
@@ -139,13 +139,18 @@
         <About v-if="selectedItem == 4" />
       </div>
 
-      <div class="spinner-container" v-if="isLoading">
+      <div class="spinner-container" v-if="isLoading && !isError">
         <v-progress-circular
           color="primary"
           :size="319"
           :width="19"
           indeterminate
         ></v-progress-circular>
+      </div>
+      <div v-if="isError">
+        <v-alert outlined type="error" prominent border="left">
+          <h1>{{ $t("InternetErr") }}</h1>
+        </v-alert>
       </div>
     </v-main>
   </v-app>
@@ -207,9 +212,11 @@ export default class App extends Vue {
   ];
   private selectedItem = 0;
   private isLoading = false;
+  private isError = false;
   private nearSabbaticalStr: string | null = null;
   private readonly PRE_SABB_LIMIT = 4;
   private readonly SLIDE_ANIM_DUR = 500;
+  private readonly ALERT_DUR = 3000;
 
   created(): void {
     this._api = new ApiClient();
@@ -231,8 +238,14 @@ export default class App extends Vue {
       this.updateCurrPrayIdx();
     }, 60000);
 
-    StateService.addListener((x: boolean) => {
+    StateService.addLoadingListener((x: boolean) => {
       this.isLoading = x;
+    });
+    StateService.addErrorListener((x: boolean) => {
+      this.isError = x;
+      setTimeout(() => {
+        this.isError = false;
+      }, this.ALERT_DUR);
     });
     this.currLang = SettingService.getCurrLang();
     if (this.currLang) {

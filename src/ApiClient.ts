@@ -23,11 +23,16 @@ export class ApiClient {
   private httpGet(url: string, cb: ((e: City[]) => void) | ((e: District[]) => void) | ((e: string[][]) => void)): void {
     const xmlhttp = new XMLHttpRequest();
     StateService.setLoading(true);
+    StateService.setError(false);
     xmlhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         cb(JSON.parse(this.responseText));
         StateService.setLoading(false);
       }
+    };
+    xmlhttp.onerror = function () {
+      StateService.setLoading(false);
+      StateService.setError(true);
     };
     xmlhttp.open('GET', url, true);
     xmlhttp.send();
