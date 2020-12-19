@@ -52,7 +52,7 @@ export default class Sabbaticals extends Vue {
   }
 
   private gre2str(d: Date): string {
-    return d.getDay() + " " + this.$t("month" + d.getMonth()) + " " + d.getFullYear();
+    return d.getDate() + " " + this.$t("month" + d.getMonth()) + " " + d.getFullYear();
   }
 }
 </script>
