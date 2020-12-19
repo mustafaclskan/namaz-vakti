@@ -6,6 +6,7 @@ export class SettingService {
   private static YEAR_FMT_KEY = 'yearFormat';
   private static MONTH_FMT_KEY = 'monthFormat';
   private static WEEKDAY_FMT_KEY = 'weekdayFormat';
+  private static TIME_FMT_KEY = 'timeFormat';
   private static THEME_KEY = 'theme';
   private static CURR_LOC_KEY = 'currLoc';
   private static CURR_LANG_KEY = 'currLang';
@@ -97,6 +98,18 @@ export class SettingService {
       return r;
     }
     return 'DDDD';
+  }
+
+  static setCurrTimeFmt(idx: number): void {
+    localStorage.setItem(this.TIME_FMT_KEY, idx + "");
+  }
+
+  static getCurrTimeFmt(): number {
+    const r = localStorage.getItem(this.TIME_FMT_KEY);
+    if (!r) {
+      return 0;
+    }
+    return Number(r);
   }
 
   static getSavedLocations(): string[] {

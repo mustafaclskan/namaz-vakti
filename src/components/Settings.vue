@@ -29,9 +29,26 @@
       @click="isShowHijriClicked()"
       :label="$t('isShowHijriDate')"
     />
-    <v-card elevation="2">
-      <v-card-title>{{ $t("dateFormat") }}</v-card-title>
-      <v-container>
+    <v-sheet rounded elevation="2" class="m5 p5">
+      <div v-if="currLang && currLang.code == 'tr'">
+        <span>{{ $t("changeZoom") }} (%{{ currZoom }})</span>
+      </div>
+      <div v-else>
+        <span>{{ $t("changeZoom") }} ({{ currZoom }}%)</span>
+      </div>
+      <div style="heigth: 100px">
+        <v-btn v-on:click="zoomIn()" icon color="primary">
+          <v-icon>mdi-magnify-plus</v-icon>
+        </v-btn>
+        <v-btn v-on:click="zoomOut()" icon color="primary">
+          <v-icon>mdi-magnify-minus</v-icon>
+        </v-btn>
+      </div>
+    </v-sheet>
+    <!-- date format -->
+    <v-sheet rounded elevation="2" class="m5 p5">
+      <span>{{ $t("dateFormat") }}</span>
+      <div class="m5">
         <v-row align="center">
           <v-col class="d-flex" cols="4">
             <v-select
@@ -68,29 +85,28 @@
                   onDateFormatSelected(x, 2);
                 }
               "
-              :label="$t('weekDayFormat')"
-              :placeholder="$t('weekDayFormat')"
+              :label="$t('weekdayFormat')"
+              :placeholder="$t('weekdayFormat')"
             />
           </v-col>
         </v-row>
-      </v-container>
-    </v-card>
-    <div>
-      <div v-if="currLang && currLang.code == 'tr'">
-        <span>{{ $t("changeZoom") }} (%{{ currZoom }})</span>
+        <h3 class="txt-center" v-bind:class="sampleDateCss">{{ sampleDate }}</h3>
       </div>
-      <div v-else>
-        <span>{{ $t("changeZoom") }} ({{ currZoom }}%)</span>
-      </div>
-      <div style="heigth: 100px">
-        <v-btn v-on:click="zoomIn()" icon color="primary">
-          <v-icon>mdi-magnify-plus</v-icon>
-        </v-btn>
-        <v-btn v-on:click="zoomOut()" icon color="primary">
-          <v-icon>mdi-magnify-minus</v-icon>
-        </v-btn>
-      </div>
-    </div>
+    </v-sheet>
+    <!-- remaining time format -->
+    <v-sheet rounded elevation="2" class="m5 p5">
+      <span>{{ $t("remainingTimeFormat") }}</span>
+      <v-select
+        v-model="currTimeFmt"
+        :items="remainingTimeFormats"
+        v-on:input="onRemainingTimeFmtChanged"
+        :label="$t('remainingTimeFormat')"
+        :placeholder="$t('remainingTimeFormat')"
+      />
+      <h3 class="txt-center" v-bind:class="sampleRemainingTimeCss">
+        {{ sampleRemainingTime }}
+      </h3>
+    </v-sheet>
   </v-container>
 </template>
 
@@ -99,6 +115,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Country, UiLanguage } from "../MetaType";
 import { ApiClient } from "../ApiClient";
 import { SettingService } from "../SettingService";
+import { gre2str, seconds2str } from "@/helper";
 
 @Component
 export default class Settings extends Vue {
@@ -117,9 +134,21 @@ export default class Settings extends Vue {
   private yearFormats: string[] = ["YYYY", "YY", "-"];
   private monthFormats: string[] = ["MMMM", "MMM", "MM"];
   private weekdayFormats: string[] = ["DDDD", "DDD", "-"];
+  private remainingTimeFormats = [
+    "XX:YY:ZZ",
+    "XX:YY",
+    `X ${this.$t("hour")} Y ${this.$t("minute")} Z ${this.$t("second")}`,
+    `X ${this.$t("hour")} Y ${this.$t("minute")}`,
+  ];
+  private currTimeFmt = this.remainingTimeFormats[0];
   private currYearFormat = "";
   private currMonthFormat = "";
   private currWeekdayFormat = "";
+  private sampleDate = "";
+  private sampleDateCss = "";
+  private readonly DATE_ANIM_DUR = 4000;
+  private sampleRemainingTime = "";
+  private sampleRemainingTimeCss = "";
 
   // special life-cycle hook for vue
   created(): void {
@@ -131,6 +160,7 @@ export default class Settings extends Vue {
     this.currYearFormat = SettingService.getCurrYearFormat();
     this.currMonthFormat = SettingService.getCurrMonthFormat();
     this.currWeekdayFormat = SettingService.getCurrWeekdayFormat();
+    this.currTimeFmt = this.remainingTimeFormats[SettingService.getCurrTimeFmt()];
 
     this.isShowHijriDate = SettingService.getIsShowHijri();
 
@@ -143,6 +173,7 @@ export default class Settings extends Vue {
     }
     this.onLangSelected(this.currLang);
     this.$vuetify.theme.dark = this.currTheme === "Dark";
+    this.setSampleDateTimes();
   }
 
   onThemeSelected(e: string): void {
@@ -150,6 +181,24 @@ export default class Settings extends Vue {
       SettingService.setCurrTheme(e);
       this.$vuetify.theme.dark = e === "Dark";
     }
+  }
+
+  onRemainingTimeFmtChanged(): void {
+    let idx = this.remainingTimeFormats.findIndex((x) => x === this.currTimeFmt);
+    if (idx < 0) {
+      idx = 0;
+    }
+    SettingService.setCurrTimeFmt(idx);
+    this.sampleRemainingTimeCss = "glow";
+    setTimeout(() => {
+      this.sampleRemainingTimeCss = "";
+    }, this.DATE_ANIM_DUR);
+    this.sampleRemainingTime = seconds2str(
+      3919,
+      this.$t("hour") + "",
+      this.$t("minute") + "",
+      this.$t("second") + ""
+    );
   }
 
   onDateFormatSelected(e: string, n = 0): void {
@@ -161,11 +210,26 @@ export default class Settings extends Vue {
       } else if (n === 2) {
         SettingService.setCurrWeekdayFormat(e);
       }
+      this.sampleDate = this.gre2str();
+      this.sampleDateCss = "glow";
+      setTimeout(() => {
+        this.sampleDateCss = "";
+      }, this.DATE_ANIM_DUR);
+      this.$emit("date-fmt-changed");
     }
   }
 
   onLangSelected(e: { txt: string; code: string }): void {
     if (e) {
+      setTimeout(() => {
+        this.remainingTimeFormats = [
+          "XX:YY:ZZ",
+          "XX:YY",
+          `X ${this.$t("hour")} Y ${this.$t("minute")} Z ${this.$t("second")}`,
+          `X ${this.$t("hour")} Y ${this.$t("minute")}`,
+        ];
+        this.currTimeFmt = this.remainingTimeFormats[SettingService.getCurrTimeFmt()];
+      }, 0);
       SettingService.setCurrLang(e.code);
       this.$i18n.locale = e.code;
       for (let i = 0; i < this.themes.length; i++) {
@@ -173,7 +237,18 @@ export default class Settings extends Vue {
       }
       SettingService.setCurrTheme(this.currTheme || "Light");
       this.$emit("lang-selected", e.code);
+      this.setSampleDateTimes();
     }
+  }
+
+  setSampleDateTimes(): void {
+    this.sampleDate = this.gre2str();
+    this.sampleRemainingTime = seconds2str(
+      3919,
+      this.$t("hour") + "",
+      this.$t("minute") + "",
+      this.$t("second") + ""
+    );
   }
 
   onSavedLocationSelected(e: string): void {
@@ -198,6 +273,15 @@ export default class Settings extends Vue {
   isShowHijriClicked(): void {
     SettingService.setIsShowHijri(this.isShowHijriDate);
     this.$emit("is-show-hijri-changed", this.isShowHijriDate);
+  }
+
+  // this function is a copy paste. I couldn't find a good way of a defining shared function that uses Vue-i18n
+  private gre2str(): string {
+    const d = new Date();
+    let m = this.$t("month" + d.getMonth()).toString();
+    let wd = this.$t("weekday" + d.getDay()).toString();
+    let wds = this.$t("weekdayShort" + d.getDay()).toString();
+    return gre2str(d, m, wd, wds);
   }
 }
 </script>

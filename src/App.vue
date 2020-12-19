@@ -103,6 +103,7 @@
           v-on:lang-selected="langSelected($event)"
           v-on:zoom-changed="zoomChanged($event)"
           v-on:is-show-hijri-changed="isShowHijriChanged($event)"
+          v-on:date-fmt-changed="setDateStrs()"
         />
         <About v-if="selectedItem == 4" />
       </div>
@@ -133,6 +134,7 @@ import { HijriDate } from "./HijriDate";
 import {
   date2TurkishStr,
   decodeHTML,
+  gre2str,
   seconds2str,
   strTime2TotalSec,
   turkishDateStr2Date,
@@ -180,6 +182,7 @@ export default class App extends Vue {
 
   created(): void {
     this._api = new ApiClient();
+    this.langSelected();
     this.currTimes = SettingService.getTimes4CurrentLocation();
     this.decodeCurrTimes();
     this.currLoc = SettingService.getCurrLocation();
@@ -212,7 +215,6 @@ export default class App extends Vue {
 
     const currTheme = SettingService.getCurrTheme();
     this.$vuetify.theme.dark = currTheme === "Dark";
-    this.langSelected();
   }
 
   setCurrDayIdx(): void {
@@ -245,11 +247,14 @@ export default class App extends Vue {
     if (this.currDayIdx < this.currTimes.length - 1) {
       this.currSlideCss = "slide-r2l";
       setTimeout(() => {
+        this.currSlideCss = "";
+      }, this.SLIDE_ANIM_DUR);
+      // change UI faster so that User won't see changing values
+      setTimeout(() => {
         this.currDayIdx++;
         this.setDateStrs();
         this.setIsShowingToday();
-        this.currSlideCss = "";
-      }, this.SLIDE_ANIM_DUR);
+      }, this.SLIDE_ANIM_DUR / 2);
     }
   }
 
@@ -257,11 +262,13 @@ export default class App extends Vue {
     if (this.currDayIdx > 0) {
       this.currSlideCss = "slide-l2r";
       setTimeout(() => {
+        this.currSlideCss = "";
+      }, this.SLIDE_ANIM_DUR);
+      setTimeout(() => {
         this.currDayIdx--;
         this.setDateStrs();
         this.setIsShowingToday();
-        this.currSlideCss = "";
-      }, this.SLIDE_ANIM_DUR);
+      }, this.SLIDE_ANIM_DUR / 2);
     }
   }
 
@@ -341,10 +348,6 @@ export default class App extends Vue {
       d.getDate() == t.getDate();
   }
 
-  private gre2str(d: Date): string {
-    return d.getDate() + " " + this.$t("month" + d.getMonth()) + " " + d.getFullYear();
-  }
-
   private hijri2str(h: HijriDate): string {
     return h.getDay() + " " + this.$t("hijriMonth" + h.getMonth()) + " " + h.getYear();
   }
@@ -398,7 +401,12 @@ export default class App extends Vue {
     if (secDiff < 0) {
       secDiff = 86400 - currSeconds + prayTimeInSeconds;
     }
-    this.remainingTime = seconds2str(secDiff);
+    this.remainingTime = seconds2str(
+      secDiff,
+      this.$t("hour") + "",
+      this.$t("minute") + "",
+      this.$t("second") + ""
+    );
   }
 
   private updateCurrPrayIdx(): void {
@@ -422,8 +430,17 @@ export default class App extends Vue {
       }
     }
   }
+
+  // this function is a copy paste. I couldn't find a good way of a defining shared function that uses Vue-i18n
+  private gre2str(d: Date): string {
+    let m = this.$t("month" + d.getMonth()).toString();
+    let wd = this.$t("weekday" + d.getDay()).toString();
+    let wds = this.$t("weekdayShort" + d.getDay()).toString();
+    return gre2str(d, m, wd, wds);
+  }
 }
 </script>
+
 <style>
 .txt-center {
   text-align: center;
@@ -433,6 +450,9 @@ export default class App extends Vue {
 }
 .m5 {
   margin: 5px;
+}
+.p5 {
+  padding: 5px;
 }
 .h0 {
   display: none;

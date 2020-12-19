@@ -1,15 +1,23 @@
 <template>
   <div class="m5">
-    {{ $t("aboutTxt") }}
+    <div>{{ $t("aboutTxt") }}</div>
+    <br />
     <div>
       <a href="https://github.com/canbax/namaz-vakti" title="Source Codes">
         {{ $t("sourceCodes") }}
       </a>
     </div>
+    <br />
     <div>
-      <a href="https://canbax.github.io/" title="Contact">
-        {{ $t("contact") }}
-      </a>
+      <span>
+        <b>{{ $t("contact") }}:</b> yusufsaidcanbaz {@} gmail.com
+      </span>
+    </div>
+    <br />
+    <div>
+      <span>
+        <b>{{ $t("lastUpdateTime") }}:</b> 
+      </span>
     </div>
     <br />
     <div>

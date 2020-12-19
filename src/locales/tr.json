@@ -74,8 +74,20 @@
   "weekday4": "Perşembe",
   "weekday5": "Cuma",
   "weekday6": "Cumartesi",
+  "weekdayShort0": "Pzr",
+  "weekdayShort1": "Pzts",
+  "weekdayShort2": "Sal",
+  "weekdayShort3": "Çar",
+  "weekdayShort4": "Per",
+  "weekdayShort5": "Cum",
+  "weekdayShort6": "Cmts",
   "yearFormat": "Yıl Gösterimi",
   "monthFormat": "Ay Gösterimi",
   "weekdayFormat": "Hafta günü Gösterimi",
-  "dateFormat": "Tarih gösterimi"
+  "dateFormat": "Tarih gösterimi",
+  "remainingTimeFormat": "Kalan süre gösterimi",
+  "hour": "saat",
+  "minute": "dakika",
+  "second": "saniye",
+  "lastUpdateTime":"Son yazılım güncellenme tarihi:"
 }

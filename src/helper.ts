@@ -1,3 +1,5 @@
+import { SettingService } from "./SettingService";
+
 export function month2Turkish(m: number): string {
   switch (m) {
     case 0:
@@ -69,29 +71,45 @@ export function turkishDateStr2Date(s: string): number {
 }
 
 // seconds to human readable string
-export function seconds2str(i: number): string {
+export function seconds2str(i: number, hourStr: string, minStr: string, secStr: string): string {
+  const pref = SettingService.getCurrTimeFmt();
   let s = "";
   const h = Math.floor(i / 3600);
   if (h > 0) {
-    if (h < 10) {
+    if (h < 10 && pref < 2) {
       s += "0" + h;
     } else {
       s += h;
     }
-    s += ":";
+    if (pref < 2) {
+      s += ":";
+    } else {
+      s += " " + hourStr + " ";
+    }
+
   }
   const m = Math.floor((i - 3600 * h) / 60);
-  if (m < 10) {
+  if (m < 10 && pref < 2) {
     s += "0" + m;
   } else {
     s += m;
   }
-  s += ":";
+  if (pref === 0) {
+    s += ":";
+  } else if (pref > 1) {
+    s += " " + minStr + " ";
+  }
+  if (pref === 1 || pref === 3) {
+    return s;
+  }
   const sec = i - 3600 * h - 60 * m;
-  if (sec < 10) {
+  if (sec < 10 && pref < 2) {
     s += "0" + sec;
   } else {
     s += sec;
+  }
+  if (pref === 2) {
+    s += " " + secStr;
   }
   return s;
 }
@@ -132,4 +150,27 @@ export function clearHours(d: Date): Date {
   d.setSeconds(0);
   d.setMilliseconds(0);
   return d;
+}
+
+export function gre2str(d: Date, monthStr: string, weekdayStr: string, weekdayShortStr: string): string {
+  const monthFmt = SettingService.getCurrMonthFormat();
+  const yearFmt = SettingService.getCurrYearFormat();
+  const wdFmt = SettingService.getCurrWeekdayFormat();
+  if (monthFmt === "MMM") {
+    monthStr = monthStr.substr(0, 3);
+  } else if (monthFmt === "MM") {
+    monthStr = d.getMonth() + "";
+  }
+  let y = d.getFullYear() + " ";
+  if (yearFmt === "YY") {
+    y = y.substr(0, 2);
+  } else if (yearFmt === "-") {
+    y = "";
+  }
+  if (wdFmt === "DDD") {
+    weekdayStr = weekdayShortStr;
+  } else if (wdFmt === "-") {
+    weekdayStr = "";
+  }
+  return d.getDate() + " " + monthStr + " " + y + " " + weekdayStr;
 }
