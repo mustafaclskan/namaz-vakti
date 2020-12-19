@@ -118,9 +118,14 @@
                 <v-icon x-large>mdi-calendar-today</v-icon>
               </v-btn>
             </div>
-            <div v-if="nearSabbaticalStr">
+            <v-snackbar v-model="isShowNearestSabb" timeout="-1">
               <h4 class="normal-font glow">{{ nearSabbaticalStr }}</h4>
-            </div>
+              <template v-slot:action="{ attrs }">
+                <v-btn text v-bind="attrs" @click="isShowNearestSabb = false">
+                  <v-icon x-large>mdi-close-circle</v-icon>
+                </v-btn>
+              </template>
+            </v-snackbar>
           </div>
         </div>
         <AddLocation
@@ -214,6 +219,7 @@ export default class App extends Vue {
   private isLoading = false;
   private isError = false;
   private nearSabbaticalStr: string | null = null;
+  private isShowNearestSabb = false;
   private readonly PRE_SABB_LIMIT = 4;
   private readonly SLIDE_ANIM_DUR = 500;
   private readonly ALERT_DUR = 3000;
@@ -385,6 +391,7 @@ export default class App extends Vue {
     } else {
       this.nearSabbaticalStr = null;
     }
+    this.isShowNearestSabb = this.nearSabbaticalStr !== null;
   }
 
   setIsShowingToday(): void {
