@@ -25,7 +25,10 @@
     </v-navigation-drawer>
 
     <v-app-bar app dense v-bind:style="{ zoom: currZoom + '%' }">
-      <v-app-bar-nav-icon @click.stop="isSideBarOpen = !isSideBarOpen" color="primary">
+      <v-app-bar-nav-icon
+        @click.stop="isSideBarOpen = !isSideBarOpen"
+        color="primary"
+      >
       </v-app-bar-nav-icon>
       <v-toolbar-title>
         <span v-if="selectedItem == 0">{{ currLoc }}</span>
@@ -57,20 +60,48 @@
           <v-divider></v-divider>
           <div class="txt-center">
             <div class="horizontal">
-              <v-btn x-large v-on:click="decreaseCurrDay()" icon color="primary">
+              <v-btn
+                x-large
+                v-on:click="decreaseCurrDay()"
+                icon
+                color="primary"
+              >
                 <v-icon x-large>mdi-calendar-arrow-left</v-icon>
               </v-btn>
               <div>
-                <div v-for="(item, i) in timeItems" :key="i" class="m5">
-                  <h2 v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }">
-                    {{ item }}:&nbsp;{{ currTimes[currDayIdx][i + 1] }}
-                    <v-icon v-if="i == currPrayIdx - 1" style="vertical-align: initial">
-                      mdi-clock
-                    </v-icon>
-                  </h2>
-                </div>
+                <table class="m5">
+                  <tbody>
+                    <tr v-for="(item, i) in timeItems" :key="i" class="m5">
+                      <td style="text-align: right; padding-right: 10px;">
+                        <h2
+                          v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }"
+                        >
+                          {{ item }}
+                        </h2>
+                      </td>
+                      <td style="text-align: left">
+                        <h2
+                          v-bind:class="{ 'normal-font': i != currPrayIdx - 1 }"
+                        >
+                          {{ currTimes[currDayIdx][i + 1] }}
+                          <v-icon
+                            v-if="i == currPrayIdx - 1"
+                            style="vertical-align: initial"
+                          >
+                            mdi-clock
+                          </v-icon>
+                        </h2>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <v-btn x-large v-on:click="increaseCurrDay()" icon color="primary">
+              <v-btn
+                x-large
+                v-on:click="increaseCurrDay()"
+                icon
+                color="primary"
+              >
                 <v-icon x-large>mdi-calendar-arrow-right</v-icon>
               </v-btn>
             </div>
@@ -312,7 +343,9 @@ export default class App extends Vue {
       if (!this.currTimes || !this.currTimes[this.currDayIdx]) {
         return;
       }
-      const date = new Date(turkishDateStr2Date(this.currTimes[this.currDayIdx][0]));
+      const date = new Date(
+        turkishDateStr2Date(this.currTimes[this.currDayIdx][0])
+      );
       const hij = this.hijri.toHijri(date);
       this.currHijriDate = this.hijri2str(hij);
       this.currGreDate = this.gre2str(date);
@@ -325,10 +358,15 @@ export default class App extends Vue {
     if (sabb.cnt < this.PRE_SABB_LIMIT) {
       if (sabb.sabb?.name) {
         if (sabb.cnt === 1) {
-          this.nearSabbaticalStr = this.$tc("tomorrow") + " " + this.$tc(sabb.sabb?.name);
+          this.nearSabbaticalStr =
+            this.$tc("tomorrow") + " " + this.$tc(sabb.sabb?.name);
         } else {
           this.nearSabbaticalStr =
-            sabb.cnt + " " + this.$tc("daysLater") + " " + this.$tc(sabb.sabb?.name);
+            sabb.cnt +
+            " " +
+            this.$tc("daysLater") +
+            " " +
+            this.$tc(sabb.sabb?.name);
         }
       }
     } else {
@@ -349,7 +387,13 @@ export default class App extends Vue {
   }
 
   private hijri2str(h: HijriDate): string {
-    return h.getDay() + " " + this.$t("hijriMonth" + h.getMonth()) + " " + h.getYear();
+    return (
+      h.getDay() +
+      " " +
+      this.$t("hijriMonth" + h.getMonth()) +
+      " " +
+      h.getYear()
+    );
   }
 
   private decodeCurrTimes(): void {
