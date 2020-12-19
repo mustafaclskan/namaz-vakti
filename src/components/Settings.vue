@@ -1,9 +1,9 @@
 <template>
   <v-container fluid>
-    <v-autocomplete
+    <v-select
+      class="unselectable-txt"
       v-model="currLocation"
       :items="savedLocations"
-      :filter="filterByTxt"
       v-on:input="onSavedLocationSelected"
       :label="$t('changeLocation')"
       :placeholder="$t('changeLocation')"
@@ -90,7 +90,9 @@
             />
           </v-col>
         </v-row>
-        <h3 class="txt-center" v-bind:class="sampleDateCss">{{ sampleDate }}</h3>
+        <h3 class="txt-center" v-bind:class="sampleDateCss">
+          {{ sampleDate }}
+        </h3>
       </div>
     </v-sheet>
     <!-- remaining time format -->
@@ -160,11 +162,15 @@ export default class Settings extends Vue {
     this.currYearFormat = SettingService.getCurrYearFormat();
     this.currMonthFormat = SettingService.getCurrMonthFormat();
     this.currWeekdayFormat = SettingService.getCurrWeekdayFormat();
-    this.currTimeFmt = this.remainingTimeFormats[SettingService.getCurrTimeFmt()];
+    this.currTimeFmt = this.remainingTimeFormats[
+      SettingService.getCurrTimeFmt()
+    ];
 
     this.isShowHijriDate = SettingService.getIsShowHijri();
 
-    this.currLang = this.langs.find((x) => x.code === SettingService.getCurrLang());
+    this.currLang = this.langs.find(
+      (x) => x.code === SettingService.getCurrLang()
+    );
     if (!this.currLang) {
       this.currLang = this.langs[1]; // default is turkish
     }
@@ -184,7 +190,9 @@ export default class Settings extends Vue {
   }
 
   onRemainingTimeFmtChanged(): void {
-    let idx = this.remainingTimeFormats.findIndex((x) => x === this.currTimeFmt);
+    let idx = this.remainingTimeFormats.findIndex(
+      (x) => x === this.currTimeFmt
+    );
     if (idx < 0) {
       idx = 0;
     }
@@ -228,7 +236,9 @@ export default class Settings extends Vue {
           `X ${this.$t("hour")} Y ${this.$t("minute")} Z ${this.$t("second")}`,
           `X ${this.$t("hour")} Y ${this.$t("minute")}`,
         ];
-        this.currTimeFmt = this.remainingTimeFormats[SettingService.getCurrTimeFmt()];
+        this.currTimeFmt = this.remainingTimeFormats[
+          SettingService.getCurrTimeFmt()
+        ];
       }, 0);
       SettingService.setCurrLang(e.code);
       this.$i18n.locale = e.code;
