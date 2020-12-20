@@ -1,24 +1,31 @@
-# namaz-vakti
+# namaz-vakti [(Türkçe)](BENİOKU.md) 
+Free, ad-free, open-source, and sleek Muslim Praying Times app. 
 
-## Project setup
-```
-npm install
-```
+<img src="doc/show-case.gif" title="religious days and nights"/>
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Pulls time information from [the official website of the turkish directorate of religious affairs](https://namazvakitleri.diyanet.gov.tr/en-US) over the internet. To fetch data, [namaz-vakti-api](https://github.com/canbax/namaz-vakti-api) is used. Currently [namaz-vakti-api](https://github.com/canbax/namaz-vakti-api) runs on a free Heroku server. So there might be a cold start since it goes to sleep after 1 hour of inactivity. [namaz-vakti-api](https://github.com/canbax/namaz-vakti-api) is also an open-source project.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Features
+### PWA
+namaz-vakti is a [Progressive Web App (PWA)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps). So it means although it is a website, once it's loaded over the Internet, it can work without the Internet. namaz-vakti fetches data **monthly**. So once you get data, you can use it for a month without an Internet connection.
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Hijri Calender
+You can see religious days and nights from the menu item _"Religious Days"_.
+<img src="doc/religious-dates.png" title="religious days and nights"/>
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+In the _"Praying Times"_ screen, when a religious day is close, you will see an alert.
+<img src="doc/alert-religious-day.png" title="religious days and nights"/>
+
+Hijri calendar calculations are without using any third-party application. The logic is inside [HijriDate.ts file](https://github.com/canbax/namaz-vakti/blob/master/src/HijriDate.ts)
+
+### Various Customizations
+- Multiple themes (_Dark_ or _Light_)
+- Change language (currently English and Turkish)
+- Show or hide hijri date
+- Change zoom level
+- Multiple date formats
+- Multiple time formats
+
+<img src="doc/settings.png" title="Settings"/>
+
+Built with [Typescript](https://www.typescriptlang.org/), [Vue.js](https://vuejs.org/), and [Vuetify](https://vuetifyjs.com/en/).
