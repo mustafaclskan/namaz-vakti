@@ -1,7 +1,9 @@
 # namaz-vakti [(Türkçe)](BENİOKU.md) 
 Free, ad-free, open-source, and sleek Muslim Praying Times app. 
 
-<img src="doc/show-case.gif" title="religious days and nights"/>
+<p align="center">
+  <img src="doc/show-case.gif" title="religious days and nights"/>
+</p>
 
 Pulls time information from [the official website of the turkish directorate of religious affairs](https://namazvakitleri.diyanet.gov.tr/en-US) over the internet. To fetch data, [namaz-vakti-api](https://github.com/canbax/namaz-vakti-api) is used. Currently [namaz-vakti-api](https://github.com/canbax/namaz-vakti-api) runs on a free Heroku server. So there might be a cold start since it goes to sleep after 1 hour of inactivity. [namaz-vakti-api](https://github.com/canbax/namaz-vakti-api) is also an open-source project.
 
@@ -11,10 +13,14 @@ namaz-vakti is a [Progressive Web App (PWA)](https://developer.mozilla.org/en-US
 
 ### Hijri Calender
 You can see religious days and nights from the menu item _"Religious Days"_.
-<img src="doc/religious-dates.png" title="religious days and nights"/>
+<p align="center">
+  <img src="doc/religious-dates.png" title="religious days and nights"/>
+</p>
 
 In the _"Praying Times"_ screen, when a religious day is close, you will see an alert.
-<img src="doc/alert-religious-day.png" title="religious days and nights"/>
+<p align="center">
+  <img src="doc/alert-religious-day.png" title="religious days and nights"/>
+</p>
 
 Hijri calendar calculations are without using any third-party application. The logic is inside [HijriDate.ts file](https://github.com/canbax/namaz-vakti/blob/master/src/HijriDate.ts)
 
@@ -26,6 +32,7 @@ Hijri calendar calculations are without using any third-party application. The l
 - Multiple date formats
 - Multiple time formats
 
-<img src="doc/settings.png" title="Settings"/>
-
+<p align="center">
+  <img src="doc/settings.png" title="Settings"/>
+</p>
 Built with [Typescript](https://www.typescriptlang.org/), [Vue.js](https://vuejs.org/), and [Vuetify](https://vuetifyjs.com/en/).
