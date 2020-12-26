@@ -124,8 +124,21 @@ export default class Settings extends Vue {
   private savedLocations: string[] = [];
   private themes = ["Light", "Dark"];
   private langs: UiLanguage[] = [
-    { txt: "English", code: "en" },
     { txt: "Türkçe", code: "tr" },
+    { txt: "English", code: "en" },
+    { txt: "Pусский", code: "ru" },
+    { txt: "Española", code: "es" },
+    { txt: "فارسی", code: "fa" },
+    { txt: "Français", code: "fr" },
+    { txt: "Deutsch", code: "de" },
+    { txt: "Chinese", code: "zh" },
+    { txt: "عربى", code: "ar" },
+    { txt: "Indonesia", code: "id" },
+    { txt: "Italian", code: "it" },
+    { txt: "Kazakh", code: "kk" },
+    { txt: "Korean", code: "ko" },
+    { txt: "Kyrgyz", code: "ky" },
+    { txt: "Malay", code: "ms" },
   ];
   private _api: ApiClient = new ApiClient();
   private currLocation: string | null = "";
