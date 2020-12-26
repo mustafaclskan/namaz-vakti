@@ -38,7 +38,12 @@
         <span v-if="selectedItem == 4">{{ $t("about") }}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-on:click="updateTimes4Current()" icon color="primary">
+      <v-btn
+        v-if="selectedItem == 0"
+        v-on:click="updateTimes4Current()"
+        icon
+        color="primary"
+      >
         <v-icon>mdi-sync</v-icon>
       </v-btn>
     </v-app-bar>
@@ -147,8 +152,8 @@
       <div class="spinner-container" v-if="isLoading && !isError">
         <v-progress-circular
           color="primary"
-          :size="319"
-          :width="19"
+          :size="100"
+          :width="8"
           indeterminate
         ></v-progress-circular>
       </div>
@@ -226,6 +231,18 @@ export default class App extends Vue {
 
   created(): void {
     this._api = new ApiClient();
+    this.currLang = SettingService.getCurrLang();
+    if (this.currLang) {
+      this.$i18n.locale = this.currLang;
+    } else {
+      // set default language if it does not exist
+      this.$i18n.locale = "tr";
+      this.currLang = "tr";
+      SettingService.setCurrLang("tr");
+    }
+
+    const currTheme = SettingService.getCurrTheme();
+    this.$vuetify.theme.dark = currTheme === "Dark";
     this.langSelected();
     this.currTimes = SettingService.getTimes4CurrentLocation();
     this.decodeCurrTimes();
@@ -253,18 +270,6 @@ export default class App extends Vue {
         this.isError = false;
       }, this.ALERT_DUR);
     });
-    this.currLang = SettingService.getCurrLang();
-    if (this.currLang) {
-      this.$i18n.locale = this.currLang;
-    } else {
-      // set default language if it does not exist
-      this.$i18n.locale = "tr";
-      this.currLang = "tr";
-      SettingService.setCurrLang("tr");
-    }
-
-    const currTheme = SettingService.getCurrTheme();
-    this.$vuetify.theme.dark = currTheme === "Dark";
   }
 
   setCurrDayIdx(): void {
