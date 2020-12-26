@@ -1,26 +1,26 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "787cbaaa8dac0eff5d3a",
-    "url": "/namaz-vakti/css/app.bc30667f.css"
+    "revision": "2df4674d1a2fdf41ccd0",
+    "url": "/namaz-vakti/css/app.039b57e1.css"
   },
   {
-    "revision": "17dc48b4f72918defc9c",
-    "url": "/namaz-vakti/css/chunk-vendors.c30d6c3f.css"
+    "revision": "2628d1380be4b45a5a1a",
+    "url": "/namaz-vakti/css/chunk-vendors.cb9c8141.css"
   },
   {
     "revision": "db8bddd2a01465f29176f04ce0dd90ee",
     "url": "/namaz-vakti/favicon.png"
   },
   {
-    "revision": "6da3a9e1db9716de40c98e1730ca6924",
+    "revision": "31bc5c97b01974d25256e4c18223f6ae",
     "url": "/namaz-vakti/index.html"
   },
   {
-    "revision": "787cbaaa8dac0eff5d3a",
-    "url": "/namaz-vakti/js/app.9159b220.js"
+    "revision": "2df4674d1a2fdf41ccd0",
+    "url": "/namaz-vakti/js/app.8ba41d40.js"
   },
   {
-    "revision": "17dc48b4f72918defc9c",
+    "revision": "2628d1380be4b45a5a1a",
     "url": "/namaz-vakti/js/chunk-vendors.e7523268.js"
   },
   {
