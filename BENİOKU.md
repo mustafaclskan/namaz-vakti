@@ -5,7 +5,7 @@
   <img src = "doc/show-case-tr.gif" title = "dini günler ve geceler" />
 </p>
 
-İnternet üzerinden [Diyanet İşleri Başkanlığı'nın resmi web sitesinden] (https://namazvakitleri.diyanet.gov.tr/en-US) vakit bilgilerini alır. Verileri almak için [namaz-vakti-api] (https://github.com/canbax/namaz-vakti-api) kullanılır. Şu anda [namaz-vakti-api] (https://github.com/canbax/namaz-vakti-api) ücretsiz bir Heroku sunucusunda çalışmaktadır. Ücretsiz sunucu 1 saatlik hareketsizlikten sonra uykuya daldığı için ilk yükleme yavaş olabilir. [namaz-vakti-api] (https://github.com/canbax/namaz-vakti-api) de açık kaynaklı bir projedir.
+İnternet üzerinden [Diyanet İşleri Başkanlığı'nın resmi web sitesinden](https://namazvakitleri.diyanet.gov.tr/en-US) vakit bilgilerini alır. Verileri almak için [namaz-vakti-api] (https://github.com/canbax/namaz-vakti-api) kullanılır. Şu anda [namaz-vakti-api] (https://github.com/canbax/namaz-vakti-api) ücretsiz bir Heroku sunucusunda çalışmaktadır. Ücretsiz sunucu 1 saatlik hareketsizlikten sonra uykuya daldığı için ilk yükleme yavaş olabilir. [namaz-vakti-api] (https://github.com/canbax/namaz-vakti-api) de açık kaynaklı bir projedir.
 
 ## Özellikleri
 ### PWA
