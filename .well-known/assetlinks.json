@@ -1,5 +1,5 @@
 [{
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target" : { "namespace": "android_app", "package_name": "io.kevn.namaz_vakti",
-                   "sha256_cert_fingerprints": ["E5:D6:C6:62:7C:4B:81:75:25:08:46:52:2D:0D:8E:02:01:85:94:70:A7:78:89:D0:6F:26:B6:FC:A2:71:0E:23"] }
+                   "sha256_cert_fingerprints": ["27:41:A7:05:C1:91:D7:CA:05:37:0D:57:E0:6E:4B:FA:A5:F0:DD:E2:90:38:86:95:80:0F:85:B7:3A:3F:A1:90"] }
     }]
