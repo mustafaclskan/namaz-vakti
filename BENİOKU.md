@@ -1,5 +1,5 @@
 # namaz-vakti [(English)](README.md) 
-Ücretsiz, reklamsız, açık kaynaklı ve şık namaz vakti uygulaması.
+Ücretsiz, reklamsız, açık kaynaklı ve şık namaz vakti uygulaması. [Google Play Store](https://play.google.com/store/apps/details?id=io.kevn.namaz_vakti), [Windows Apps Store](https://www.microsoft.com/en-us/p/namaz-vakti/9p6rv2n2mrbv), ve [webde](https://canbax.github.io/namaz-vakti/) kullanılabilir.
 
 <p align="center">
   <img src = "doc/show-case-tr.gif" title = "dini günler ve geceler" />
