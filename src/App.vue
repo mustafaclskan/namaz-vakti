@@ -162,7 +162,7 @@
           <h1>{{ $t("InternetErr") }}</h1>
         </v-alert>
       </div>
-      <pwa-update></pwa-update>
+      <pwa-update swpath="registerServiceWorker.ts"></pwa-update>
     </v-main>
   </v-app>
 </template>
