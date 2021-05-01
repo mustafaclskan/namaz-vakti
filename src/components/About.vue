@@ -16,7 +16,7 @@
     <br />
     <div>
       <span>
-        <b>{{ $t("lastUpdateTime") }}:</b> 25/04/2021 17:00:00
+        <b>{{ $t("lastUpdateTime") }}:</b> 01/05/2021 13:30:00
       </span>
     </div>
     <br />

@@ -162,7 +162,6 @@
           <h1>{{ $t("InternetErr") }}</h1>
         </v-alert>
       </div>
-      <pwa-update swpath="service-worker.js"></pwa-update>
     </v-main>
   </v-app>
 </template>
@@ -177,7 +176,6 @@ import About from "./components/About.vue";
 import { SettingService } from "./SettingService";
 import { StateService } from "./StateService";
 import { HijriDate } from "./HijriDate";
-import "@pwabuilder/pwaupdate";
 
 import {
   date2TurkishStr,
