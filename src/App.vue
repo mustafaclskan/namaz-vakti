@@ -385,12 +385,13 @@ export default class App extends Vue {
           this.nearSabbaticalStr =
             this.$tc("tomorrow") + " " + this.$tc(sabb.sabb?.name);
         } else {
-          this.nearSabbaticalStr =
-            sabb.cnt +
-            " " +
-            this.$tc("daysLater") +
-            " " +
-            this.$tc(sabb.sabb?.name);
+          if (sabb.cnt == 0) {
+            this.nearSabbaticalStr = this.$tc(sabb.sabb?.name);
+          } else {
+            this.nearSabbaticalStr = `${sabb.cnt} ${this.$tc(
+              "daysLater"
+            )} ${this.$tc(sabb.sabb?.name)}`;
+          }
         }
       }
     } else {
