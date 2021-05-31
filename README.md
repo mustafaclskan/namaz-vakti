@@ -35,4 +35,5 @@ Hijri calendar calculations are without using any third-party application. The l
 <p align="center">
   <img src="doc/settings.png" title="Settings"/>
 </p>
-Built with [Typescript](https://www.typescriptlang.org/), [Vue.js](https://vuejs.org/), and [Vuetify](https://vuetifyjs.com/en/).
+
+Built with [Typescript](https://www.typescriptlang.org), [Vue.js](https://vuejs.org), and [Vuetify](https://vuetifyjs.com/en).
