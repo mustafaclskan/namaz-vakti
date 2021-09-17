@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d59b520cfb68726db1fa",
-    "url": "/namaz-vakti/css/app.039b57e1.css"
+    "revision": "524d53574d5b00443585",
+    "url": "/namaz-vakti/css/app.645bb9ae.css"
   },
   {
-    "revision": "d59b520cfb68726db1fa",
-    "url": "/namaz-vakti/css/app.039b57e1.css.map"
+    "revision": "524d53574d5b00443585",
+    "url": "/namaz-vakti/css/app.645bb9ae.css.map"
   },
   {
     "revision": "6aaa93dd5ac8c48b217e",
@@ -80,16 +80,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/namaz-vakti/img/icons/safari-pinned-tab.svg"
   },
   {
-    "revision": "eddc7f9deb9f7bd6e817b47d5cf986fc",
+    "revision": "458724ab4a683019c368a6a3be83116e",
     "url": "/namaz-vakti/index.html"
   },
   {
-    "revision": "d59b520cfb68726db1fa",
-    "url": "/namaz-vakti/js/app.e7ec9bd1.js"
+    "revision": "524d53574d5b00443585",
+    "url": "/namaz-vakti/js/app.0e4bcd56.js"
   },
   {
-    "revision": "d59b520cfb68726db1fa",
-    "url": "/namaz-vakti/js/app.e7ec9bd1.js.map"
+    "revision": "524d53574d5b00443585",
+    "url": "/namaz-vakti/js/app.0e4bcd56.js.map"
   },
   {
     "revision": "6aaa93dd5ac8c48b217e",
