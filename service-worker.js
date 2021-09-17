@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/namaz-vakti/precache-manifest.aea5b45cf640511778542ba0fc68c276.js"
+  "/namaz-vakti/precache-manifest.2fac8055c53e5ef632c70207a66f3a51.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "namaz-vakti"});
