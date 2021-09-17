@@ -441,7 +441,7 @@ export default class App extends Vue {
     const arr = k.split("_");
 
     this._api.getTimes4District(arr[arr.length - 2], (e) => {
-      const unix_date = turkishDateStr2Date(e[0][0]);
+      const unix_date = turkishDateStr2Date(decodeHTML(e[0][0]));
       const id = arr.slice(0, -1).join("_") + "_" + unix_date;
       const loc = SettingService.getCurrLocation();
       if (loc) {

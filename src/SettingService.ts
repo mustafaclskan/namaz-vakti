@@ -1,17 +1,17 @@
-import { StringDict } from './MetaType';
+import { StringDict } from "./MetaType";
 
 export class SettingService {
   private static QUEUE_LIMIT = 33;
-  private static QUEUE_KEY = 'timesQueue';
-  private static YEAR_FMT_KEY = 'yearFormat';
-  private static MONTH_FMT_KEY = 'monthFormat';
-  private static WEEKDAY_FMT_KEY = 'weekdayFormat';
-  private static TIME_FMT_KEY = 'timeFormat';
-  private static THEME_KEY = 'theme';
-  private static CURR_LOC_KEY = 'currLoc';
-  private static CURR_LANG_KEY = 'currLang';
-  private static CUR_ZOOM_KEY = 'currZoom';
-  private static IS_SHOW_HIJRI_KEY = 'showHijri';
+  private static QUEUE_KEY = "timesQueue";
+  private static YEAR_FMT_KEY = "yearFormat";
+  private static MONTH_FMT_KEY = "monthFormat";
+  private static WEEKDAY_FMT_KEY = "weekdayFormat";
+  private static TIME_FMT_KEY = "timeFormat";
+  private static THEME_KEY = "theme";
+  private static CURR_LOC_KEY = "currLoc";
+  private static CURR_LANG_KEY = "currLang";
+  private static CUR_ZOOM_KEY = "currZoom";
+  private static IS_SHOW_HIJRI_KEY = "showHijri";
 
   static setCurrLang(langCode: string): void {
     localStorage.setItem(this.CURR_LANG_KEY, langCode);
@@ -34,7 +34,7 @@ export class SettingService {
   }
 
   static setCurrZoom(v: number): void {
-    localStorage.setItem(this.CUR_ZOOM_KEY, v + '');
+    localStorage.setItem(this.CUR_ZOOM_KEY, v + "");
   }
 
   static getIsShowHijri(): boolean {
@@ -42,14 +42,14 @@ export class SettingService {
     if (!v) {
       return true;
     }
-    if (v === 'true') {
+    if (v === "true") {
       return true;
     }
     return false;
   }
 
   static setIsShowHijri(v: boolean): void {
-    localStorage.setItem(this.IS_SHOW_HIJRI_KEY, v + '');
+    localStorage.setItem(this.IS_SHOW_HIJRI_KEY, v + "");
   }
 
   static setCurrLocation(loc: string): void {
@@ -73,7 +73,7 @@ export class SettingService {
     if (r) {
       return r;
     }
-    return 'YYYY';
+    return "YYYY";
   }
 
   static setCurrMonthFormat(theme: string): void {
@@ -85,7 +85,7 @@ export class SettingService {
     if (r) {
       return r;
     }
-    return 'MMMM';
+    return "MMMM";
   }
 
   static setCurrWeekdayFormat(theme: string): void {
@@ -97,7 +97,7 @@ export class SettingService {
     if (r) {
       return r;
     }
-    return 'DDDD';
+    return "DDDD";
   }
 
   static setCurrTimeFmt(idx: number): void {
@@ -212,16 +212,19 @@ export class SettingService {
     return SettingService.getRecentQueueKey4Location(queueKeys);
   }
 
-  private static getRecentQueueKey4Location(timesQueueKeys: string[], now = 0): string {
+  private static getRecentQueueKey4Location(
+    timesQueueKeys: string[],
+    now = 0
+  ): string {
     if (now < 1) {
       now = new Date().getTime();
     }
     let minDiff = now;
-    let keyOfMin = '';
+    let keyOfMin = "";
     for (const k of timesQueueKeys) {
-      const arr = k.split('_');
+      const arr = k.split("_");
       const d = Number(arr[arr.length - 1]);
-      const currDiff = now - d;
+      const currDiff = Math.abs(now - d);
       if (currDiff < minDiff) {
         minDiff = currDiff;
         keyOfMin = k;
@@ -229,5 +232,4 @@ export class SettingService {
     }
     return keyOfMin;
   }
-
 }
