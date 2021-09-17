@@ -12,7 +12,7 @@ module.exports = {
     }
   },
   pwa: {
-    name: "Namaz Vakti",
+    name: "namaz-vakti",
     themeColor: "#4DBA87",
     msTileColor: "#000000",
     appleMobileWebAppCapable: "yes",
