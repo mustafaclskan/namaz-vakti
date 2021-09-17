@@ -19,6 +19,9 @@ module.exports = {
     appleMobileWebAppStatusBarStyle: "black",
     // configure the workbox plugin
     workboxPluginMode: "GenerateSW",
+    workboxOptions: {
+      exclude: [/.well-known/]
+    }
 
   },
   publicPath: process.env.NODE_ENV === 'production'
