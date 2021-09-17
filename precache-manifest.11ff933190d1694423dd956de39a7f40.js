@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/namaz-vakti/favicon.png"
   },
   {
-    "revision": "e1daca060537d0e50000286132d3d765",
+    "revision": "27e118e02875b8fcacb3a6e84c0d166f",
     "url": "/namaz-vakti/index.html"
   },
   {
@@ -28,7 +28,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/namaz-vakti/js/chunk-vendors.1616b8c3.js"
   },
   {
-    "revision": "d91121d1ed0dd472dbcc689372193d81",
+    "revision": "1739f89d60d3bc90bf1e774e7f705c08",
     "url": "/namaz-vakti/manifest.json"
   },
   {
