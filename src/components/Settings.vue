@@ -109,6 +109,9 @@
         {{ sampleRemainingTime }}
       </h3>
     </v-sheet>
+    <v-btn v-on:click="clearAllData()" color="primary">
+      Clear All Data
+    </v-btn>
   </v-container>
 </template>
 
@@ -291,6 +294,10 @@ export default class Settings extends Vue {
   zoomOut(): void {
     this.$emit("zoom-changed", false);
     this.currZoom = SettingService.getCurrZoom();
+  }
+
+  clearAllData() {
+    localStorage.clear();
   }
 
   isShowHijriClicked(): void {
