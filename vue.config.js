@@ -21,8 +21,9 @@ module.exports = {
     workboxPluginMode: "GenerateSW",
     workboxOptions: {
       exclude: [/.well-known/]
-    }
-
+    },
+    start_url: "https://canbax.github.io/namaz-vakti/",
+    scope: "."
   },
   publicPath: process.env.NODE_ENV === 'production'
     ? '/namaz-vakti/'

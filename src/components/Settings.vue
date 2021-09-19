@@ -109,9 +109,9 @@
         {{ sampleRemainingTime }}
       </h3>
     </v-sheet>
-    <v-btn v-on:click="clearAllData()" color="primary">
+    <!-- <v-btn v-on:click="clearAllData()" color="primary">
       Clear All Data
-    </v-btn>
+    </v-btn> -->
   </v-container>
 </template>
 
