@@ -1,18 +1,18 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "524d53574d5b00443585",
-    "url": "/namaz-vakti/css/app.645bb9ae.css"
+    "revision": "3dc6d2d23abb14bed14a",
+    "url": "/namaz-vakti/css/app.a4295b18.css"
   },
   {
-    "revision": "524d53574d5b00443585",
-    "url": "/namaz-vakti/css/app.645bb9ae.css.map"
+    "revision": "3dc6d2d23abb14bed14a",
+    "url": "/namaz-vakti/css/app.a4295b18.css.map"
   },
   {
-    "revision": "6aaa93dd5ac8c48b217e",
+    "revision": "45825734d717f62e1e7a",
     "url": "/namaz-vakti/css/chunk-vendors.fc4388fc.css"
   },
   {
-    "revision": "6aaa93dd5ac8c48b217e",
+    "revision": "45825734d717f62e1e7a",
     "url": "/namaz-vakti/css/chunk-vendors.fc4388fc.css.map"
   },
   {
@@ -76,28 +76,28 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/namaz-vakti/img/icons/mstile-150x150.png"
   },
   {
-    "revision": "54b30b38d0f21753647163bf6327848a",
+    "revision": "8956ca8407f719080a9aded1c9a7be50",
     "url": "/namaz-vakti/img/icons/safari-pinned-tab.svg"
   },
   {
-    "revision": "458724ab4a683019c368a6a3be83116e",
+    "revision": "ecff24201a1aa958637f9f025b593d9f",
     "url": "/namaz-vakti/index.html"
   },
   {
-    "revision": "524d53574d5b00443585",
-    "url": "/namaz-vakti/js/app.0e4bcd56.js"
+    "revision": "3dc6d2d23abb14bed14a",
+    "url": "/namaz-vakti/js/app.0c00bceb.js"
   },
   {
-    "revision": "524d53574d5b00443585",
-    "url": "/namaz-vakti/js/app.0e4bcd56.js.map"
+    "revision": "3dc6d2d23abb14bed14a",
+    "url": "/namaz-vakti/js/app.0c00bceb.js.map"
   },
   {
-    "revision": "6aaa93dd5ac8c48b217e",
-    "url": "/namaz-vakti/js/chunk-vendors.1616b8c3.js"
+    "revision": "45825734d717f62e1e7a",
+    "url": "/namaz-vakti/js/chunk-vendors.bd13c272.js"
   },
   {
-    "revision": "6aaa93dd5ac8c48b217e",
-    "url": "/namaz-vakti/js/chunk-vendors.1616b8c3.js.map"
+    "revision": "45825734d717f62e1e7a",
+    "url": "/namaz-vakti/js/chunk-vendors.bd13c272.js.map"
   },
   {
     "revision": "1739f89d60d3bc90bf1e774e7f705c08",
