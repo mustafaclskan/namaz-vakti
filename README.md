@@ -1,3 +1,4 @@
+Proje https://github.com/canbax/namaz-vakti alıntıdır. Sitenin kaynak kodlarını kendi projeme uyarlamak üzere kopyaladım.
 # namaz-vakti [(Türkçe)](BENİOKU.md) 
 Free, ad-free, open-source, and sleek Muslim Praying Times app. Available on [Google Play Store](https://play.google.com/store/apps/details?id=io.kevn.namaz_vakti), [Windows Apps Store](https://www.microsoft.com/en-us/p/namaz-vakti/9p6rv2n2mrbv), and [the web](https://canbax.github.io/namaz-vakti/).
 
